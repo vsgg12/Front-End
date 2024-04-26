@@ -1,5 +1,4 @@
-import Header from './layout/Header';
-import Footer from './layout/Footer';
+import './styles/global.css';
 
 export const metadata = {
   title: 'Next.js',
