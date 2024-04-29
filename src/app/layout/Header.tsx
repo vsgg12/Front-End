@@ -1,3 +1,3 @@
-export default function Header() {
-  return <>헤더</>;
+export default function Header(): JSX.Element {
+  return <></>;
 }

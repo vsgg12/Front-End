@@ -1,10 +1,11 @@
-import Video from './video';
+import ContentSection from './ContentSection';
+import CommentSection from './CommentSeciton';
 
-export default function Post() {
+export default function Post(): JSX.Element {
   return (
     <>
-      <h1>게시글 페이지</h1>
-      <Video />
+      <ContentSection />
+      <CommentSection />
     </>
   );
 }
