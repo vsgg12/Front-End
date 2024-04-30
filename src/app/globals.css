@@ -9,3 +9,71 @@
   font-weight: normal;
   font-style: normal;
 }
+
+* {
+  @apply box-border;
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+.scroll {
+  @apply overflow-x-hidden overflow-y-scroll;
+}
+
+::-webkit-scrollbar {
+  @apply w-[7px];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#ECECEC];
+  /* rounded-[10px] */
+}
+
+.root-bg {
+  @apply h-full w-full bg-[#F8F8F8];
+}
+
+.p-content-pd {
+  @apply p-[44px];
+}
+
+.p-content-mr {
+  @apply mr-[44px];
+}
+
+.p-content-mb {
+  @apply mb-[44px];
+}
+
+.p-content-rounded {
+  @apply rounded-[30px];
+}
+
+.p-content-s-mb {
+  @apply mb-[18px];
+}
+
+.p-content-s-mr {
+  @apply mr-[18px];
+}
+
+.p-content-tag {
+  @apply p-content-s-mr rounded-[150px] border-2 px-[14px] py-[8px] text-[12px];
+}
+
+.p-content-ss-mb {
+  @apply mb-[6px];
+}
+
+.p-last-mb {
+  @apply mb-[150px];
+}
+
+.p-voting-number-element {
+  @apply mr-[10px] text-[22px] font-semibold;
+}
+.p-voing-bar-element {
+  @apply mr-[2px] h-[24px] w-[50px] border-[1.3px] border-[#333333];
+}
