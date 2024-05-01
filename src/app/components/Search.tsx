@@ -1,3 +1,4 @@
+import { GoSearch } from 'react-icons/go';
 export default function Search(): JSX.Element {
   return (
     <>
@@ -12,7 +13,7 @@ export default function Search(): JSX.Element {
               placeholder="제목 혹은 내용 검색"
             />
             <button>
-              <i className="bi bi-search absolute right-5 top-2  text-[#8A1F21]"></i>
+              <GoSearch className="absolute right-5 top-2.5  text-[#8A1F21]" />
             </button>
           </div>
         </div>

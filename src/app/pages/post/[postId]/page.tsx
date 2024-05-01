@@ -21,13 +21,13 @@ export default function PostRead({
         <Search />
         <section className="flex justify-center">
           <div className="w-fit">
-            <header className=" flex flex-row items-center justify-between">
+            <header className="flex flex-row items-center justify-between">
               <PostReturnBtn>글 목록</PostReturnBtn>
               <div className="text-[12px] text-[#909090]">홈{' > '}게시글</div>
             </header>
 
-            <div className="contnet-mb flex flex-row">
-              <div className="p-content-pd p-content-mr p-content-rounded my-[44px] h-[1458px] w-[897px] bg-[#ffffff]">
+            <div className="flex flex-row">
+              <div className="p-content-pd p-content-mr p-content-rounded mb-[44px] h-[1458px] w-[897px] bg-[#ffffff]">
                 <PostHeader />
                 <PostUploadInfo />
                 <iframe
@@ -65,11 +65,11 @@ export default function PostRead({
                 </div>
               </div>
 
-              <div className="p-content-pd p-content-rounded scroll my-[44px] h-[1458px] w-[501px] bg-[#ffffff]">
+              <div className="p-content-pd p-content-rounded scroll mb-[44px] h-[1458px] w-[501px] bg-[#ffffff]">
                 <div>
                   <div className="p-content-s-mb text-[16px]">댓글</div>
                   <div className="flex flex-row">
-                    <div className="mr-[10px] h-[38px] w-[38px] rounded-full bg-[#D9D9D9]"></div>
+                    {/* <div className="mr-[10px] h-[38px] w-[38px] rounded-full bg-[#D9D9D9]"></div> */}
                     <PostCommentInput />
                   </div>
                 </div>

@@ -32,7 +32,8 @@ button {
 }
 
 .root-bg {
-  @apply h-full w-full bg-[#F8F8F8];
+  /* @apply h-full w-full bg-[#F8F8F8]; */
+  @apply h-full w-full bg-[#000000];
 }
 
 .p-content-pd {
