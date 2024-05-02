@@ -78,3 +78,18 @@ button {
 .p-voing-bar-element {
   @apply mr-[2px] h-[24px] w-[50px] border-[1.3px] border-[#333333];
 }
+
+.p-tab-title {
+  @apply mr-[5px] h-[80px] w-[136px]  rounded-t-[10px] text-[#333333];
+}
+
+.p-tab-n-selected {
+  @apply h-[70px] rounded-[10px] bg-[#F8F8F8];
+}
+.p-tab-selected {
+  @apply border-[1.5px] border-b-2 border-[#828282] border-b-[#ffffff] text-[#8A1F21];
+}
+
+.p-tab-content {
+  @apply absolute top-[78.3px] z-0 w-[100%] border-collapse rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[20px] text-[16px] text-[#828282];
+}

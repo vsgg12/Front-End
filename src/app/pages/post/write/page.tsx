@@ -1,6 +1,7 @@
 import PostReturnBtn from '@/app/components/post/PostReturnBtn';
 import PostVidUploadTab from '@/app/components/post/PostVidUploadTab';
 import { IoLinkOutline } from 'react-icons/io5';
+import { IoDocumentOutline } from 'react-icons/io5';
 
 export default function PostWrite() {
   const items = [
@@ -8,6 +9,7 @@ export default function PostWrite() {
       title: '파일 불러오기',
       content: (
         <div className="flex flex-row items-center justify-center">
+          <IoDocumentOutline className="mr-[10px] text-[20px]" />
           <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
         </div>
       ),
@@ -17,8 +19,12 @@ export default function PostWrite() {
       content: (
         <div className="flex flex-row items-center ">
           <div className="flex flex-row items-center justify-center">
-            <IoLinkOutline className="mr-[10px] text-[30px]" />
-            링크를 붙여 넣어주세요
+            <IoLinkOutline className="mr-[10px] text-[25px]" />
+            <input
+              type="text"
+              placeholder="링크를 붙여 넣어주세요"
+              className=" text-[#333333] outline-none"
+            />
           </div>
         </div>
       ),
@@ -27,6 +33,7 @@ export default function PostWrite() {
       title: '썸네일 업로드',
       content: (
         <div className="flex flex-row items-center justify-center">
+          <IoDocumentOutline className="mr-[10px] text-[20px]" />
           <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
         </div>
       ),
@@ -44,9 +51,7 @@ export default function PostWrite() {
             </header>
 
             <div className="p-content-pd p-content-rounded h-[2500px] w-[1440px] bg-[#ffffff]">
-              <div>
-                <PostVidUploadTab items={items} />
-              </div>
+              <PostVidUploadTab items={items} />
             </div>
           </div>
         </section>

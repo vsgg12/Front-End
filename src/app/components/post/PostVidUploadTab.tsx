@@ -19,21 +19,18 @@ export default function PostVidUploadTab({ items }: PostVidUploadTabProps) {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const firstBtnRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    // Focus the button when the component mounts
-    firstBtnRef.current?.focus();
-  }, []);
-
+  //CSS에 따로 정의해놓고 클래스 명만 가져오는 방법으로 바꾸기.
   const changeTabTitleStyle = (index: number) => {
-    return `h-[77px] w-[136px] rounded-t-[20px] border-collapse border-b-[#ffffff] ${
-      selectedTab === index
-        ? 'border-[1.5px] border-[#828282] text-[#8A1F21]'
-        : ''
-    }`;
+    if (selectedTab === index) {
+      console.log(selectedTab === index);
+      return 'p-tab-title p-tab-selected';
+    } else {
+      return 'p-tab-title p-tab-n-selected ';
+    }
   };
 
   const changeTabContentStyle = (index: number) => {
-    return `absolute top-[76px] text-[16px] text-[#828282] z-1 w-[100%] border-[1.5px]  border-[#828282] rounded-[30px] py-[20px] px-[30px] ${selectedTab === index ? '' : 'hidden'}`;
+    return `p-tab-content ${selectedTab === index ? '' : 'hidden'}`;
   };
 
   return (
@@ -47,7 +44,7 @@ export default function PostVidUploadTab({ items }: PostVidUploadTabProps) {
               onClick={() => setSelectedTab(index)}
               className={changeTabTitleStyle(index)}
             >
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex  flex-col items-center justify-center">
                 <div className="text-[30px]">
                   {index === 0 ? (
                     <IoVideocamOutline />
