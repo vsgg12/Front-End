@@ -15,7 +15,7 @@
 }
 
 button {
-  @apply cursor-pointer;
+  /* @apply cursor-pointer; */
 }
 
 .scroll {
@@ -23,73 +23,100 @@ button {
 }
 
 ::-webkit-scrollbar {
-  @apply w-[7px];
+  @apply w-[0.4375rem];
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-[#ECECEC];
-  /* rounded-[10px] */
+  /* rounded-[0.625rem] */
 }
 
 .root-bg {
-  /* @apply h-full w-full bg-[#F8F8F8]; */
-  @apply h-full w-full bg-[#000000];
+  @apply h-full w-full bg-[#F8F8F8];
+  /* @apply h-full w-full bg-[#000000]; */
 }
 
 .p-content-pd {
-  @apply p-[44px];
+  @apply p-11;
 }
 
 .p-content-mr {
-  @apply mr-[44px];
+  @apply mr-11;
 }
 
 .p-content-mb {
-  @apply mb-[44px];
+  @apply mb-11;
 }
 
 .p-content-rounded {
-  @apply rounded-[30px];
+  @apply rounded-[1.875rem];
 }
 
 .p-content-s-mb {
-  @apply mb-[18px];
+  @apply mb-[1.125rem];
 }
 
 .p-content-s-mr {
-  @apply mr-[18px];
+  @apply mr-[1.125rem];
 }
 
 .p-content-tag {
-  @apply p-content-s-mr rounded-[150px] border-2 px-[14px] py-[8px] text-[12px];
+  @apply p-content-s-mr rounded-full border-2 px-[0.875rem] py-[0.5rem] text-xs;
 }
 
 .p-content-ss-mb {
-  @apply mb-[6px];
+  @apply mb-[0.375rem];
 }
 
 .p-last-mb {
-  @apply mb-[150px];
+  @apply mb-[9.375rem];
 }
 
+.p-voting-champ-dot {
+  @apply mx-[1.125em] h-[1em] w-[1em] rounded-full;
+}
 .p-voting-number-element {
-  @apply mr-[10px] text-[22px] font-semibold;
+  @apply mr-[0.625em] text-[1.375em] font-semibold;
 }
 .p-voing-bar-element {
-  @apply mr-[2px] h-[24px] w-[50px] border-[1.3px] border-[#333333];
+  @apply mr-[0.125em] h-[1.5em] w-[3.125em] border-[0.08125em] border-[#333333];
 }
 
 .p-tab-title {
-  @apply mr-[5px] h-[80px] w-[136px]  rounded-t-[10px] text-[#333333];
+  @apply mr-[0.3125rem] h-[5rem] w-[8.5rem] rounded-t-[0.625rem] text-[#333333];
 }
 
 .p-tab-n-selected {
-  @apply h-[70px] rounded-[10px] bg-[#F8F8F8];
+  @apply h-[4.375rem] rounded-full bg-[#F8F8F8];
 }
 .p-tab-selected {
-  @apply border-[1.5px] border-b-2 border-[#828282] border-b-[#ffffff] text-[#8A1F21];
+  @apply border-[0.09375rem] border-b-2 border-[#828282] border-b-[#ffffff] text-[#8A1F21];
 }
 
 .p-tab-content {
-  @apply absolute top-[78.3px] z-0 w-[100%] border-collapse rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[20px] text-[16px] text-[#828282];
+  @apply absolute top-[4.89375rem] z-0 w-full border-collapse rounded-[1.875rem] border-[0.09375rem] border-[#828282] px-[1.875rem] py-[1.25rem] text-lg text-[#828282];
+}
+
+.p-font-color-default {
+  @apply text-[#333333];
+}
+
+.p-input-hidden {
+  @apply absolute h-0 w-0 overflow-hidden border-0 p-0;
+}
+
+.p-position {
+  @apply mr-[0.625rem] flex cursor-pointer select-none flex-row items-center rounded-[1.875rem] border-[0.09375rem] px-[1.25rem] py-[0.3125rem] text-xs;
+}
+
+.p-position-selected {
+  @apply border-[#8A1F21] text-[#8A1F21];
+}
+
+.p-position-n-selected {
+  @apply border-[#828282] text-[#828282];
+}
+
+.p-select {
+  @apply mr-[0.625rem] grow rounded-[1.875rem] border-[0.0625rem] border-[#333333] px-[1.25rem] py-[0.3125rem] text-xs outline-none;
 }
