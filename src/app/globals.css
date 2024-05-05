@@ -32,7 +32,7 @@ button {
 }
 
 .root-bg {
-  @apply h-full w-full bg-[#F8F8F8];
+  @apply h-full w-full bg-[#f3f3f3];
   /* @apply h-full w-full bg-[#000000]; */
 }
 
@@ -119,4 +119,15 @@ button {
 
 .p-select {
   @apply mr-[0.625rem] grow rounded-[1.875rem] border-[0.0625rem] border-[#333333] px-[1.25rem] py-[0.3125rem] text-xs outline-none;
+}
+
+.hd-items {
+  @apply mb-1 mr-[1rem] p-0.5 text-[2rem] text-[#8A1F21];
+}
+
+.hd-items-desc {
+}
+
+.hd-items:hover {
+  @apply rounded-full bg-white;
 }
