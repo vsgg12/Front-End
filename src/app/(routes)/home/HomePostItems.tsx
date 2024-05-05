@@ -5,10 +5,10 @@ import PostVotingChampList from '../post/PostVotingChampList';
 import PostVotingGraph from '../post/PostVotingGraph';
 import PostTag from '../post/PostTag';
 
-export default function MainPostItems() {
+export default function HomePostItems() {
   return (
     <>
-      <Link href={`/pages/post/${1}/`}>
+      <Link href={`/post/${1}/`}>
         <div className="p-content-pd p-content-mb h-fit w-[1440px] rounded-[30px] bg-[#ffffff]">
           <PostHeader />
           <PostUploadInfo />

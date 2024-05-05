@@ -1,7 +1,6 @@
 'use client';
-import PostReturnBtn from '@/app/components/post/PostReturnBtn';
-import PostVidUploadTab from '@/app/components/post/PostVidUploadTab';
 import Logo from '@/app/components/Logo';
+import PostReturnBtn from '../PostReturnBtn';
 
 import { IoLinkOutline } from 'react-icons/io5';
 import { IoDocumentOutline } from 'react-icons/io5';

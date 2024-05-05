@@ -2,6 +2,10 @@ export interface IPostReadParams {
   postId: string;
 }
 
+export interface IPostReturnBtnChildren {
+  children: React.ReactNode;
+}
+
 export interface IPostReadSearchParams {}
 
 export interface IPostWriteParams {

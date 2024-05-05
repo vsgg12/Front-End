@@ -1,12 +1,13 @@
 import Search from '@/app/components/Search';
-import PostReturnBtn from '@/app/components/post/PostReturnBtn';
-import PostHeader from '@/app/components/post/PostHeader';
-import PostUploadInfo from '@/app/components/post/PostUploadInfo';
-import PostTag from '@/app/components/post/PostTag';
-import PostComment from '@/app/components/post/PostComment';
-import PostCommentInput from '@/app/components/post/PostCommentInput';
-import PostVotingChampList from '@/app/components/post/PostVotingChampList';
-import PostVotingGraph from '@/app/components/post/PostVotingGraph';
+
+import PostReturnBtn from '../PostReturnBtn';
+import PostHeader from '../PostHeader';
+import PostUploadInfo from '../PostUploadInfo';
+import PostTag from '../PostTag';
+import PostCommentInput from '../PostCommentInput';
+import PostComment from '../PostComment';
+import PostVotingChampList from '../PostVotingChampList';
+import PostVotingGraph from '../PostVotingGraph';
 
 import { IPostReadParams } from '@/app/types/post';
 
