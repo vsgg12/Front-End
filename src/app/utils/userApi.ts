@@ -5,7 +5,7 @@ import {
   createPatchRequestOptions,
   createPostRequestOptions,
   createPutRequestOptions,
-} from './requestOptions';
+} from './common/requestOptions';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 

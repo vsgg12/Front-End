@@ -5,7 +5,8 @@ export default function Header(): JSX.Element {
   return (
     <>
       <div className="p-right-20 absolute right-10 top-10 flex flex-row items-center justify-end">
-        {/* <button className="">로그인</button> */}
+        <Link href={'/auth/signIn'}>로그인</Link>
+
         <div className="flex flex-col ">
           <Link className="hd-items " href={`/post/write`}>
             <PiListPlus className="text-[31px]" />
