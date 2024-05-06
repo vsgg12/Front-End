@@ -5,7 +5,7 @@ import SignUpTerm from '@/app/components/signUp/SignUpTerm';
 
 export default function SignUp() {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-10">
+    <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
       <div className="font-['SBAggroB'] text-4xl text-[#8A1F21]">VS.GG</div>
       <div className="flex w-full items-center justify-center px-40">
         <div className="flex w-1/2 items-center">

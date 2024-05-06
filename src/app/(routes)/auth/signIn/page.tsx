@@ -13,7 +13,7 @@ export default function SignIn() {
       </div>
       <div className="flex gap-2">
         <div>아직 VS.GG 멤버가 아니신가요?</div>
-        <Link href="/pages/auth/signUp" className="text-[#8A1F21]">
+        <Link href="/pages/signUp" className="text-[#8A1F21]">
           회원가입
         </Link>
       </div>
