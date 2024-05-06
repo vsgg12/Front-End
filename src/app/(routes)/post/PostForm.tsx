@@ -1,16 +1,25 @@
-import { IoVideocamOutline } from 'react-icons/io5';
-import { IoEaselOutline } from 'react-icons/io5';
 import { SlPicture } from 'react-icons/sl';
-import { IoCloseOutline } from 'react-icons/io5';
-import { IoCompassOutline } from 'react-icons/io5';
-import { IoAddCircleOutline } from 'react-icons/io5';
-import { IoSaveOutline } from 'react-icons/io5';
-import { IoLinkOutline } from 'react-icons/io5';
-import { IoDocumentOutline } from 'react-icons/io5';
+import { IoIosClose } from 'react-icons/io';
+import {
+  IoVideocamOutline,
+  IoEaselOutline,
+  IoLinkOutline,
+  IoCompassOutline,
+  IoAddCircleOutline,
+  IoSaveOutline,
+  IoDocumentOutline,
+  IoCloseOutline,
+} from 'react-icons/io5';
 
 import { useRef, useEffect, useState } from 'react';
 import { ChampionData } from '@/app/types/post';
-import { writePost } from '@/app/utils/postApi';
+
+interface IGameInfoProps {
+  id: number;
+  position: string;
+  champion: string;
+  tier: string;
+}
 
 const tabs = [
   {
@@ -49,31 +58,11 @@ const tabs = [
 ];
 
 const positions = [
-  {
-    id: 'top',
-    value: 'top',
-    content: '탑',
-  },
-  {
-    id: 'mid',
-    value: 'mid',
-    content: '미드',
-  },
-  {
-    id: 'jungle',
-    value: 'jungle',
-    content: '정글',
-  },
-  {
-    id: 'onedeal',
-    value: 'onedeal',
-    content: '원딜',
-  },
-  {
-    id: 'support',
-    value: 'support',
-    content: '서폿',
-  },
+  { id: 'top', value: 'top', content: '탑' },
+  { id: 'mid', value: 'mid', content: '미드' },
+  { id: 'jungle', value: 'jungle', content: '정글' },
+  { id: 'onedeal', value: 'onedeal', content: '원딜' },
+  { id: 'support', value: 'support', content: '서폿' },
 ];
 
 const tiers = [
@@ -90,14 +79,60 @@ const tiers = [
   { id: 'challenger', value: 'challenger', content: '챌린저' },
 ];
 
+const intialIngameInfos: IGameInfoProps[] = [
+  { id: 0, position: '', champion: '', tier: '' },
+  { id: 1, position: '', champion: '', tier: '' },
+];
+
 export default function PostForm() {
+  const [ingameInfos, setIngameInfos] =
+    useState<IGameInfoProps[]>(intialIngameInfos);
+  const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
+  const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({});
+  const [selectedTab, setSelectedTab] = useState<number>(0);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [selectedTab, setSelectedTab] = useState<number>(0);
-  const [selectedPos, setSelectedPos] = useState<number>(0);
-  const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
+  const changeTabTitleStyle = (index: number): string => {
+    return selectedTab === index
+      ? 'p-tab-title p-tab-selected'
+      : 'p-tab-title p-tab-n-selected';
+  };
 
-  const getLOLChampList = () => {
+  const changeTabContentStyle = (index: number): string => {
+    return `p-tab-content ${selectedTab === index ? '' : 'hidden'}`;
+  };
+
+  const changePositionRadioStyle = (index: number, checked: boolean) => {
+    return checked
+      ? 'p-position p-position-selected'
+      : 'p-position p-position-n-selected';
+  };
+
+  const addIngameInfo = (): void => {
+    setIngameInfos([
+      ...ingameInfos,
+      { id: ingameInfos.length, position: '', champion: '', tier: '' },
+    ]);
+  };
+
+  const removeIngameInfo = (index: number): void => {
+    setIngameInfos(ingameInfos.filter((_, idx) => idx !== index));
+  };
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.placeholder =
+        '[게시글 내용 작성 가이드]\n\n' +
+        '1. 리플레이 영상 업로드는 필수! 판결을 받고 싶은 부분만 편집해 업로드 하기\n' +
+        '- 파일 크기 제한 : 500MB\n' +
+        '- 파일 형식: mp4\n' +
+        "2. 게임 상황의 이해를 돕기 위해 '플레이 정보를 담은 전적 캡처 이미지'를 첨부하기\n" +
+        '- 파일 크기 제한 : 2MB\n' +
+        '- 파일 형식: jpg, jpeg, png\n' +
+        '3. 상황 설명은 자세하게 글로 작성하기\n' +
+        '- 문자 수 제한 : 1000자 이내\n';
+    }
+
     fetch(
       'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
     )
@@ -114,51 +149,11 @@ export default function PostForm() {
         setChampions((prev) => [...prev, ...sortedChampions]);
       })
       .catch((error) => console.error('Error loading the champions:', error));
-  };
-
-  const setTextAreaPlaceHoler = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.placeholder =
-        '[게시글 내용 작성 가이드]\n\n' +
-        '1. 리플레이 영상 업로드는 필수! 판결을 받고 싶은 부분만 편집해 업로드 하기\n' +
-        '- 파일 크기 제한 : 500MB\n' +
-        '- 파일 형식: mp4\n' +
-        "2. 게임 상황의 이해를 돕기 위해 '플레이 정보를 담은 전적 캡처 이미지'를 첨부하기\n" +
-        '- 파일 크기 제한 : 2MB\n' +
-        '- 파일 형식: jpg, jpge, png\n' +
-        '3. 상황 설명은 자세하게 글로 작성하기\n' +
-        '- 문자 수 제한 : 1000자 이내\n';
-    }
-  };
-
-  const changeTabTitleStyle = (index: number) => {
-    if (selectedTab === index) {
-      return 'p-tab-title p-tab-selected';
-    } else {
-      return 'p-tab-title p-tab-n-selected';
-    }
-  };
-
-  const changeTabContentStyle = (index: number) => {
-    return `p-tab-content ${selectedTab === index ? '' : 'hidden'}`;
-  };
-
-  const changePositionRadioStyle = (index: number) => {
-    if (selectedPos === index) {
-      return 'p-position p-position-selected';
-    } else {
-      return 'p-position p-position-n-selected';
-    }
-  };
-
-  useEffect(() => {
-    setTextAreaPlaceHoler();
-    getLOLChampList();
   }, []);
 
   return (
     <>
-      <form action={writePost}>
+      <form>
         <div className="p-content-mb relative h-[150px]">
           <div className="absolute z-10 ml-[30px] ">
             {tabs.map((tab, index) => (
@@ -247,49 +242,80 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="mb-[20px] flex flex-col rounded-[30px] border-[1.5px] border-[#828282] p-[20px]">
-          <div className="mb-[15px] text-[12px] text-[#333333]">
-            본인의 챔피언, 포지션, 티어를 선택해주세요.
-          </div>
-          <div className="flex w-[100%] items-center">
-            {positions.map((pos, index) => (
-              <div key={index}>
-                <input
-                  type="radio"
-                  name="position"
-                  id={pos.id}
-                  value={pos.value}
-                  className="p-input-hidden"
-                />
-                <label
-                  htmlFor={pos.id}
-                  onClick={() => setSelectedPos(index)}
-                  className={changePositionRadioStyle(index)}
-                >
-                  <IoCompassOutline className="mr-[5px] text-[15px]" />
-                  <div>{pos.content}</div>
-                </label>
+        {ingameInfos.map((ingameInfo, index) => (
+          <div
+            key={index}
+            className="mb-[20px] flex flex-col rounded-[30px] border-[1.5px] border-[#828282] p-[20px]"
+          >
+            <div className="flex flex-row justify-between">
+              <div className="mb-[15px] text-[12px] text-[#333333]">
+                본인의 챔피언, 포지션, 티어를 선택해주세요.
               </div>
-            ))}
-            <select id="champions-select" className="p-select">
-              {champions.map((champion, index) => (
-                <option key={index} value={champion}>
-                  {champion}
-                </option>
+              {ingameInfo.id > 1 ? (
+                <IoIosClose
+                  onClick={() => removeIngameInfo(index)}
+                  className="cursor-pointer text-[23px]"
+                />
+              ) : (
+                ''
+              )}
+            </div>
+
+            <div className="flex w-[100%] items-center">
+              {positions.map((pos, index) => (
+                <div key={index}>
+                  <input
+                    type="radio"
+                    name={`position-${ingameInfo.id}`}
+                    id={`${pos.id}-${ingameInfo.id}`}
+                    value={pos.value}
+                    className="p-input-hidden"
+                    onChange={() => {
+                      const updatedSelectedPos = { ...selectedPos };
+                      updatedSelectedPos[ingameInfo.id] = index;
+                      setSelectedPos(updatedSelectedPos);
+                    }}
+                    checked={selectedPos[ingameInfo.id] === index}
+                  />
+                  <label
+                    htmlFor={`${pos.id}-${ingameInfo.id}`}
+                    className={changePositionRadioStyle(
+                      index,
+                      selectedPos[ingameInfo.id] === index,
+                    )}
+                  >
+                    <IoCompassOutline className="mr-[5px] text-[15px]" />
+                    <div>{pos.content}</div>
+                  </label>
+                </div>
               ))}
-            </select>
-            <select id="tiers-select" className="p-select">
-              {tiers.map((tier, index) => (
-                <option key={index} id={tier.id} value={tier.value}>
-                  {tier.content}
-                </option>
-              ))}
-            </select>
+              <select id="champions-select" className="p-select">
+                {champions.map((champion, index) => (
+                  <option key={index} value={champion}>
+                    {champion}
+                  </option>
+                ))}
+              </select>
+              <select id="tiers-select" className="p-select">
+                {tiers.map((tier, index) => (
+                  <option key={index} id={tier.id} value={tier.value}>
+                    {tier.content}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="flex cursor-pointer flex-row justify-center text-[50px] text-[#333333]">
-          <IoAddCircleOutline />
-        </div>
+        ))}
+
+        {ingameInfos.length < 5 && (
+          <div
+            onClick={addIngameInfo}
+            className="flex cursor-pointer flex-row justify-center text-[50px] text-[#333333]"
+          >
+            <IoAddCircleOutline />
+          </div>
+        )}
+
         <div className="flex flex-row justify-end">
           <button
             type="submit"

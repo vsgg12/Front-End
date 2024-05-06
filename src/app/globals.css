@@ -44,24 +44,20 @@ button {
   @apply mr-11;
 }
 
-.p-content-mb {
-  @apply mb-11;
+.p-content-s-mr {
+  @apply mr-[1.125rem];
 }
 
 .p-content-rounded {
   @apply rounded-[1.875rem];
 }
 
+.p-content-mb {
+  @apply mb-11;
+}
+
 .p-content-s-mb {
   @apply mb-[1.125rem];
-}
-
-.p-content-s-mr {
-  @apply mr-[1.125rem];
-}
-
-.p-content-tag {
-  @apply p-content-s-mr rounded-full border-2 px-[0.875rem] py-[0.5rem] text-xs;
 }
 
 .p-content-ss-mb {
@@ -70,6 +66,10 @@ button {
 
 .p-last-mb {
   @apply mb-[9.375rem];
+}
+
+.p-content-tag {
+  @apply p-content-s-mr rounded-full border-2 px-[0.875rem] py-[0.5rem] text-xs;
 }
 
 .p-voting-champ-dot {
@@ -130,4 +130,23 @@ button {
 
 .hd-items:hover {
   @apply rounded-full bg-white;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 30px;
+  padding-bottom: 8px;
+  background: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
+  animation: l2 2s linear infinite;
+}
+.loader:before {
+  content: 'Loading...';
+}
+@keyframes l2 {
+  to {
+    background-size: 100% 3px;
+  }
 }
