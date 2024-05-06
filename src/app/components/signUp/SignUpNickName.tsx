@@ -1,3 +1,5 @@
+const nickNameMock = ['junyoung'];
+
 export default function SignUpNickName() {
   return (
     <div className="flex flex-col gap-2">
