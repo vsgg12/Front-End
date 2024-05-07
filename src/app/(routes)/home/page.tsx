@@ -4,9 +4,14 @@ import Search from '@/app/components/Search';
 import PostReturnBtn from '../post/PostReturnBtn';
 import { PiListPlus } from 'react-icons/pi';
 import HomePostItems from './HomePostItems';
+import { useEffect } from 'react';
 
 const textPosts = [{}];
 export default function Home(): JSX.Element {
+  useEffect(() => {
+    console.log('home 렌더');
+    //voting한 postId === postId면 해제하는 코드
+  }, []);
   return (
     <>
       <main>

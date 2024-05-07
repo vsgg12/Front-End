@@ -1,9 +1,14 @@
 'use client';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { SiNaver } from 'react-icons/si';
 
 export default function SignIn() {
+  useEffect(() => {
+    console.log('로그인 페이지 렌더');
+    //voting한 postId === postId면 해제하는 코드
+  }, []);
   const naverLogin = () => {
     signIn('naver', { redirect: true, callbackUrl: '/' });
   };

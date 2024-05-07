@@ -1,9 +1,15 @@
+'use client';
 import SignUpEmail from '@/app/components/signUp/SignUpEmail';
 import SignUpNickName from '@/app/components/signUp/SignUpNickName';
 import SignUpPhone from '@/app/components/signUp/SignUpPhone';
 import SignUpTerm from '@/app/components/signUp/SignUpTerm';
+import { useEffect } from 'react';
 
 export default function SignUp() {
+  useEffect(() => {
+    console.log('회원가입 페이지 렌더');
+    //voting한 postId === postId면 해제하는 코드
+  }, []);
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
       <div className="font-['SBAggroB'] text-4xl text-[#8A1F21]">VS.GG</div>

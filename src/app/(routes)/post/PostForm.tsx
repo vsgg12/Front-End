@@ -13,6 +13,7 @@ import {
 
 import { useRef, useEffect, useState } from 'react';
 import { ChampionData } from '@/app/types/post';
+import { fetchDataWithAuth } from '@/app/utils/authApi';
 
 interface IGameInfoProps {
   id: number;
@@ -120,6 +121,8 @@ export default function PostForm() {
   };
 
   useEffect(() => {
+    console.log('postForm 렌더');
+
     if (textAreaRef.current) {
       textAreaRef.current.placeholder =
         '[게시글 내용 작성 가이드]\n\n' +

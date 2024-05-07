@@ -10,6 +10,7 @@ import { testMember, testPost, testVid } from '@/app/test/dummy';
 export default function HomePostItems() {
   const [isVoted, setIsVoted] = useState(false);
   useEffect(() => {
+    console.log('homeitem 렌더');
     //voting한 postId === postId면 해제하는 코드
   }, []);
 

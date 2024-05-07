@@ -1,3 +1,4 @@
+'use client';
 import Search from '@/app/components/Search';
 
 import PostReturnBtn from '../PostReturnBtn';
@@ -10,12 +11,18 @@ import PostVotingChampList from '../PostVotingChampList';
 import PostVotingGraph from '../PostVotingGraph';
 
 import { IPostReadParams } from '@/app/types/post';
+import { useEffect } from 'react';
 
 export default function PostRead({
   params,
 }: {
   params: IPostReadParams;
 }): JSX.Element {
+  useEffect(() => {
+    console.log('post read page 렌더');
+    //voting한 postId === postId면 해제하는 코드
+  }, []);
+
   return (
     <>
       <main>
