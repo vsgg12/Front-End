@@ -13,7 +13,7 @@ export async function signIn(): Promise<any> {
   return response.json();
 }
 
-export async function fetchDataWithAuth(): Promise<any> {
+export async function checkSession(): Promise<any> {
   const session = await getSession();
 
   if (!session) {

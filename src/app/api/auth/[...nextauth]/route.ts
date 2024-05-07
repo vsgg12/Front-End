@@ -1,18 +1,32 @@
-import { NAVER_CLIENT_ID, NAVER_CLIENT_SECERET } from '@/app/constants';
+import {
+  NAVER_CLIENT_ID,
+  NAVER_CLIENT_SECRET,
+  NEXTAUTH_SECRET,
+} from '@/app/constants';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
 
 const handler = NextAuth({
+  pages: {
+    signIn: '/auth/signIn',
+    signOut: '/',
+    newUser: '/auth/signUp',
+  },
+  secret: NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     NaverProvider({
       clientId: NAVER_CLIENT_ID!,
-      clientSecret: NAVER_CLIENT_SECERET!,
+      clientSecret: NAVER_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
       if (typeof account?.accessToken === 'string') {
         token.accessToken = account.accessToken;
+        console.log(token.accessToken);
       }
       return token;
     },

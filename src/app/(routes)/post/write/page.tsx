@@ -4,8 +4,24 @@ import PostReturnBtn from '../PostReturnBtn';
 
 import PostUploadDesc from '../PostUploadDesc';
 import PostForm from '../PostForm';
+import { useEffect } from 'react';
+import { checkSession } from '@/app/utils/authApi';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function PostWrite() {
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session) {
+      alert('로그인이 필요합니다');
+      signIn();
+    }
+    console.log('글쓰기 페이지 렌더');
+  }, [status, session]);
+
+  if (!session) return null;
+
   return (
     <>
       <main>
