@@ -26,7 +26,9 @@ export default function Header(): JSX.Element {
         <button className="hd-items">
           <IoMdNotificationsOutline />
         </button>
-        <button className=" hd-items h-[2rem] w-[2rem] rounded-full border-2 border-[#8A1F21] bg-[#C3C3C3]"></button>
+        <Link className="hd-items" href={`/myPage`}>
+          <button className=" hd-items h-[2rem] w-[2rem] rounded-full border-2 border-[#8A1F21] bg-[#C3C3C3]"></button>
+        </Link>
       </div>
     </>
   );
