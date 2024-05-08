@@ -28,12 +28,12 @@ export default function Header(): JSX.Element {
               <IoMdNotificationsOutline />
             </button>
             <button className=" hd-items mr-[1.5rem] h-[2rem] w-[2rem] rounded-full border-2 border-[#8A1F21] bg-[#C3C3C3]"></button>
-            <div
+            <button
               className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]"
               onClick={() => signOut()}
             >
               로그아웃
-            </div>
+            </button>
           </div>
         ) : (
           <Link href={'/auth/signIn'}>

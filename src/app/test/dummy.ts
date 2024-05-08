@@ -5,7 +5,7 @@ export const testMember = {
 
 export const testPost = {
   postId: '0',
-  title: '바론 한타 맞다이',
+  title: '바론 한타 갔어야 한다 말았어야 한다',
   content: `
     Lorem Ipsum is simply dummy text of the printing and typesetting
     industry. Lorem Ipsum has been the industry's standard dummy

@@ -13,9 +13,11 @@ export function createGetRequestOptions(): RequestOptions {
 }
 
 // POST 요청을 위한 옵션 생성
+//body:Record<string, unknown>
 export function createPostRequestOptions(
-  body: Record<string, unknown>,
+  body: ICreateMemberProps,
 ): RequestOptions {
+  console.log(body);
   return {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

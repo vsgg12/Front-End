@@ -36,6 +36,29 @@ button {
   /* @apply h-full w-full bg-[#000000]; */
 }
 
+.hd-items {
+  @apply p-0.5 text-[2rem] text-[#8A1F21];
+}
+
+.hd-items-desc {
+}
+
+.hd-items:hover {
+  @apply rounded-full bg-white;
+}
+
+.su-i-blocked {
+  @apply select-none rounded-full bg-[#D9D9D9] px-5 py-3 text-[#7B7B7B] outline-none;
+}
+
+.su-i {
+  @apply grow rounded-full border-2 border-[#8A1F21] px-5 py-3 focus:outline-none;
+}
+
+.su-btn {
+  @apply rounded-full border-2 border-[#8A1F21] p-1 px-4 py-2 font-bold;
+}
+
 .p-content-pd {
   @apply p-11;
 }
@@ -119,17 +142,6 @@ button {
 
 .p-select {
   @apply mr-[0.625rem] grow rounded-[1.875rem] border-[0.0625rem] border-[#333333] px-[1.25rem] py-[0.3125rem] text-xs outline-none;
-}
-
-.hd-items {
-  @apply p-0.5 text-[2rem] text-[#8A1F21];
-}
-
-.hd-items-desc {
-}
-
-.hd-items:hover {
-  @apply rounded-full bg-white;
 }
 
 /* HTML: <div class="loader"></div> */

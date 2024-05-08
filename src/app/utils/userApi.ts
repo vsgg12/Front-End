@@ -1,3 +1,4 @@
+'use server';
 import { NEXT_PUBLIC_API_URL } from '../constants';
 import {
   createDeleteRequestOptions,
@@ -6,6 +7,7 @@ import {
   createPostRequestOptions,
   createPutRequestOptions,
 } from './common/requestOptions';
+import convertMemberFormData from './data/memberData';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
@@ -17,9 +19,11 @@ export async function fetchData(): Promise<any> {
 }
 
 // 사용자 생성 함수
-export async function createUser(data: Record<string, unknown>): Promise<any> {
-  const requestOptions = createPostRequestOptions(data);
-  const response = await fetch(`${API_URL}/users`, requestOptions);
+//Record<string, unknown>
+export async function createUser(data: ICreateMemberProps): Promise<any> {
+  const memberData = convertMemberFormData(data);
+  const requestOptions = createPostRequestOptions(memberData);
+  const response = await fetch(`${API_URL}/users/signup`, requestOptions);
   return response.json();
 }
 

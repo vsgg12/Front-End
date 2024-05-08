@@ -6,7 +6,6 @@ import { PiListPlus } from 'react-icons/pi';
 import HomePostItems from './HomePostItems';
 import { useEffect } from 'react';
 
-const textPosts = [{}];
 export default function Home(): JSX.Element {
   useEffect(() => {
     console.log('home 렌더');
