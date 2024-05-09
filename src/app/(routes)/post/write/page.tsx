@@ -15,16 +15,16 @@ export default function PostWrite() {
     formState: { errors },
   } = useForm<ICreateMemberProps>();
 
-  useEffect(() => {
-    if (status === 'loading') return;
-    if (!session) {
-      alert('로그인이 필요합니다');
-      signIn();
-    }
-    console.log('글쓰기 페이지 렌더');
-  }, [status, session]);
+  // useEffect(() => {
+  //   if (status === 'loading') return;
+  //   if (!session) {
+  //     alert('로그인이 필요합니다');
+  //     signIn();
+  //   }
+  //   console.log('글쓰기 페이지 렌더');
+  // }, [status, session]);
 
-  if (!session) return null;
+  // if (!session) return null;
 
   return (
     <>

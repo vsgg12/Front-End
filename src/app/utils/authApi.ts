@@ -14,25 +14,25 @@ export async function signIn(): Promise<any> {
   return response.json();
 }
 
-export async function checkSession(): Promise<any> {
-  const session = await getSession();
+// export async function checkSession(): Promise<any> {
+//   const session = await getSession();
 
-  if (!session) {
-    throw new Error('No session found, user is probably not logged in.');
-  }
+//   if (!session) {
+//     throw new Error('No session found, user is probably not logged in.');
+//   }
 
-  try {
-    const response = await fetch(`${API_URL}/auth`, {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Fetching error:', error);
-    throw error;
-  }
-}
+//   try {
+//     const response = await fetch(`${API_URL}/auth`, {
+//       headers: {
+//         Authorization: `Bearer ${session.accessToken}`,
+//       },
+//     });
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     return await response.json();
+//   } catch (error) {
+//     console.error('Fetching error:', error);
+//     throw error;
+//   }
+// }

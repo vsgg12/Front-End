@@ -18,7 +18,15 @@ export async function fetchData(): Promise<any> {
   return response.json();
 }
 
-// 사용자 생성 함수
+//로그인 함수
+export async function signIn(): Promise<any> {
+  const requestOptions = createGetRequestOptions();
+  const response = await fetch(`${API_URL}/signin`, requestOptions);
+  console.log(response);
+  return response.json();
+}
+
+//(회원가입) 사용자 생성 함수
 //Record<string, unknown>
 export async function createUser(data: ICreateMemberProps): Promise<any> {
   const memberData = convertMemberFormData(data);
