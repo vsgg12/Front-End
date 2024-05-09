@@ -40,6 +40,10 @@ export default function RootLayout({
           defer
           src="https://cdn.swygbro.com/public/widget/swyg-widget.js"
         ></script>
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        ></meta>
       </head>
       <body className={inter.className}>
         <AuthSession>
