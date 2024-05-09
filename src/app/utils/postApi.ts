@@ -17,8 +17,8 @@ export async function getPost(postId: string) {
   console.log(postId);
 }
 
-export async function createPost(data: Record<string, unknown>): Promise<any> {
-  const postFormData = {};
+// /Record<string, unknown>
+export async function createPost(data: ICreateMemberProps): Promise<any> {
   const requestOptions = createPostRequestOptions(data);
   const response = await fetch(`${API_URL}/users`, requestOptions);
   return response.json();
