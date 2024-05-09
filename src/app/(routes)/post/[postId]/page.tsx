@@ -84,7 +84,7 @@ export default function PostRead({
                 <PostVotingChampList />
                 <div className="flex grow flex-col items-center justify-center">
                   <div className="mb-[3rem] text-[20px]">
-                    이 게임의 과실의 몇 대 몇~?
+                    이 게임의 과실은 몇 대 몇~?
                   </div>
                   <PostVotingGraph />
                   <div className="text-[12px] text-[#7B7B7B]">
