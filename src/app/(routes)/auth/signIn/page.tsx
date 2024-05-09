@@ -1,5 +1,5 @@
 'use client';
-import { signIn } from 'next-auth/react';
+import { signIn } from '@/app/utils/authApi';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { SiNaver } from 'react-icons/si';
@@ -10,7 +10,10 @@ export default function SignIn() {
     //voting한 postId === postId면 해제하는 코드
   }, []);
   const naverLogin = () => {
-    signIn('naver', { redirect: true, callbackUrl: '/' });
+    // signIn('naver', { redirect: true, callbackUrl: '/' });
+    signIn()
+      .then(() => console.log('로그인에 성공했습니다.'))
+      .catch(() => console.log('로그인에 실패했습니다.'));
   };
 
   return (

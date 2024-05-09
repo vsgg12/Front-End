@@ -9,7 +9,8 @@ const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
 export async function signIn(): Promise<any> {
   const requestOptions = createGetRequestOptions();
-  const response = await fetch(`${API_URL}/data`, requestOptions);
+  const response = await fetch(`${API_URL}/signin`, requestOptions);
+  console.log(response);
   return response.json();
 }
 
