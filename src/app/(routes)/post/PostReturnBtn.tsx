@@ -1,4 +1,4 @@
-import { IPostReturnBtnChildren } from '@/app/types/component';
+import { IPostReturnBtnChildren } from '@/app/types/post';
 
 export default function PostReturnBtn({
   children,
