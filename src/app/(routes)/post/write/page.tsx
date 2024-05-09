@@ -1,15 +1,19 @@
 'use client';
 import Logo from '@/app/components/Logo';
 import PostReturnBtn from '../PostReturnBtn';
-
-import PostUploadDesc from '../PostUploadDesc';
 import PostForm from '../PostForm';
 import { useEffect } from 'react';
-import { checkSession } from '@/app/utils/authApi';
 import { signIn, useSession } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
 
 export default function PostWrite() {
   const { data: session, status } = useSession();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ICreateMemberProps>();
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -34,10 +38,7 @@ export default function PostWrite() {
               <PostReturnBtn>뒤로 가기</PostReturnBtn>
               <div className="text-[12px] text-[#909090]">홈{' > '}게시글</div>
             </header>
-            <div className="p-content-pd p-content-rounded mb-[200px] h-fit w-[1440px] bg-[#ffffff]">
-              <PostUploadDesc />
-              <PostForm />
-            </div>
+            <PostForm />
           </div>
         </section>
       </main>
