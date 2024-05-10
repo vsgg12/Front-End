@@ -7,13 +7,14 @@ import {
 import convertMemberFormData from './data/memberData';
 
 // const API_URL: string = NEXT_PUBLIC_API_URL || '';\
-const API_URL: string = TEST_URL || '';
+const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
 //로그인 함수
 export async function signIn(): Promise<any> {
   try {
     const requestOptions = createGetRequestOptions();
     const response = await fetch(`${API_URL}/users/signin`, requestOptions);
+    console.log(response);
     return response.json();
   } catch (error) {
     console.log(error);

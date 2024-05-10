@@ -1,14 +1,11 @@
 'use client';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo, LegacyRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
 import PostUploadDesc from './PostUploadDesc';
+import ForwardedRefReactQuill from './FowardedRefReactQuill';
+// import type ReactQuill from 'react-quill';
 
-// import { SlPicture } from 'react-icons/sl';
 import { IoIosClose } from 'react-icons/io';
 import {
   IoVideocamOutline,
@@ -20,6 +17,27 @@ import {
   IoDocumentOutline,
   IoCloseOutline,
 } from 'react-icons/io5';
+import ReactQuill from 'react-quill';
+import dynamic from 'next/dynamic';
+
+interface IWrappedComponent extends React.ComponentProps<typeof ReactQuill> {
+  forwardedRef: LegacyRef<ReactQuill>;
+}
+
+const ReactQuillBase = dynamic(
+  async () => {
+    const { default: RQ } = await import('react-quill');
+
+    function QuillJS({ forwardedRef, ...props }: IWrappedComponent) {
+      return <RQ ref={forwardedRef} {...props} />;
+    }
+
+    return QuillJS;
+  },
+  {
+    ssr: false,
+  },
+);
 
 export default function PostForm() {
   const positions = [
@@ -50,11 +68,13 @@ export default function PostForm() {
     { id: 1, position: '', champion: '', tier: '' },
   ];
 
-  const modules = {
-    toolbar: {
-      container: [['image']],
-    },
-  };
+  const modules = useMemo(() => {
+    return {
+      toolbar: {
+        container: [['image']],
+      },
+    };
+  }, []);
 
   const tabs = [
     {
@@ -100,7 +120,18 @@ export default function PostForm() {
   const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
   const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({});
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  // const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const quillRef = useRef<ReactQuill>(null);
+  const quillPlaceHolder =
+    '[게시글 내용 작성 가이드]\n\n' +
+    '1. 리플레이 영상 업로드는 필수! 판결을 받고 싶은 부분만 편집해 업로드 하기\n' +
+    '- 파일 크기 제한 : 500MB\n' +
+    '- 파일 형식: mp4\n' +
+    "2. 게임 상황의 이해를 돕기 위해 '플레이 정보를 담은 전적 캡처 이미지'를 첨부하기\n" +
+    '- 파일 크기 제한 : 2MB\n' +
+    '- 파일 형식: jpg, jpeg, png\n' +
+    '3. 상황 설명은 자세하게 글로 작성하기\n' +
+    '- 문자 수 제한 : 1000자 이내\n';
 
   //useForm
   const {
@@ -144,19 +175,6 @@ export default function PostForm() {
   //useEffect
   useEffect(() => {
     console.log('postForm 렌더');
-
-    if (textAreaRef.current) {
-      textAreaRef.current.placeholder =
-        '[게시글 내용 작성 가이드]\n\n' +
-        '1. 리플레이 영상 업로드는 필수! 판결을 받고 싶은 부분만 편집해 업로드 하기\n' +
-        '- 파일 크기 제한 : 500MB\n' +
-        '- 파일 형식: mp4\n' +
-        "2. 게임 상황의 이해를 돕기 위해 '플레이 정보를 담은 전적 캡처 이미지'를 첨부하기\n" +
-        '- 파일 크기 제한 : 2MB\n' +
-        '- 파일 형식: jpg, jpeg, png\n' +
-        '3. 상황 설명은 자세하게 글로 작성하기\n' +
-        '- 문자 수 제한 : 1000자 이내\n';
-    }
 
     fetch(
       'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
@@ -246,12 +264,14 @@ export default function PostForm() {
               className="p-content-mb h-[100%] w-[100%] whitespace-pre-wrap p-[30px] outline-none"
               maxLength={1000}
             /> */}
-            <ReactQuill
-              theme="snow"
+
+            <ReactQuillBase
+              forwardedRef={quillRef}
               modules={modules}
               className=" h-[100%] w-[100%] whitespace-pre-wrap outline-none"
               value={content}
               onChange={setContent}
+              placeholder={quillPlaceHolder}
             />
           </div>
           <div className="mx-[30px] mb-[30px] text-[24px]">해시태그</div>
