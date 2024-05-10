@@ -10,8 +10,6 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'VS.GG',
   description: '리그 오브 레전드 과실 판결 커뮤니티',
-  content: '',
-  openGraph: {},
 };
 
 export default function RootLayout({

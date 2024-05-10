@@ -2,17 +2,8 @@
 import Logo from '@/app/components/Logo';
 import PostReturnBtn from '../PostReturnBtn';
 import PostForm from '../PostForm';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 
 export default function PostWrite() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<ICreateMemberProps>();
-
   // useEffect(() => {
   //   if (status === 'loading') return;
   //   if (!session) {
