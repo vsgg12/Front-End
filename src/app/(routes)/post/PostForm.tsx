@@ -8,7 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
 import PostUploadDesc from './PostUploadDesc';
 
-import { SlPicture } from 'react-icons/sl';
+// import { SlPicture } from 'react-icons/sl';
 import { IoIosClose } from 'react-icons/io';
 import {
   IoVideocamOutline,

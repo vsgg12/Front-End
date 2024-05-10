@@ -20,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="root-bg">
       <head>
-        <Script
+        {/* <Script
           defer
           src="https://cdn.swygbro.com/public/widget/swyg-widget.js"
-        ></Script>
+        ></Script> */}
       </head>
       <body className={inter.className}>
         {/* <AuthSession> */}
