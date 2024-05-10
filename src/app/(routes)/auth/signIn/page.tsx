@@ -10,24 +10,18 @@ export default function SignIn() {
     //voting한 postId === postId면 해제하는 코드
   }, []);
 
-  const naverLogin = () => {
-    // signIn('naver', { redirect: true, callbackUrl: '/' });
-    signIn().then((res) => {
-      console.log(res);
-    });
-  };
-
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="mb-10 mt-auto font-['SBAggroB'] text-5xl text-[#8A1F21] md:text-8xl">
         <Link href="/">VS.GG</Link>
       </div>
-      <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32 ">
-        <SiNaver color="white" />
-        <button className="text-white" onClick={naverLogin}>
-          네이버로 3초만에 시작하기
-        </button>
-      </div>
+
+      <Link href="/api/oauth/naver/login">
+        <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32 ">
+          <SiNaver color="white" />
+          <button className="text-white">네이버로 3초만에 시작하기</button>
+        </div>
+      </Link>
       <div className="flex gap-2">
         <div>아직 VS.GG 멤버가 아니신가요?</div>
         <Link href="/auth/signUp" className="text-[#8A1F21]">

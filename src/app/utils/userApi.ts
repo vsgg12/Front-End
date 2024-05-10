@@ -1,5 +1,5 @@
 'use server';
-import { NEXT_PUBLIC_API_URL, TEST_URL } from '../constants';
+import { NEXT_AUTH_API_URL, NEXT_PUBLIC_API_URL } from '../constants';
 import {
   createGetRequestOptions,
   createPostRequestOptions,
@@ -14,10 +14,9 @@ export async function signIn(): Promise<any> {
   try {
     const requestOptions = createGetRequestOptions();
     const response = await fetch(
-      `http://localhost:8081/users/signin`,
+      `${NEXT_AUTH_API_URL}/oauth2/authorization/naver?redirect_uri=http://localhost:3000&mode=login`,
       requestOptions,
     );
-    console.log(response);
     return response.json();
   } catch (error) {
     console.log(error);

@@ -4,7 +4,7 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
-import AuthSession from './api/auth/[...nextauth]/AuthSession';
+// import AuthSession from './api/auth/[...nextauth]/AuthSession';
 import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
