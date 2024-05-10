@@ -1,11 +1,18 @@
 'use client';
 import Link from 'next/link';
 import SignUpTerm from './SignUpTerm';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createUser } from '@/app/utils/userApi';
 
-export default function SignUpDetail() {
+export default function SignUp() {
+  const [naverValue, setNaverValue] = useState({
+    id: 'naver',
+    profileImage: 'https://adfaefa.jpg',
+    email: 'gg@naver.com',
+    mobileNumber: '01012341121',
+  });
+
   const {
     register,
     handleSubmit,
@@ -13,25 +20,26 @@ export default function SignUpDetail() {
     formState: { errors },
   } = useForm<ICreateMemberProps>();
 
-  const naverValue = {
-    id: 'naver',
-    profileImage: 'https://adfaefa.jpg',
-    email: 'gg@naver.com',
-    mobileNumber: '01012341121',
-  };
-
   const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
-    const { id: oldId, profileImage: oldImg, email: oldEmail, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
+    const {
+      id: oldId,
+      email: oldEmail,
+      profileImage: oldImg,
+      mobileNumber: oldNumber,
+      ...rest
+    } = data; // data에서 id를 제외한 나머지를 rest로 받음
+
+    createUser(data);
 
     console.log({ ...naverValue, ...rest }); // 새로운 id와 나머지 데이터를 로깅
-
-    // createUser({ ...naverValue, ...rest });
   };
 
   useEffect(() => {
     console.log('회원가입 페이지 렌더');
     //voting한 postId === postId면 해제하는 코드
   }, []);
+
+  console.log(watch('nickname'));
 
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
@@ -46,11 +54,7 @@ export default function SignUpDetail() {
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-10"
-        action=""
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
         <div className="flex flex-col gap-2">
           <p>이메일</p>
           <input
@@ -64,18 +68,15 @@ export default function SignUpDetail() {
           <p>닉네임</p>
           <div className="flex gap-2">
             <div className="flex grow flex-col">
-              <input
-                {...(register('nickname'),
-                { required: true, minLength: 2, maxLength: 20 })}
-                type="text"
-                className="su-i"
-              />
+              <input type="text" {...register('nickname')} className="su-i" />
               {errors.nickname && (
                 <span>닉네임은 2글자 이상, 20글자 이하로 입력해야 합니다.</span>
               )}
             </div>
 
-            <button className="su-btn text-[#8A1F21]">중복확인</button>
+            <button type="button" className="su-btn text-[#8A1F21]">
+              중복확인
+            </button>
           </div>
           <span className="pl-5 text-xs text-[#8A1F21]">
             중복된 닉네임입니다.
@@ -89,13 +90,14 @@ export default function SignUpDetail() {
             <input
               value={naverValue.mobileNumber}
               type="text"
-              className="su-i"
+              readOnly
+              className="su-i-blocked grow"
             />
             <button className="su-btn">인증요청</button>
           </div>
           <div className="flex gap-2">
             <input type="text" required className="su-i" />
-            <button className="su-btn bg-[#8A1F21]  text-white">
+            <button type="button" className="su-btn bg-[#8A1F21]  text-white">
               인증완료
             </button>
           </div>

@@ -4,7 +4,6 @@ interface ICreateMemberProps {
   nickname: string;
   mobileNumber: string;
   profileImage: string;
-  age: number;
 }
 
 interface ICreatePostProps {
@@ -12,15 +11,11 @@ interface ICreatePostProps {
   content: string;
   thumbnailUrl: string;
   videoType: string;
-  //사진
-  //판결시작일자
-  //판결 종료일자
   ingameInfo: [
     {
       champion: string;
-      tier: string;
       position: string;
-      //type?:string
+      tier: string;
     },
   ];
 }

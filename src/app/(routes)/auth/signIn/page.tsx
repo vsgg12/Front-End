@@ -12,9 +12,9 @@ export default function SignIn() {
 
   const naverLogin = () => {
     // signIn('naver', { redirect: true, callbackUrl: '/' });
-    signIn()
-      .then(() => console.log('로그인에 성공했습니다.'))
-      .catch(() => console.log('로그인에 실패했습니다.'));
+    signIn().then((res) => {
+      console.log(res);
+    });
   };
 
   return (

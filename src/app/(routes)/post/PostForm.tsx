@@ -1,3 +1,13 @@
+'use client';
+import { useRef, useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
+import PostUploadDesc from './PostUploadDesc';
+
 import { SlPicture } from 'react-icons/sl';
 import { IoIosClose } from 'react-icons/io';
 import {
@@ -11,88 +21,98 @@ import {
   IoCloseOutline,
 } from 'react-icons/io5';
 
-import { useRef, useEffect, useState } from 'react';
-import { ChampionData } from '@/app/types/post';
-import PostUploadDesc from './PostUploadDesc';
-
-interface IGameInfoProps {
-  id: number;
-  position: string;
-  champion: string;
-  tier: string;
-}
-
-const tabs = [
-  {
-    title: '파일 불러오기',
-    content: (
-      <div className="flex flex-row items-center justify-center">
-        <IoDocumentOutline className="mr-[10px] text-[20px]" />
-        <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
-      </div>
-    ),
-  },
-  {
-    title: '링크로 불러오기',
-    content: (
-      <div className="flex flex-row items-center ">
-        <div className="flex flex-row items-center justify-center">
-          <IoLinkOutline className="mr-[10px] text-[25px]" />
-          <input
-            type="text"
-            placeholder="링크를 붙여 넣어주세요"
-            className="p-font-color-default outline-none"
-          />
-        </div>
-      </div>
-    ),
-  },
-  {
-    title: '썸네일 업로드',
-    content: (
-      <div className="flex flex-row items-center justify-center">
-        <IoDocumentOutline className="mr-[10px] text-[20px]" />
-        <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
-      </div>
-    ),
-  },
-];
-
-const positions = [
-  { id: 'top', value: 'top', content: '탑' },
-  { id: 'mid', value: 'mid', content: '미드' },
-  { id: 'jungle', value: 'jungle', content: '정글' },
-  { id: 'onedeal', value: 'onedeal', content: '원딜' },
-  { id: 'support', value: 'support', content: '서폿' },
-];
-
-const tiers = [
-  { id: undefined, value: undefined, content: '티어 선택' },
-  { id: 'iron', value: 'iron', content: '아이언' },
-  { id: 'bronze', value: 'bronze', content: '브론즈' },
-  { id: 'silver', value: 'silver', content: '실버' },
-  { id: 'gold', value: 'gold', content: '골드' },
-  { id: 'platinum', value: 'platinum', content: '플래티넘' },
-  { id: 'emerald', value: 'emerald', content: '에메랄드' },
-  { id: 'diamond', value: 'diamond', content: '다이아' },
-  { id: 'master', value: 'master', content: '마스터' },
-  { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
-  { id: 'challenger', value: 'challenger', content: '챌린저' },
-];
-
-const intialIngameInfos: IGameInfoProps[] = [
-  { id: 0, position: '', champion: '', tier: '' },
-  { id: 1, position: '', champion: '', tier: '' },
-];
-
 export default function PostForm() {
+  const positions = [
+    { id: 'top', value: 'top', content: '탑' },
+    { id: 'mid', value: 'mid', content: '미드' },
+    { id: 'jungle', value: 'jungle', content: '정글' },
+    { id: 'onedeal', value: 'onedeal', content: '원딜' },
+    { id: 'support', value: 'support', content: '서폿' },
+  ];
+
+  const tiers = [
+    { id: undefined, value: undefined, content: '티어 선택' },
+    { id: 'unrank', value: 'unrank', content: '언랭' },
+    { id: 'iron', value: 'iron', content: '아이언' },
+    { id: 'bronze', value: 'bronze', content: '브론즈' },
+    { id: 'silver', value: 'silver', content: '실버' },
+    { id: 'gold', value: 'gold', content: '골드' },
+    { id: 'platinum', value: 'platinum', content: '플래티넘' },
+    { id: 'emerald', value: 'emerald', content: '에메랄드' },
+    { id: 'diamond', value: 'diamond', content: '다이아' },
+    { id: 'master', value: 'master', content: '마스터' },
+    { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
+    { id: 'challenger', value: 'challenger', content: '챌린저' },
+  ];
+
+  const intialIngameInfos: IGameInfoProps[] = [
+    { id: 0, position: '', champion: '', tier: '' },
+    { id: 1, position: '', champion: '', tier: '' },
+  ];
+
+  const modules = {
+    toolbar: {
+      container: [['image']],
+    },
+  };
+
+  const tabs = [
+    {
+      title: '파일 불러오기',
+      content: (
+        <div className="flex flex-row items-center justify-center">
+          <IoDocumentOutline className="mr-[10px] text-[20px]" />
+          <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+        </div>
+      ),
+    },
+    {
+      title: '링크로 불러오기',
+      content: (
+        <div className="flex flex-row items-center ">
+          <div className="flex flex-row items-center justify-center">
+            <IoLinkOutline className="mr-[10px] text-[25px]" />
+            <input
+              type="text"
+              placeholder="링크를 붙여 넣어주세요"
+              className="p-font-color-default outline-none"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: '썸네일 업로드',
+      content: (
+        <div className="flex flex-row items-center justify-center">
+          <IoDocumentOutline className="mr-[10px] text-[20px]" />
+          <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+        </div>
+      ),
+    },
+  ];
+
+  //useState
   const [ingameInfos, setIngameInfos] =
     useState<IGameInfoProps[]>(intialIngameInfos);
+  const [content, setContent] = useState('');
+  const [hastags, setHashtags] = useState([]);
   const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
   const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({});
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+  //useForm
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ICreatePostProps>();
+
+  const onSubmit: SubmitHandler<ICreatePostProps> = (data) => console.log(data);
+
+  //functions
   const changeTabTitleStyle = (index: number): string => {
     return selectedTab === index
       ? 'p-tab-title p-tab-selected'
@@ -114,12 +134,14 @@ export default function PostForm() {
       ...ingameInfos,
       { id: ingameInfos.length, position: '', champion: '', tier: '' },
     ]);
+    console.log(ingameInfos);
   };
 
   const removeIngameInfo = (index: number): void => {
     setIngameInfos(ingameInfos.filter((_, idx) => idx !== index));
   };
 
+  //useEffect
   useEffect(() => {
     console.log('postForm 렌더');
 
@@ -140,7 +162,7 @@ export default function PostForm() {
       'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
     )
       .then((response) => response.json())
-      .then((data: ChampionData) => {
+      .then((data: ChampionDataProps) => {
         const loadedChampions = Object.keys(data.data).map(
           (key) => data.data[key].name,
         );
@@ -154,9 +176,10 @@ export default function PostForm() {
       .catch((error) => console.error('Error loading the champions:', error));
   }, []);
 
+  //tsx
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
           <PostUploadDesc />
           <div className="p-content-mb relative h-[150px]">
@@ -192,6 +215,7 @@ export default function PostForm() {
             </div>
           </div>
         </div>
+
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
           <div className="p-content-mb mx-[30px] text-[20px] text-[#333333]">
             글 작성
@@ -203,10 +227,11 @@ export default function PostForm() {
               maxLength={35}
               className=" grow rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[15px] text-[22px]  outline-none"
               placeholder="최대 35글자 입력 가능합니다."
+              {...register('title')}
             />
           </div>
           <div className="p-content-mb h-[882px] overflow-hidden  rounded-[30px] border-[1.5px] border-[#828282]">
-            <div className="flex h-[100px] items-center rounded-t-[30px] border-[1.5px] border-b-[#828282] px-[44px] py-[20px]">
+            {/* <div className="flex h-[100px] items-center rounded-t-[30px] border-[1.5px] border-b-[#828282] px-[44px] py-[20px]">
               <label
                 htmlFor="p-picture"
                 className="flex flex-col justify-center hover:cursor-pointer"
@@ -215,11 +240,18 @@ export default function PostForm() {
                 <div>사진</div>
               </label>
               <input type="file" id="p-picture" className="p-input-hidden" />
-            </div>
-            <textarea
+            </div> */}
+            {/* <textarea
               ref={textAreaRef}
               className="p-content-mb h-[100%] w-[100%] whitespace-pre-wrap p-[30px] outline-none"
               maxLength={1000}
+            /> */}
+            <ReactQuill
+              theme="snow"
+              modules={modules}
+              className=" h-[100%] w-[100%] whitespace-pre-wrap outline-none"
+              value={content}
+              onChange={setContent}
             />
           </div>
           <div className="mx-[30px] mb-[30px] text-[24px]">해시태그</div>
@@ -238,6 +270,7 @@ export default function PostForm() {
             </div>
           </div>
         </div>
+
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
             <div className="ml-[30px] mr-[20px] text-[24px]">
@@ -290,7 +323,6 @@ export default function PostForm() {
                         selectedPos[ingameInfo.id] === index,
                       )}
                     >
-                      <IoCompassOutline className="mr-[5px] text-[15px]" />
                       <div>{pos.content}</div>
                     </label>
                   </div>

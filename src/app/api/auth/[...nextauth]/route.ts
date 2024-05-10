@@ -16,12 +16,7 @@ const handler = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  providers: [
-    NaverProvider({
-      clientId: NAVER_CLIENT_ID!,
-      clientSecret: NAVER_CLIENT_SECRET!,
-    }),
-  ],
+  providers: [],
   callbacks: {
     async jwt({ token, user, account }) {
       if (typeof account?.accessToken === 'string') {

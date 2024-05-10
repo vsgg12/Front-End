@@ -3,11 +3,9 @@ import Logo from '@/app/components/Logo';
 import PostReturnBtn from '../PostReturnBtn';
 import PostForm from '../PostForm';
 import { useEffect } from 'react';
-import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 export default function PostWrite() {
-  const { data: session, status } = useSession();
   const {
     register,
     handleSubmit,
@@ -19,7 +17,7 @@ export default function PostWrite() {
   //   if (status === 'loading') return;
   //   if (!session) {
   //     alert('로그인이 필요합니다');
-  //     signIn();
+  //     // signIn();
   //   }
   //   console.log('글쓰기 페이지 렌더');
   // }, [status, session]);

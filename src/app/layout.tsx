@@ -22,21 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="root-bg">
       <head>
-        <script
+        <Script
           defer
           src="https://cdn.swygbro.com/public/widget/swyg-widget.js"
-        ></script>
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        ></meta>
+        ></Script>
       </head>
       <body className={inter.className}>
-        <AuthSession>
-          <Header />
-          {children}
-          <Footer />
-        </AuthSession>
+        {/* <AuthSession> */}
+        <Header />
+        {children}
+        <Footer />
+        {/* </AuthSession> */}
       </body>
     </html>
   );

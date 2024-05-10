@@ -25,7 +25,7 @@ export interface IPostVidUploadTabProps {
   items: PostVidUploadItem[];
 }
 
-export interface ChampionData {
+export interface ChampionDataProps {
   data: {
     [key: string]: {
       name: string;
@@ -52,6 +52,13 @@ export interface IPostIngameInfoProps {
   tier: '';
   position: '';
   type: ''; //?
+}
+
+interface IGameInfoProps {
+  id: number; //실제 데이터 보낼 땐 이거 빼고 보내기
+  position: string;
+  champion: string;
+  tier: string;
 }
 
 export interface IPostVotingProps {

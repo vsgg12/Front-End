@@ -5,7 +5,6 @@ export default function convertMemberFormData(data: ICreateMemberProps) {
     nickname: data.nickname,
     mobileNumber: data.mobileNumber,
     profileImage: data.profileImage,
-    age: data.age,
   };
   return convertedData;
 }
