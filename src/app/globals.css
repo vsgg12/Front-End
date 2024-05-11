@@ -162,3 +162,8 @@ button {
     background-size: 100% 3px;
   }
 }
+
+.pagination {
+  display: flex;
+  gap: 1rem;
+}
