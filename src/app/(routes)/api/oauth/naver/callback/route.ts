@@ -1,9 +1,10 @@
 // src/app/api/auth/callback/naver.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { redirect } from 'next/navigation';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const { code, state } = req.query; // 네이버에서 반환된 데이터
+export async function GET(req: NextRequest, res: NextResponse) {
+  // const { code, state } = req.query; // 네이버에서 반환된 데이터
 
   try {
     // 토큰 요청 및 사용자 정보 요청 로직
