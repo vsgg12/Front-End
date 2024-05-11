@@ -1,8 +1,11 @@
 'use client';
-import { PiListPlus } from 'react-icons/pi';
-import { IoMdNotificationsOutline } from 'react-icons/io';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import Image from 'next/image';
+
+import { IoMdNotificationsOutline } from 'react-icons/io';
+import writeSVG from '../../../public/svg/writing.svg';
+
 export default function Header(): JSX.Element {
   useEffect(() => {
     console.log('헤더 렌더링');
@@ -14,7 +17,11 @@ export default function Header(): JSX.Element {
         <div className="flex flex-row items-center">
           <div className="flex flex-col ">
             <Link className="hd-items mr-[0.5rem]  " href={`/post/write`}>
-              {/* <PiListPlus className="text-[31px] " /> */}
+              <Image
+                className="h-[32px] w-[32px]"
+                src={writeSVG}
+                alt="writeIcon"
+              />
             </Link>
           </div>
           <button className="hd-items mr-[1rem] ">

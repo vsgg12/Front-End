@@ -3,6 +3,15 @@ import { useRef, useEffect, useState, useMemo, LegacyRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
 import PostUploadDesc from './PostUploadDesc';
+
+import topSVG from '../../../../public/svg/top.svg';
+import midSVG from '../../../../public/svg/mid.svg';
+import jungleSVG from '../../../../public/svg/jungle.svg';
+import onedealSVG from '../../../../public/svg/onedeal.svg';
+import supportSVG from '../../../../public/svg/supporter.svg';
+
+import Image from 'next/image';
+
 import ForwardedRefReactQuill from './FowardedRefReactQuill';
 // import type ReactQuill from 'react-quill';
 
@@ -41,11 +50,36 @@ const ReactQuillBase = dynamic(
 
 export default function PostForm() {
   const positions = [
-    { id: 'top', value: 'top', content: '탑' },
-    { id: 'mid', value: 'mid', content: '미드' },
-    { id: 'jungle', value: 'jungle', content: '정글' },
-    { id: 'onedeal', value: 'onedeal', content: '원딜' },
-    { id: 'support', value: 'support', content: '서폿' },
+    {
+      id: 'top',
+      value: 'top',
+      content: '탑',
+      svg: <Image alt="top" src={topSVG} />,
+    },
+    {
+      id: 'mid',
+      value: 'mid',
+      content: '미드',
+      svg: <Image alt="mid" src={midSVG} />,
+    },
+    {
+      id: 'jungle',
+      value: 'jungle',
+      content: '정글',
+      svg: <Image alt="jungle" src={jungleSVG} />,
+    },
+    {
+      id: 'onedeal',
+      value: 'onedeal',
+      content: '원딜',
+      svg: <Image alt="onedeal" src={onedealSVG} />,
+    },
+    {
+      id: 'support',
+      value: 'support',
+      content: '서폿',
+      svg: <Image alt="support" src={supportSVG} />,
+    },
   ];
 
   const tiers = [
@@ -343,6 +377,7 @@ export default function PostForm() {
                         selectedPos[ingameInfo.id] === index,
                       )}
                     >
+                      {pos.svg}
                       <div>{pos.content}</div>
                     </label>
                   </div>

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
   const redirectUri = 'https://nid.naver.com/nidlogin.logout'; // 콜백 URL
-  const clientUrl = `http://localhost:3000`;
+  const clientUrl = `http://localhost:3000/home`;
 
-  redirect(clientUrl);
+  redirect(redirectUri);
 }

@@ -2,9 +2,10 @@
 import Link from 'next/link';
 import Search from '@/app/components/Search';
 import PostReturnBtn from '../post/PostReturnBtn';
-import { PiListPlus } from 'react-icons/pi';
 import HomePostItems from './HomePostItems';
 import { useEffect } from 'react';
+import Image from 'next/image';
+import writeSVG from '../../../../public/svg/writingWhite.svg';
 
 export default function Home(): JSX.Element {
   useEffect(() => {
@@ -19,7 +20,11 @@ export default function Home(): JSX.Element {
           <div className="relative w-fit">
             <Link href={`/post/write`}>
               <button className=" fixed bottom-[60px] right-2 z-10 flex h-[7.125rem] w-[7.313rem] flex-col items-center justify-center rounded-full bg-[#8A1F21] text-white shadow-2xl">
-                {/* <PiListPlus className="mb-[5px] text-[30px]" /> */}
+                <Image
+                  className="h-[32px] w-[32px]"
+                  src={writeSVG}
+                  alt="writeIcon"
+                />
 
                 <div className="text-[0.875rem]">글쓰기</div>
               </button>
