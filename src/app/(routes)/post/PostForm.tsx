@@ -1,5 +1,12 @@
 'use client';
-import { useRef, useEffect, useState, useMemo, LegacyRef } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  LegacyRef,
+  useCallback,
+} from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ICreatePostProps, IWrappedComponent } from '@/app/types/form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
@@ -134,7 +141,7 @@ export default function PostForm() {
   } = useForm<ICreatePostProps>();
 
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
-    console.log(content);
+    // console.log(content);
   };
 
   //functions
@@ -197,25 +204,64 @@ export default function PostForm() {
       .catch((error) => console.error('Error loading the champions:', error));
   }, []);
 
-  //useMemo
-  const modules = useMemo(() => {
-    return {
-      toolbar: {
-        container: [['image']],
-      },
-      imageResize: {
-        // 이미지 리사이징 설정
-        parchment: Quill.import('parchment'),
-        modules: ['Resize', 'DisplaySize'],
-      },
+  //useCallback
+  const imageHandler = useCallback(() => {
+    //input type= file DOM을 만든다.
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click(); //toolbar 이미지를 누르게 되면 이 부분이 실행된다.
+    /*이미지를 선택하게 될 시*/
+    input.onchange = async () => {
+      /*이미지 선택에 따른 조건을 다시 한번 하게 된다.*/
+      const file: any = input.files ? input.files[0] : null;
+      /*선택을 안하면 취소버튼처럼 수행하게 된다.*/
+      if (!file) return;
+      /*서버에서 FormData형식으로 받기 때문에 이에 맞는 데이터형식으로 만들어준다.*/
+      const formData = new FormData();
+      formData.append('profile', file);
+      /*에디터 정보를 가져온다.*/
+      let quillObj = quillRef.current?.getEditor();
+      /*에디터 커서 위치를 가져온다.*/
+      const range = quillObj?.getSelection()!;
+      try {
+        /*서버에다가 정보를 보내준 다음 서버에서 보낸 url을 imgUrl로 받는다.*/
+        // const res = await axios.post('api주소', formData);\
+        // const imgUrl = res.data;
+
+        const res =
+          'file:///C:/Users/User/Desktop/%EC%9D%B4%EB%AF%B8%EC%A7%80/KakaoTalk_20240510_213817411.jpg';
+        const imgUrl = res;
+
+        /*에디터의 커서 위치에 이미지 요소를 넣어준다.*/
+        quillObj?.insertEmbed(range.index, 'image', `${imgUrl}`);
+      } catch (error) {
+        console.log(error);
+      }
     };
   }, []);
+
+  //useMemo
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [['image']],
+        handlers: {
+          image: imageHandler,
+        },
+      },
+      clipboard: {
+        matchVisual: true,
+      },
+    }),
+    [imageHandler],
+  );
 
   //tsx
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
           <PostUploadDesc />
           <div className="p-content-mb relative h-[150px]">
             <div className="absolute z-10 ml-[30px] ">
@@ -274,7 +320,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
           <div className="p-content-mb mx-[30px] text-[20px] font-semibold text-[#8A1F21]">
             글 작성
           </div>
@@ -317,7 +363,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
             <div className=" mr-[20px] text-[20px] font-semibold text-[#8A1F21]">
               판결 참여자 입력
