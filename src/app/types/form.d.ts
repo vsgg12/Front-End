@@ -1,4 +1,6 @@
-interface ICreateMemberProps {
+import ReactQuill, { Quill } from 'react-quill';
+
+export interface ICreateMemberProps {
   id: string;
   email: string;
   nickname: string; //직접 작성
@@ -12,7 +14,7 @@ interface ICreateMemberProps {
   agreePromotion: boolean; //직접 동의
 }
 
-interface ICreatePostProps {
+export interface ICreatePostProps {
   title: string;
   content: string;
   thumbnailUrl: string;
@@ -26,8 +28,9 @@ interface ICreatePostProps {
   ];
 }
 
-interface IWrappedComponent extends React.ComponentProps<typeof ReactQuill> {
+export interface IWrappedComponent
+  extends React.ComponentProps<typeof ReactQuill> {
   forwardedRef: LegacyRef<ReactQuill>;
 }
 
-interface ICreateVideoProps {}
+export interface ICreateVideoProps {}

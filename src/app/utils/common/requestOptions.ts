@@ -1,3 +1,5 @@
+import { ICreateMemberProps } from '@/app/types/form';
+
 interface RequestOptions {
   method: string;
   headers?: Record<string, string>; // headers는 선택적으로 설정

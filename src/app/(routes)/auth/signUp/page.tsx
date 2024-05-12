@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createUser } from '@/app/utils/userApi';
+import { ICreateMemberProps } from '@/app/types/form';
 
 export default function SignUp() {
   const [naverValue, setNaverValue] = useState({
@@ -13,6 +14,9 @@ export default function SignUp() {
     mobile: '010-2314-4513',
     profileImage: 'https://adfaefa.jpg',
   });
+
+  const [sameNickname, setSameNickname] = useState(false);
+  const [wrongNumber, setWrongNumber] = useState(false);
 
   const [checkboxes, setCheckboxes] = useState({
     agreeAge: false,
@@ -61,9 +65,9 @@ export default function SignUp() {
       </Link>
       <div className="flex w-full items-center justify-center px-40">
         <div className="flex w-1/2 items-center">
-          <div className="h-0.5 w-1/3 bg-[#D9D9D9]"></div>
-          <div className="w-1/3 text-center text-[#7B7B7B]">간단 회원가입</div>
-          <div className="h-0.5 w-1/3 bg-[#D9D9D9]"></div>
+          <div className="h-0.5 grow bg-[#D9D9D9]"></div>
+          <div className="mx-[30px] text-[#7B7B7B]">간단 회원가입</div>
+          <div className="h-0.5 grow bg-[#D9D9D9]"></div>
         </div>
       </div>
 
@@ -91,9 +95,11 @@ export default function SignUp() {
               중복확인
             </button>
           </div>
-          <span className="pl-5 text-xs text-[#8A1F21]">
-            중복된 닉네임입니다.
-          </span>
+          {sameNickname && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              중복된 닉네임입니다.
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <p>
@@ -104,7 +110,7 @@ export default function SignUp() {
               value={naverValue.mobile}
               type="text"
               readOnly
-              className="su-i-blocked grow"
+              className="su-i-blocked mb-1 grow"
             />
             <button className="su-btn">인증요청</button>
           </div>
@@ -114,9 +120,11 @@ export default function SignUp() {
               인증완료
             </button>
           </div>
-          <span className="pl-5 text-xs text-[#8A1F21]">
-            잘못된 인증번호입니다.
-          </span>
+          {wrongNumber && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              잘못된 인증번호입니다.
+            </span>
+          )}
         </div>
         <div className="h-0.5 bg-[#D9D9D9]"></div>
         <div className="flex flex-col gap-10">

@@ -1,4 +1,5 @@
 import { NEXT_PUBLIC_API_URL } from '../constants';
+import { ICreateMemberProps } from '../types/form';
 import {
   createGetRequestOptions,
   createPostRequestOptions,

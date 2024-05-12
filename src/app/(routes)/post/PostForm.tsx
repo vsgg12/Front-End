@@ -1,7 +1,10 @@
 'use client';
 import { useRef, useEffect, useState, useMemo, LegacyRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { ICreatePostProps, IWrappedComponent } from '@/app/types/form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
+import ReactQuill, { Quill } from 'react-quill';
+
 import PostUploadDesc from './PostUploadDesc';
 
 import Image from 'next/image';
@@ -22,13 +25,13 @@ import {
   IoCloseOutline,
 } from 'react-icons/io5';
 
-import ReactQuill, { Quill } from 'react-quill';
-
 import dynamic from 'next/dynamic';
 
 const ReactQuillBase = dynamic(
   async () => {
     const { default: RQ } = await import('react-quill');
+    const { ImageResize } = await import('quill-image-resize-module-ts');
+    RQ.Quill.register('modules/imageResize', ImageResize);
 
     function QuillJS({ forwardedRef, ...props }: IWrappedComponent) {
       return <RQ ref={forwardedRef} {...props} />;
@@ -199,6 +202,11 @@ export default function PostForm() {
     return {
       toolbar: {
         container: [['image']],
+      },
+      imageResize: {
+        // 이미지 리사이징 설정
+        parchment: Quill.import('parchment'),
+        modules: ['Resize', 'DisplaySize'],
       },
     };
   }, []);
