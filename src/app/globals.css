@@ -110,7 +110,7 @@ button {
 }
 
 .p-tab-n-selected {
-  @apply h-[4.375rem] rounded-full bg-[#F8F8F8];
+  @apply h-[4.375rem] rounded-[10px] bg-[#F8F8F8];
 }
 .p-tab-selected {
   @apply border-[0.09375rem] border-b-2 border-[#828282] border-b-[#ffffff] text-[#8A1F21];
@@ -133,32 +133,13 @@ button {
 }
 
 .p-position-selected {
-  @apply border-[#8A1F21] text-[#8A1F21];
+  @apply bg-[#8A1F21] text-[#ECECEC];
 }
 
 .p-position-n-selected {
-  @apply border-[#828282] text-[#828282];
+  @apply border-[#828282] bg-[#ECECEC] text-[#828282];
 }
 
 .p-select {
   @apply mr-[0.625rem] grow rounded-[1.875rem] border-[0.0625rem] border-[#333333] px-[1.25rem] py-[0.3125rem] text-xs outline-none;
-}
-
-/* HTML: <div class="loader"></div> */
-.loader {
-  width: fit-content;
-  font-weight: bold;
-  font-family: sans-serif;
-  font-size: 30px;
-  padding-bottom: 8px;
-  background: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
-  animation: l2 2s linear infinite;
-}
-.loader:before {
-  content: 'Loading...';
-}
-@keyframes l2 {
-  to {
-    background-size: 100% 3px;
-  }
 }

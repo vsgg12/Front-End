@@ -8,7 +8,9 @@ interface RequestOptions {
 export function createGetRequestOptions(): RequestOptions {
   return {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
 }
 
@@ -53,7 +55,9 @@ export function createPutRequestOptions(
 ): RequestOptions {
   return {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   };
 }
@@ -62,7 +66,9 @@ export function createPutRequestOptions(
 export function createDeleteRequestOptions(): RequestOptions {
   return {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
 }
 
@@ -72,7 +78,9 @@ export function createPatchRequestOptions(
 ): RequestOptions {
   return {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   };
 }

@@ -7,39 +7,53 @@ import { createUser } from '@/app/utils/userApi';
 
 export default function SignUp() {
   const [naverValue, setNaverValue] = useState({
-    id: 'naver',
-    profileImage: 'https://adfaefa.jpg',
+    id: 'naverToken',
     email: 'gg@naver.com',
-    mobileNumber: '01012341121',
+    age: '20-29',
+    gender: 'F',
+    mobile: '010-2314-4513',
+    profileImage: 'https://adfaefa.jpg',
   });
+
+  const [checkboxes, setCheckboxes] = useState({
+    agreeAge: false,
+    agreeTerms: false,
+    agreePrivacy: false,
+    agreePromotion: false,
+  });
+
+  const handleCheckAll = (checked: boolean) => {
+    setCheckboxes({
+      agreeAge: checked,
+      agreeTerms: checked,
+      agreePrivacy: checked,
+      agreePromotion: checked,
+    });
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target;
+    setCheckboxes({
+      ...checkboxes,
+      [name]: checked,
+    });
+  };
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<ICreateMemberProps>();
 
   const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
-    const {
-      id: oldId,
-      email: oldEmail,
-      profileImage: oldImg,
-      mobileNumber: oldNumber,
-      ...rest
-    } = data; // data에서 id를 제외한 나머지를 rest로 받음
+    const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
 
-    createUser(data);
-
-    console.log({ ...naverValue, ...rest }); // 새로운 id와 나머지 데이터를 로깅
+    createUser({ ...naverValue, ...checkboxes, ...rest });
   };
 
   useEffect(() => {
     console.log('회원가입 페이지 렌더');
-    //voting한 postId === postId면 해제하는 코드
   }, []);
-
-  console.log(watch('nickname'));
 
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
@@ -88,7 +102,7 @@ export default function SignUp() {
           </p>
           <div className="flex gap-2">
             <input
-              value={naverValue.mobileNumber}
+              value={naverValue.mobile}
               type="text"
               readOnly
               className="su-i-blocked grow"
@@ -105,9 +119,74 @@ export default function SignUp() {
             잘못된 인증번호입니다.
           </span>
         </div>
-
         <div className="h-0.5 bg-[#D9D9D9]"></div>
-        <SignUpTerm />
+        <div className="flex flex-col gap-10">
+          <div className="flex items-center gap-5">
+            <input
+              type="checkbox"
+              className="size-6 accent-[#8A1F21]"
+              name="agreeAge"
+              checked={checkboxes.agreeAge}
+              onChange={handleCheckboxChange}
+            />
+            <div className="flex flex-col gap-1">
+              <p>만 14세 이상입니다. (필수)</p>
+              <p className="text-xs text-[#8A1F21]">
+                만 14세 이상만 가입이 가능합니다.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-5">
+            <input
+              type="checkbox"
+              className="size-6 accent-[#8A1F21]"
+              name="agreeTerms"
+              checked={checkboxes.agreeTerms}
+              onChange={handleCheckboxChange}
+            />
+            <p>
+              <span className="font-bold text-[#8A1F21]">이용약관</span>에
+              동의합니다. (필수)
+            </p>
+          </div>
+          <div className="flex items-center gap-5">
+            <input
+              type="checkbox"
+              className="size-6 accent-[#8A1F21]"
+              name="agreePrivacy"
+              checked={checkboxes.agreePrivacy}
+              onChange={handleCheckboxChange}
+            />
+            <p>
+              <span className="font-bold text-[#8A1F21]">개인정보처리방침</span>
+              에 동의합니다. (필수)
+            </p>
+          </div>
+          <div className="flex items-center gap-5">
+            <input
+              type="checkbox"
+              className="size-6 accent-[#8A1F21]"
+              name="agreePromotion"
+              checked={checkboxes.agreePromotion}
+              onChange={handleCheckboxChange}
+            />
+            <p>
+              서비스 홍보 및 마케팅 목적의{' '}
+              <span className="font-bold text-[#8A1F21]">개인정보처리방침</span>
+              에 동의합니다. (선택)
+            </p>
+          </div>
+          <div className="h-0.5 w-full bg-[#D9D9D9]"></div>
+          <div className="flex items-center gap-5">
+            <input
+              type="checkbox"
+              className="size-6 accent-[#8A1F21]"
+              checked={Object.values(checkboxes).every(Boolean)}
+              onChange={(e) => handleCheckAll(e.target.checked)}
+            />
+            <p>모두 동의합니다.</p>
+          </div>
+        </div>
         <button
           type="submit"
           className="rounded-full bg-[#8A1F21] py-2 text-white"

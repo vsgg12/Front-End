@@ -6,10 +6,8 @@ import {
 } from './common/requestOptions';
 import convertMemberFormData from './data/memberData';
 
-// const API_URL: string = NEXT_PUBLIC_API_URL || '';\
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
-//로그인 함수
 export async function signIn(): Promise<any> {
   try {
     const requestOptions = createGetRequestOptions();
@@ -23,20 +21,17 @@ export async function signIn(): Promise<any> {
   }
 }
 
-//로그아웃
 export async function signout() {
   try {
   } catch (error) {}
 }
 
-//(회원가입) 사용자 생성 함수
-//Record<string, unknown>
 export async function createUser(data: ICreateMemberProps): Promise<any> {
   try {
-    console.log(data);
     const memberData = convertMemberFormData(data);
-    console.log(memberData);
-    const requestOptions = createPostRequestOptions(memberData);
+    console.log('멤버보냄');
+    console.log(data);
+    const requestOptions = createPostRequestOptions(data);
     const response = await fetch(`${API_URL}/users/signup`, requestOptions);
     return response.json();
   } catch (error) {

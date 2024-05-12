@@ -4,17 +4,6 @@ import PostReturnBtn from '../PostReturnBtn';
 import PostForm from '../PostForm';
 
 export default function PostWrite() {
-  // useEffect(() => {
-  //   if (status === 'loading') return;
-  //   if (!session) {
-  //     alert('로그인이 필요합니다');
-  //     // signIn();
-  //   }
-  //   console.log('글쓰기 페이지 렌더');
-  // }, [status, session]);
-
-  // if (!session) return null;
-
   return (
     <>
       <main>

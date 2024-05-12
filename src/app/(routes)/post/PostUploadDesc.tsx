@@ -4,8 +4,10 @@ export default function PostUploadDesc() {
   return (
     <>
       <div className="mb-[5px] ml-[30px] flex flex-row items-center">
-        <div className=" mr-[6px] text-[20px] text-[#333333] ">파일 첨부</div>
-        <IoWarningOutline className="mr-[6px] cursor-pointer text-[25px] text-[#828282]" />
+        <div className=" mr-[6px] text-[20px] font-semibold text-[#8A1F21] ">
+          파일 첨부
+        </div>
+        <IoWarningOutline className="mr-[6px] cursor-pointer text-[25px]  text-[#828282]" />
         <div className="h-[120px] w-[180px] rounded-[5px] border-[1.5px] border-[#828282] p-[15px] text-[10px] font-medium text-[#828282]">
           <div>1. 파일불러오기</div>
           <div>

@@ -4,34 +4,26 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
 import PostUploadDesc from './PostUploadDesc';
 
+import Image from 'next/image';
 import topSVG from '../../../../public/svg/top.svg';
 import midSVG from '../../../../public/svg/mid.svg';
 import jungleSVG from '../../../../public/svg/jungle.svg';
 import onedealSVG from '../../../../public/svg/onedeal.svg';
 import supportSVG from '../../../../public/svg/supporter.svg';
 
-import Image from 'next/image';
-
-import ForwardedRefReactQuill from './FowardedRefReactQuill';
-// import type ReactQuill from 'react-quill';
-
 import { IoIosClose } from 'react-icons/io';
 import {
   IoVideocamOutline,
   IoEaselOutline,
   IoLinkOutline,
-  IoCompassOutline,
   IoAddCircleOutline,
   IoSaveOutline,
   IoDocumentOutline,
   IoCloseOutline,
 } from 'react-icons/io5';
+
 import ReactQuill from 'react-quill';
 import dynamic from 'next/dynamic';
-
-interface IWrappedComponent extends React.ComponentProps<typeof ReactQuill> {
-  forwardedRef: LegacyRef<ReactQuill>;
-}
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -43,12 +35,16 @@ const ReactQuillBase = dynamic(
 
     return QuillJS;
   },
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
 export default function PostForm() {
+  const tabs = [
+    { id: 0, title: '파일 불러오기' },
+    { id: 1, title: '링크로 불러오기' },
+    { id: 2, title: '썸네일 업로드' },
+  ];
+
   const positions = [
     {
       id: 'top',
@@ -102,59 +98,17 @@ export default function PostForm() {
     { id: 1, position: '', champion: '', tier: '' },
   ];
 
-  const modules = useMemo(() => {
-    return {
-      toolbar: {
-        container: [['image']],
-      },
-    };
-  }, []);
-
-  const tabs = [
-    {
-      title: '파일 불러오기',
-      content: (
-        <div className="flex flex-row items-center justify-center">
-          <IoDocumentOutline className="mr-[10px] text-[20px]" />
-          <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
-        </div>
-      ),
-    },
-    {
-      title: '링크로 불러오기',
-      content: (
-        <div className="flex flex-row items-center ">
-          <div className="flex flex-row items-center justify-center">
-            <IoLinkOutline className="mr-[10px] text-[25px]" />
-            <input
-              type="text"
-              placeholder="링크를 붙여 넣어주세요"
-              className="p-font-color-default outline-none"
-            />
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: '썸네일 업로드',
-      content: (
-        <div className="flex flex-row items-center justify-center">
-          <IoDocumentOutline className="mr-[10px] text-[20px]" />
-          <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
-        </div>
-      ),
-    },
-  ];
-
   //useState
   const [ingameInfos, setIngameInfos] =
     useState<IGameInfoProps[]>(intialIngameInfos);
   const [content, setContent] = useState('');
   const [hastags, setHashtags] = useState([]);
   const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
-  const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({});
+  const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({
+    0: 0,
+    1: 0,
+  });
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  // const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const quillRef = useRef<ReactQuill>(null);
   const quillPlaceHolder =
     '[게시글 내용 작성 가이드]\n\n' +
@@ -195,11 +149,20 @@ export default function PostForm() {
   };
 
   const addIngameInfo = (): void => {
-    setIngameInfos([
-      ...ingameInfos,
-      { id: ingameInfos.length, position: '', champion: '', tier: '' },
-    ]);
-    console.log(ingameInfos);
+    const newInfo = {
+      id: ingameInfos.length,
+      position: '',
+      champion: '',
+      tier: '',
+    };
+    setIngameInfos(ingameInfos.concat(newInfo));
+
+    // Setting the default position for the newly added game info
+    const updatedSelectedPos = {
+      ...selectedPos,
+      [newInfo.id]: 0, // Defaulting to the first position for the new entry
+    };
+    setSelectedPos(updatedSelectedPos);
   };
 
   const removeIngameInfo = (index: number): void => {
@@ -226,6 +189,15 @@ export default function PostForm() {
         setChampions((prev) => [...prev, ...sortedChampions]);
       })
       .catch((error) => console.error('Error loading the champions:', error));
+  }, []);
+
+  //useMemo
+  const modules = useMemo(() => {
+    return {
+      toolbar: {
+        container: [['image']],
+      },
+    };
   }, []);
 
   //tsx
@@ -261,7 +233,30 @@ export default function PostForm() {
             <div>
               {tabs.map((tab, index) => (
                 <div key={index} className={changeTabContentStyle(index)}>
-                  {tab.content}
+                  {tab.id === 0 ? (
+                    <div className="flex flex-row items-center justify-center">
+                      <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                      <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                    </div>
+                  ) : tab.id === 1 ? (
+                    <div className="flex flex-row items-center ">
+                      <div className="flex flex-row items-center justify-center">
+                        <IoLinkOutline className="mr-[10px] text-[25px]" />
+                        <input
+                          type="text"
+                          placeholder="링크를 붙여 넣어주세요"
+                          className="p-font-color-default outline-none"
+                        />
+                      </div>
+                    </div>
+                  ) : tab.id === 2 ? (
+                    <div className="flex flex-row items-center justify-center">
+                      <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                      <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               ))}
             </div>
@@ -269,11 +264,11 @@ export default function PostForm() {
         </div>
 
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
-          <div className="p-content-mb mx-[30px] text-[20px] text-[#333333]">
+          <div className="p-content-mb mx-[30px] text-[20px] font-semibold text-[#8A1F21]">
             글 작성
           </div>
           <div className="p-content-mb p-font-color-default flex flex-row items-center justify-center">
-            <div className="mx-[30px] text-[24px]">제목</div>
+            <div className="mx-[30px] text-[20px]">제목</div>
             <input
               type="text"
               maxLength={35}
@@ -283,22 +278,6 @@ export default function PostForm() {
             />
           </div>
           <div className="p-content-mb h-[882px] overflow-hidden  rounded-[30px] border-[1.5px] border-[#828282]">
-            {/* <div className="flex h-[100px] items-center rounded-t-[30px] border-[1.5px] border-b-[#828282] px-[44px] py-[20px]">
-              <label
-                htmlFor="p-picture"
-                className="flex flex-col justify-center hover:cursor-pointer"
-              >
-                <SlPicture className="text-[30px]" />
-                <div>사진</div>
-              </label>
-              <input type="file" id="p-picture" className="p-input-hidden" />
-            </div> */}
-            {/* <textarea
-              ref={textAreaRef}
-              className="p-content-mb h-[100%] w-[100%] whitespace-pre-wrap p-[30px] outline-none"
-              maxLength={1000}
-            /> */}
-
             <ReactQuillBase
               forwardedRef={quillRef}
               modules={modules}
@@ -308,7 +287,9 @@ export default function PostForm() {
               placeholder={quillPlaceHolder}
             />
           </div>
-          <div className="mx-[30px] mb-[30px] text-[24px]">해시태그</div>
+          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold text-[#8A1F21]">
+            해시태그
+          </div>
           <input
             type="text"
             className="mb-[30px] w-[100%] rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
@@ -327,75 +308,86 @@ export default function PostForm() {
 
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
-            <div className="ml-[30px] mr-[20px] text-[24px]">
+            <div className=" mr-[20px] text-[20px] font-semibold text-[#8A1F21]">
               판결 참여자 입력
             </div>
-            <div className="text-[12px] text-[#828282]">
+            <div className="text-[12px] text-[#8A1F21]">
               본인을 포함해 판결에 참여할 대상의 정보를 입력해주세요
             </div>
           </div>
 
           {ingameInfos.map((ingameInfo, index) => (
-            <div
-              key={index}
-              className="mb-[20px] flex flex-col rounded-[30px] border-[1.5px] border-[#828282] p-[20px]"
-            >
-              <div className="flex flex-row justify-between">
-                <div className="mb-[15px] text-[12px] text-[#333333]">
-                  본인의 챔피언, 포지션, 티어를 선택해주세요.
-                </div>
-                {ingameInfo.id > 1 ? (
-                  <IoIosClose
-                    onClick={() => removeIngameInfo(index)}
-                    className="cursor-pointer text-[23px]"
-                  />
-                ) : (
-                  ''
-                )}
-              </div>
-
-              <div className="flex w-[100%] items-center">
-                {positions.map((pos, index) => (
-                  <div key={index}>
-                    <input
-                      type="radio"
-                      name={`position-${ingameInfo.id}`}
-                      id={`${pos.id}-${ingameInfo.id}`}
-                      value={pos.value}
-                      className="p-input-hidden"
-                      onChange={() => {
-                        const updatedSelectedPos = { ...selectedPos };
-                        updatedSelectedPos[ingameInfo.id] = index;
-                        setSelectedPos(updatedSelectedPos);
-                      }}
-                      checked={selectedPos[ingameInfo.id] === index}
-                    />
-                    <label
-                      htmlFor={`${pos.id}-${ingameInfo.id}`}
-                      className={changePositionRadioStyle(
-                        index,
-                        selectedPos[ingameInfo.id] === index,
-                      )}
-                    >
-                      {pos.svg}
-                      <div>{pos.content}</div>
-                    </label>
+            <div key={index}>
+              {index === 0 ? (
+                <div className="flex flex-row justify-between">
+                  <div className="mb-[15px] text-[12px] text-[#333333]">
+                    본인의 챔피언, 포지션, 티어를 선택해주세요.
                   </div>
-                ))}
-                <select id="champions-select" className="p-select">
-                  {champions.map((champion, index) => (
-                    <option key={index} value={champion}>
-                      {champion}
-                    </option>
+                </div>
+              ) : index === 1 ? (
+                <div className="flex flex-row justify-between">
+                  <div className="mb-[15px] text-[12px] text-[#333333]">
+                    상대의 챔피언, 포지션, 티어를 선택해주세요.
+                  </div>
+                  <hr />
+                </div>
+              ) : (
+                ''
+              )}
+
+              <div className="mb-[20px] flex flex-col rounded-[30px] border-2 border-[#8A1F21] p-[20px]">
+                <div className="flex w-[100%] items-center">
+                  {positions.map((pos, index) => (
+                    <div key={index}>
+                      <input
+                        type="radio"
+                        name={`position-${ingameInfo.id}`}
+                        id={`${pos.id}-${ingameInfo.id}`}
+                        value={pos.value}
+                        className="p-input-hidden"
+                        onChange={() => {
+                          const updatedSelectedPos = { ...selectedPos };
+                          updatedSelectedPos[ingameInfo.id] = index;
+                          setSelectedPos(updatedSelectedPos);
+                        }}
+                        checked={selectedPos[ingameInfo.id] === index}
+                      />
+                      <label
+                        htmlFor={`${pos.id}-${ingameInfo.id}`}
+                        className={changePositionRadioStyle(
+                          index,
+                          selectedPos[ingameInfo.id] === index,
+                        )}
+                      >
+                        <div className="mr-1">{pos.svg}</div>
+                        <div>{pos.content}</div>
+                      </label>
+                    </div>
                   ))}
-                </select>
-                <select id="tiers-select" className="p-select">
-                  {tiers.map((tier, index) => (
-                    <option key={index} id={tier.id} value={tier.value}>
-                      {tier.content}
-                    </option>
-                  ))}
-                </select>
+                  <select id="champions-select" className="p-select">
+                    {champions.map((champion, index) => (
+                      <option key={index} value={champion}>
+                        {champion}
+                      </option>
+                    ))}
+                  </select>
+                  <select id="tiers-select" className="p-select">
+                    {tiers.map((tier, index) => (
+                      <option key={index} id={tier.id} value={tier.value}>
+                        {tier.content}
+                      </option>
+                    ))}
+                  </select>
+                  {ingameInfo.id === ingameInfos.length - 1 &&
+                  ingameInfo.id > 1 ? (
+                    <IoIosClose
+                      onClick={() => removeIngameInfo(index)}
+                      className="cursor-pointer text-[23px] text-[#8A1F21] "
+                    />
+                  ) : (
+                    ''
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -405,14 +397,14 @@ export default function PostForm() {
               onClick={addIngameInfo}
               className="flex cursor-pointer flex-row justify-center text-[50px] text-[#333333]"
             >
-              <IoAddCircleOutline />
+              <IoAddCircleOutline className="text-[#8A1F21]" />
             </div>
           )}
 
           <div className="flex flex-row justify-end">
             <button
               type="submit"
-              className="flex flex-row items-center rounded-[50px] bg-[#8A1F21] px-[30px] py-[5px] text-[20px] text-white"
+              className="flex flex-row items-center rounded-[50px] bg-[#8A1F21] px-[20px] py-[5px] text-[17px] text-white"
             >
               <IoSaveOutline className="mr-[5px]" />
               작성완료
