@@ -4,30 +4,30 @@ import PostVotingGraph from '../post/PostVotingGraph';
 export default function HomeNotVoted() {
   return (
     <>
-      <div className="flex flex-row items-center p-[25px] text-[10px]">
-        <div className="mx-[50px] flex flex-col">
+      <div className="flex flex-row items-center  text-[0.625em]">
+        <div className="flex flex-col">
           <div className="mb-1 flex flex-row items-center">
             <div className="p-voting-champ-dot bg-[#000000]"></div>
-            <div className="">트위스티드 페이트</div>
+            <div className="whitespace-nowrap">트위스티드 페이트</div>
           </div>
           <div className="mb-1  flex flex-row items-center">
             <div className="p-voting-champ-dot bg-[#9D2A2C]"></div>
-            <div className="">블리츠크랭크</div>
+            <div className="whitespace-nowrap">블리츠크랭크</div>
           </div>
           <div className="mb-1 flex flex-row items-center">
             <div className="p-voting-champ-dot bg-[#CACACA]"></div>
-            <div className="">아우렐리온 솔</div>
+            <div className="whitespace-nowrap">아우렐리온 솔</div>
           </div>
           <div className="mb-1 flex flex-row items-center">
             <div className="p-voting-champ-dot bg-[#656565]"></div>
-            <div className="">레나타 글라스크</div>
+            <div className="whitespace-nowrap">레나타 글라스크</div>
           </div>
           <div className="mb-1 flex flex-row items-center">
             <div className="p-voting-champ-dot bg-[#6C0000]"></div>
-            <div className="">누누와 윌럼프</div>
+            <div className="whitespace-nowrap">누누와 윌럼프</div>
           </div>
         </div>
-        <div className="flex  flex-col items-center">
+        <div className="flex flex-col items-center">
           <div className="p-content-s-mb flex flex-row">
             <div className="p-voting-number-element text-[#000000] ">2 </div>
             <div className="p-voting-number-element "> : </div>
@@ -53,7 +53,7 @@ export default function HomeNotVoted() {
           </div>
         </div>
       </div>
-      <div className="absolute right-[35%] top-5 flex h-[6rem] w-[13rem] flex-col items-center justify-center rounded-[5px] bg-[#ffffff] p-2 shadow-md">
+      <div className="absolute right-[35%] top-5 flex h-[6rem] flex-col items-center justify-center rounded-[5px] bg-[#ffffff] p-2 shadow-md">
         <div className="mb-2 text-center text-[10px]">
           판결이 궁금하시다구요? <br />
           판결에 참여하고, 결과를 확인하세요

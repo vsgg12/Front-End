@@ -22,7 +22,8 @@ import {
   IoCloseOutline,
 } from 'react-icons/io5';
 
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
+
 import dynamic from 'next/dynamic';
 
 const ReactQuillBase = dynamic(
@@ -129,7 +130,9 @@ export default function PostForm() {
     formState: { errors },
   } = useForm<ICreatePostProps>();
 
-  const onSubmit: SubmitHandler<ICreatePostProps> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
+    console.log(content);
+  };
 
   //functions
   const changeTabTitleStyle = (index: number): string => {
@@ -204,7 +207,7 @@ export default function PostForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
           <PostUploadDesc />
           <div className="p-content-mb relative h-[150px]">
             <div className="absolute z-10 ml-[30px] ">
@@ -263,7 +266,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
           <div className="p-content-mb mx-[30px] text-[20px] font-semibold text-[#8A1F21]">
             글 작성
           </div>
@@ -281,7 +284,7 @@ export default function PostForm() {
             <ReactQuillBase
               forwardedRef={quillRef}
               modules={modules}
-              className=" h-[100%] w-[100%] whitespace-pre-wrap outline-none"
+              className=" h-[100%] w-full whitespace-pre-wrap outline-none"
               value={content}
               onChange={setContent}
               placeholder={quillPlaceHolder}
@@ -292,7 +295,7 @@ export default function PostForm() {
           </div>
           <input
             type="text"
-            className="mb-[30px] w-[100%] rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
+            className="mb-[30px] w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
             placeholder="#해시태그를 등록하세요 (최대 5개)"
           />
           {/* map으로 태그 돌리기, 엔터치면 태그내용에서 스페이스 다 빼서 밑에 태그에 입력 */}
@@ -306,7 +309,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-[1440px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
             <div className=" mr-[20px] text-[20px] font-semibold text-[#8A1F21]">
               판결 참여자 입력

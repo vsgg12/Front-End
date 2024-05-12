@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import Search from '@/app/components/Search';
-import PostReturnBtn from '../post/PostReturnBtn';
 import HomePostItems from './HomePostItems';
 import { useEffect } from 'react';
 import Image from 'next/image';
@@ -17,7 +16,7 @@ export default function Home(): JSX.Element {
       <main>
         <Search />
         <section className="flex justify-center">
-          <div className="relative w-fit">
+          <div className="relative w-4/5">
             <Link href={`/post/write`}>
               <button className=" fixed bottom-[60px] right-2 z-10 flex h-[7.125rem] w-[7.313rem] flex-col items-center justify-center rounded-full bg-[#8A1F21] text-white shadow-2xl">
                 <Image
@@ -30,7 +29,9 @@ export default function Home(): JSX.Element {
               </button>
             </Link>
             <header className="mb-[44px] flex flex-row items-center justify-between ">
-              <PostReturnBtn>최신순/추천순</PostReturnBtn>
+              <button className="  box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white">
+                <div className="text-[13px]">최신순/추천순</div>
+              </button>
               <div className="text-xs text-[#909090]">홈</div>
             </header>
             <HomePostItems />

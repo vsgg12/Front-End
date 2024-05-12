@@ -17,8 +17,8 @@ export default function HomePostItems() {
   return (
     <>
       <Link href={`/post/${1}/`}>
-        <div className="p-content-pd p-content-mb h-fit w-[90rem] rounded-[1.875rem] bg-[#ffffff]">
-          <div className="flex w-full flex-row place-items-start justify-between font-medium">
+        <div className="p-content-pd p-content-mb h-fit w-full rounded-[1.875rem] bg-[#ffffff]">
+          <div className="flex w-full flex-row  justify-between font-medium">
             <div className="p-content-s-mb text-[1.563rem]">
               {testPost.title}
             </div>
@@ -42,20 +42,20 @@ export default function HomePostItems() {
               </div>
             </div>
           </div>
-          <div className="flex flex-row">
+          <div className="flex h-fit flex-row">
             <iframe
-              className="p-content-rounded p-content-s-mb p-content-mr h-[21.25rem] w-[37.875rem]"
+              className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
               src={testVid.url}
               title="롤 랭크 4:5 바론한타"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             ></iframe>
-            <div className="flex w-[50%] flex-col">
-              <div className="p-content-mb h-[45%] cursor-pointer decoration-solid hover:underline">
+            <div className="flex flex-col overflow-hidden">
+              <div className="mb-2 line-clamp-[8] cursor-pointer overflow-hidden text-ellipsis decoration-solid ">
                 {testPost.content}
               </div>
-              <div className="to-[#DCDCDC} relative h-[8.563rem] rounded-[1.875rem] bg-gradient-to-b from-[#ADADAD]/30 to-[#DCDCDC]/30 ">
+              <div className="to-[#DCDCDC} relative flex h-[8.563rem] items-center justify-center rounded-[1.875rem] bg-gradient-to-b from-[#ADADAD]/30 to-[#DCDCDC]/30 ">
                 {isVoted ? <HomeVoted /> : <HomeNotVoted />}
               </div>
             </div>

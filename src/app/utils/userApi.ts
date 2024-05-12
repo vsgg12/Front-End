@@ -4,7 +4,6 @@ import {
   createGetRequestOptions,
   createPostRequestOptions,
 } from './common/requestOptions';
-import convertMemberFormData from './data/memberData';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
@@ -28,8 +27,6 @@ export async function signout() {
 
 export async function createUser(data: ICreateMemberProps): Promise<any> {
   try {
-    const memberData = convertMemberFormData(data);
-    console.log('멤버보냄');
     console.log(data);
     const requestOptions = createPostRequestOptions(data);
     const response = await fetch(`${API_URL}/users/signup`, requestOptions);

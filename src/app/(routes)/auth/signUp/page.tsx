@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import SignUpTerm from './SignUpTerm';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createUser } from '@/app/utils/userApi';
