@@ -40,11 +40,24 @@ const ReactQuillBase = dynamic(
     const { ImageResize } = await import('quill-image-resize-module-ts');
     RQ.Quill.register('modules/imageResize', ImageResize);
 
-    function QuillJS({ forwardedRef, ...props }: IWrappedComponent) {
-      return <RQ ref={forwardedRef} {...props} />;
-    }
+    // function QuillJS({ forwardedRef, ...props }: IWrappedComponent) {
+    //   return <RQ ref={forwardedRef} {...props} />;
+    // }
 
-    return QuillJS;
+    // return QuillJS;
+    return function forwardRef({ forwardedRef, ...props }: IWrappedComponent) {
+      const newProps = {
+        ...props,
+        modules: {
+          ...props.modules,
+          imageResize: {
+            parchment: RQ.Quill.import('parchment'),
+            modules: ['Resize'],
+          },
+        },
+      };
+      return <RQ ref={forwardedRef} {...newProps} />;
+    };
   },
   { ssr: false },
 );
@@ -141,7 +154,7 @@ export default function PostForm() {
   } = useForm<ICreatePostProps>();
 
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
-    // console.log(content);
+    console.log(content);
   };
 
   //functions
@@ -246,9 +259,9 @@ export default function PostForm() {
     () => ({
       toolbar: {
         container: [['image']],
-        handlers: {
-          image: imageHandler,
-        },
+        // handlers: {
+        //   image: imageHandler,
+        // },
       },
       clipboard: {
         matchVisual: true,
