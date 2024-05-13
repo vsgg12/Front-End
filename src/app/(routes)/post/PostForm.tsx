@@ -123,10 +123,11 @@ export default function PostForm() {
   ];
 
   //useState
+  const [content, setContent] = useState('');
+  const [videoType, setVideoType] = useState('FILE');
+  const [hashtags, setHashtags] = useState([]);
   const [ingameInfos, setIngameInfos] =
     useState<IGameInfoProps[]>(intialIngameInfos);
-  const [content, setContent] = useState('');
-  const [hastags, setHashtags] = useState([]);
   const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
   const [selectedPos, setSelectedPos] = useState<{ [key: number]: number }>({
     0: 0,
@@ -154,7 +155,15 @@ export default function PostForm() {
   } = useForm<ICreatePostProps>();
 
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
-    console.log(content);
+    const postData = {
+      title: data.title,
+      content: content, //useState - react-quill
+      type: videoType,
+      hashtag: hashtags,
+      inGameInfoRequests: ingameInfos,
+    };
+
+    console.log(postData);
   };
 
   //functions
@@ -189,6 +198,27 @@ export default function PostForm() {
       [newInfo.id]: 0, // Defaulting to the first position for the new entry
     };
     setSelectedPos(updatedSelectedPos);
+  };
+
+  const handlePositionChange = (position: string, index: number) => {
+    const updatedIngameInfos = ingameInfos.map((info, idx) =>
+      idx === index ? { ...info, position } : info,
+    );
+    setIngameInfos(updatedIngameInfos);
+  };
+
+  const handleChampionChange = (champion: string, index: number) => {
+    const updatedIngameInfos = ingameInfos.map((info, idx) =>
+      idx === index ? { ...info, champion } : info,
+    );
+    setIngameInfos(updatedIngameInfos);
+  };
+
+  const handleTierChange = (tier: string, index: number) => {
+    const updatedIngameInfos = ingameInfos.map((info, idx) =>
+      idx === index ? { ...info, tier } : info,
+    );
+    setIngameInfos(updatedIngameInfos);
   };
 
   const removeIngameInfo = (index: number): void => {
@@ -274,7 +304,7 @@ export default function PostForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
           <PostUploadDesc />
           <div className="p-content-mb relative h-[150px]">
             <div className="absolute z-10 ml-[30px] ">
@@ -333,7 +363,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
           <div className="p-content-mb mx-[30px] text-[20px] font-semibold text-[#8A1F21]">
             글 작성
           </div>
@@ -376,7 +406,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[1000px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
             <div className=" mr-[20px] text-[20px] font-semibold text-[#8A1F21]">
               판결 참여자 입력
@@ -419,6 +449,8 @@ export default function PostForm() {
                           const updatedSelectedPos = { ...selectedPos };
                           updatedSelectedPos[ingameInfo.id] = index;
                           setSelectedPos(updatedSelectedPos);
+
+                          handlePositionChange(pos.value, ingameInfo.id);
                         }}
                         checked={selectedPos[ingameInfo.id] === index}
                       />
@@ -434,14 +466,24 @@ export default function PostForm() {
                       </label>
                     </div>
                   ))}
-                  <select id="champions-select" className="p-select">
+                  <select
+                    id="champions-select"
+                    className="p-select"
+                    onChange={(e) =>
+                      handleChampionChange(e.target.value, index)
+                    }
+                  >
                     {champions.map((champion, index) => (
                       <option key={index} value={champion}>
                         {champion}
                       </option>
                     ))}
                   </select>
-                  <select id="tiers-select" className="p-select">
+                  <select
+                    id="tiers-select"
+                    className="p-select"
+                    onChange={(e) => handleTierChange(e.target.value, index)}
+                  >
                     {tiers.map((tier, index) => (
                       <option key={index} id={tier.id} value={tier.value}>
                         {tier.content}
