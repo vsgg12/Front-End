@@ -6,6 +6,8 @@ import {
   useMemo,
   LegacyRef,
   useCallback,
+  KeyboardEvent,
+  ChangeEvent,
 } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ICreatePostProps, IWrappedComponent } from '@/app/types/form';
@@ -62,70 +64,71 @@ const ReactQuillBase = dynamic(
   { ssr: false },
 );
 
+const tabs = [
+  { id: 0, title: '파일 불러오기' },
+  { id: 1, title: '링크로 불러오기' },
+  { id: 2, title: '썸네일 업로드' },
+];
+
+const positions = [
+  {
+    id: 'top',
+    value: 'top',
+    content: '탑',
+    svg: <Image alt="top" src={topSVG} />,
+  },
+  {
+    id: 'mid',
+    value: 'mid',
+    content: '미드',
+    svg: <Image alt="mid" src={midSVG} />,
+  },
+  {
+    id: 'jungle',
+    value: 'jungle',
+    content: '정글',
+    svg: <Image alt="jungle" src={jungleSVG} />,
+  },
+  {
+    id: 'onedeal',
+    value: 'onedeal',
+    content: '원딜',
+    svg: <Image alt="onedeal" src={onedealSVG} />,
+  },
+  {
+    id: 'support',
+    value: 'support',
+    content: '서폿',
+    svg: <Image alt="support" src={supportSVG} />,
+  },
+];
+
+const tiers = [
+  { id: undefined, value: undefined, content: '티어 선택' },
+  { id: 'unrank', value: 'unrank', content: '언랭' },
+  { id: 'iron', value: 'iron', content: '아이언' },
+  { id: 'bronze', value: 'bronze', content: '브론즈' },
+  { id: 'silver', value: 'silver', content: '실버' },
+  { id: 'gold', value: 'gold', content: '골드' },
+  { id: 'platinum', value: 'platinum', content: '플래티넘' },
+  { id: 'emerald', value: 'emerald', content: '에메랄드' },
+  { id: 'diamond', value: 'diamond', content: '다이아' },
+  { id: 'master', value: 'master', content: '마스터' },
+  { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
+  { id: 'challenger', value: 'challenger', content: '챌린저' },
+];
+
+const intialIngameInfos: IGameInfoProps[] = [
+  { id: 0, position: '', champion: '', tier: '' },
+  { id: 1, position: '', champion: '', tier: '' },
+];
+
 export default function PostForm() {
-  const tabs = [
-    { id: 0, title: '파일 불러오기' },
-    { id: 1, title: '링크로 불러오기' },
-    { id: 2, title: '썸네일 업로드' },
-  ];
-
-  const positions = [
-    {
-      id: 'top',
-      value: 'top',
-      content: '탑',
-      svg: <Image alt="top" src={topSVG} />,
-    },
-    {
-      id: 'mid',
-      value: 'mid',
-      content: '미드',
-      svg: <Image alt="mid" src={midSVG} />,
-    },
-    {
-      id: 'jungle',
-      value: 'jungle',
-      content: '정글',
-      svg: <Image alt="jungle" src={jungleSVG} />,
-    },
-    {
-      id: 'onedeal',
-      value: 'onedeal',
-      content: '원딜',
-      svg: <Image alt="onedeal" src={onedealSVG} />,
-    },
-    {
-      id: 'support',
-      value: 'support',
-      content: '서폿',
-      svg: <Image alt="support" src={supportSVG} />,
-    },
-  ];
-
-  const tiers = [
-    { id: undefined, value: undefined, content: '티어 선택' },
-    { id: 'unrank', value: 'unrank', content: '언랭' },
-    { id: 'iron', value: 'iron', content: '아이언' },
-    { id: 'bronze', value: 'bronze', content: '브론즈' },
-    { id: 'silver', value: 'silver', content: '실버' },
-    { id: 'gold', value: 'gold', content: '골드' },
-    { id: 'platinum', value: 'platinum', content: '플래티넘' },
-    { id: 'emerald', value: 'emerald', content: '에메랄드' },
-    { id: 'diamond', value: 'diamond', content: '다이아' },
-    { id: 'master', value: 'master', content: '마스터' },
-    { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
-    { id: 'challenger', value: 'challenger', content: '챌린저' },
-  ];
-
-  const intialIngameInfos: IGameInfoProps[] = [
-    { id: 0, position: '', champion: '', tier: '' },
-    { id: 1, position: '', champion: '', tier: '' },
-  ];
-
   //useState
   const [content, setContent] = useState('');
   const [videoType, setVideoType] = useState('FILE');
-  const [hashtags, setHashtags] = useState([]);
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [ingameInfos, setIngameInfos] =
     useState<IGameInfoProps[]>(intialIngameInfos);
   const [champions, setChampions] = useState<string[]>(['챔피언 선택']);
@@ -187,6 +190,25 @@ export default function PostForm() {
       : 'p-position p-position-n-selected';
   };
 
+  const handleTagInput = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // 폼 제출 방지
+      const newTag = event.currentTarget.value.trim();
+      if (newTag && !hashtags.includes(newTag) && hashtags.length < 5) {
+        // 중복 및 빈 문자열 검사
+        setHashtags([...hashtags, newTag]);
+        setTagInput(''); // 입력 필드 초기화
+      }
+    }
+  };
+
+  const handleTagInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setTagInput(event.target.value); // 입력값 상태 업데이트
+  };
+
+  const removeTag = (index: number) => {
+    setHashtags(hashtags.filter((_, idx) => idx !== index)); // 특정 인덱스의 태그 제거
+  };
   const addIngameInfo = (): void => {
     const newInfo = {
       id: ingameInfos.length,
@@ -396,17 +418,25 @@ export default function PostForm() {
           </div>
           <input
             type="text"
-            className="mb-[30px] w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
+            className="mb-4 w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
             placeholder="#해시태그를 등록하세요 (최대 5개)"
+            value={tagInput}
+            onChange={handleTagInputChange}
+            onKeyDown={handleTagInput}
           />
           {/* map으로 태그 돌리기, 엔터치면 태그내용에서 스페이스 다 빼서 밑에 태그에 입력 */}
-          <div className="p-content-mb ml-[30px] flex flex-row">
-            <div className="mr-[15px] flex w-fit flex-row items-center justify-center rounded-[150px] border-2 border-[#333333] px-[15px] py-[5px]">
-              <div className="mr-[8px] text-[12px]"># 바론앞한타</div>
-              <button type="button">
-                <IoCloseOutline className="text-[20px]" />
-              </button>
-            </div>
+          <div className="ml-4 flex">
+            {hashtags.map((hashtag, index) => (
+              <div className="mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-2 border-[#333333] px-[15px] py-[5px]">
+                <div className="mr-[8px] text-[12px]"># {hashtag}</div>
+                <button type="button">
+                  <IoCloseOutline
+                    className="text-[20px]"
+                    onClick={() => removeTag(index)}
+                  />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
