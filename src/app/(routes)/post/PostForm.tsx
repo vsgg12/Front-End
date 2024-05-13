@@ -155,12 +155,16 @@ export default function PostForm() {
   } = useForm<ICreatePostProps>();
 
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
+    const inGameInfoRequests = ingameInfos.map(({ id, ...rest }) => ({
+      ...rest,
+    }));
+
     const postData = {
       title: data.title,
       content: content, //useState - react-quill
       type: videoType,
       hashtag: hashtags,
-      inGameInfoRequests: ingameInfos,
+      inGameInfoRequests: inGameInfoRequests,
     };
 
     console.log(postData);
