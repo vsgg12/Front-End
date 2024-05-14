@@ -27,7 +27,7 @@ export default function Header(): JSX.Element {
           <button className="hd-items mr-[1rem] ">
             <IoMdNotificationsOutline />
           </button>
-          <Link href="/pages/myPage">
+          <Link href="/myPage">
             <button className=" hd-items mr-[1.5rem] h-[2rem] w-[2rem] rounded-full border-2 border-[#8A1F21] bg-[#C3C3C3]"></button>
           </Link>
           <Link href="/api/oauth/naver/logout">

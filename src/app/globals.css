@@ -129,7 +129,7 @@ button {
 }
 
 .p-position {
-  @apply mr-[0.625rem] flex cursor-pointer select-none flex-row items-center rounded-[1.875rem] border-[0.09375rem] px-[1.25rem] py-[0.3125rem] text-xs;
+  @apply mr-[0.625rem] flex cursor-pointer select-none flex-row items-center whitespace-nowrap rounded-[1.875rem] border-[0.09375rem] px-[1.25rem] py-[0.3125rem] text-xs;
 }
 
 .p-position-selected {
