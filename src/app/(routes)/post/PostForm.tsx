@@ -4,7 +4,6 @@ import {
   useEffect,
   useState,
   useMemo,
-  LegacyRef,
   useCallback,
   KeyboardEvent,
   ChangeEvent,
@@ -22,6 +21,12 @@ import midSVG from '../../../../public/svg/mid.svg';
 import jungleSVG from '../../../../public/svg/jungle.svg';
 import onedealSVG from '../../../../public/svg/onedeal.svg';
 import supportSVG from '../../../../public/svg/supporter.svg';
+
+import topWSVG from '../../../../public/svg/top-w.svg';
+import midWSVG from '../../../../public/svg/mid-w.svg';
+import jungleWSVG from '../../../../public/svg/jungle-w.svg';
+import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
+import supportWSVG from '../../../../public/svg/supporter-w.svg';
 
 import { IoIosClose } from 'react-icons/io';
 import {
@@ -71,30 +76,35 @@ const positions = [
     value: 'top',
     content: '탑',
     svg: <Image alt="top" src={topSVG} />,
+    svgW: <Image alt="top" src={topWSVG} />,
   },
   {
     id: 'jungle',
     value: 'jungle',
     content: '정글',
     svg: <Image alt="jungle" src={jungleSVG} />,
+    svgW: <Image alt="top" src={jungleWSVG} />,
   },
   {
     id: 'mid',
     value: 'mid',
     content: '미드',
     svg: <Image alt="mid" src={midSVG} />,
+    svgW: <Image alt="top" src={midWSVG} />,
   },
   {
     id: 'onedeal',
     value: 'onedeal',
     content: '원딜',
     svg: <Image alt="onedeal" src={onedealSVG} />,
+    svgW: <Image alt="top" src={onedealWSVG} />,
   },
   {
     id: 'support',
     value: 'support',
     content: '서폿',
     svg: <Image alt="support" src={supportSVG} />,
+    svgW: <Image alt="top" src={supportWSVG} />,
   },
 ];
 
@@ -122,6 +132,7 @@ export default function PostForm() {
   //useState
   const [memberId, setMemberId] = useState(1);
   const [thumbnail, setThumbnail] = useState<any>();
+  const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
   const [content, setContent] = useState('');
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
@@ -162,7 +173,15 @@ export default function PostForm() {
   //form submit
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
     const thumbNailData = new FormData();
-    thumbNailData.append('thumbnail', thumbnail, `${memberId}-thumbnail.jpg`);
+    if (!uploadedThumbnail) {
+      thumbNailData.append('thumbnail', thumbnail, `${memberId}-thumbnail.jpg`);
+    } else {
+      thumbNailData.append(
+        'thumbnail',
+        uploadedThumbnail,
+        `${memberId}-thumbnail.jpg`,
+      );
+    }
 
     let values = thumbNailData.values();
     for (const pair of values) {
@@ -205,7 +224,7 @@ export default function PostForm() {
 
   //handle
   //thumbnail upload
-  const handleFileChange = async (
+  const handleVideoFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
@@ -241,6 +260,13 @@ export default function PostForm() {
         };
       }
     }
+  };
+
+  const handleThumbnailFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    setUploadedThumbnail(file);
   };
 
   //hashtags
@@ -425,11 +451,11 @@ export default function PostForm() {
                         name="video"
                         className="p-input-hidden"
                         accept="video/mp4"
-                        onChange={handleFileChange}
+                        onChange={handleVideoFileChange}
                       />
                       <label
                         htmlFor="video"
-                        className="flex flex-row items-center justify-center"
+                        className="flex cursor-pointer flex-row items-center justify-center"
                       >
                         <IoDocumentOutline className="mr-[10px] text-[20px]" />
                         파일을 끌어오거나 클릭 후 업로드 하세요
@@ -454,9 +480,22 @@ export default function PostForm() {
                       </div>
                     </div>
                   ) : tab.id === 2 ? (
-                    <div className="flex flex-row items-center justify-center">
-                      <IoDocumentOutline className="mr-[10px] text-[20px]" />
-                      <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                    <div>
+                      <input
+                        type="file"
+                        id="uploadedThumbnail"
+                        name="uploadedThumbnail"
+                        className="p-input-hidden"
+                        accept="image/*"
+                        onChange={handleThumbnailFileChange}
+                      />
+                      <label
+                        htmlFor="uploadedThumbnail"
+                        className="flex cursor-pointer flex-row items-center justify-center"
+                      >
+                        <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                        <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                      </label>
                     </div>
                   ) : (
                     ''
@@ -502,7 +541,6 @@ export default function PostForm() {
             onChange={handleTagInputChange}
             onKeyDown={handleTagInput}
           />
-          {/* map으로 태그 돌리기, 엔터치면 태그내용에서 스페이스 다 빼서 밑에 태그에 입력 */}
           <div className="ml-4 flex flex-wrap ">
             {hashtags.map((hashtag, index) => (
               <div
@@ -576,7 +614,12 @@ export default function PostForm() {
                           selectedPos[ingameInfo.id] === index,
                         )}
                       >
-                        <div className="mr-1">{pos.svg}</div>
+                        <div className="mr-1">
+                          {' '}
+                          {selectedPos[ingameInfo.id] === index
+                            ? pos.svgW
+                            : pos.svg}
+                        </div>
                         <div>{pos.content}</div>
                       </label>
                     </div>
