@@ -125,8 +125,8 @@ const tiers = [
 ];
 
 const intialIngameInfos: IGameInfoProps[] = [
-  { id: 0, position: '', champion: '', tier: '' },
-  { id: 1, position: '', champion: '', tier: '' },
+  { id: 0, position: 'top', champion: '', tier: '' },
+  { id: 1, position: 'top', champion: '', tier: '' },
 ];
 
 export default function PostForm() {
@@ -135,7 +135,6 @@ export default function PostForm() {
   const [uploadedVideo, setUploadedVideo] = useState<any>();
   const [thumbnail, setThumbnail] = useState<any>();
   const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
-  const [link, setLink] = useState<string>();
   const [content, setContent] = useState('');
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
@@ -170,6 +169,7 @@ export default function PostForm() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ICreatePostProps>();
 
@@ -198,12 +198,24 @@ export default function PostForm() {
       ...rest,
     }));
 
+    // const postData = {
+    //   title: data.title,
+    //   content: content, //useState - react-quill
+    //   type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
+    //   hashtag: hashtags,
+    //   inGameInfoRequests: inGameInfoRequests,
+    // };
+
     const postData = {
-      title: data.title,
-      content: content, //useState - react-quill
-      type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
-      hashtag: hashtags,
-      inGameInfoRequests: inGameInfoRequests,
+      uploadedVideos: videoData,
+      videoUrl: data.link,
+      postAddRequest: {
+        title: data.title,
+        content,
+        type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
+        hashTag: hashtags,
+      },
+      inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
     };
 
     console.log(postData);
@@ -229,6 +241,36 @@ export default function PostForm() {
 
   //handle
   //thumbnail upload
+  const handleTabChange = (index: number) => {
+    const link = watch('link');
+    if ((index === 0 || index === 2) && link) {
+      const confirmChange = confirm('파일 업로드 선택 시 링크가 삭제됩니다.');
+      if (confirmChange) {
+        setValue('link', '');
+        setSelectedTab(index);
+      } else {
+        return;
+      }
+    } else if (
+      (index === 1 && uploadedVideo) ||
+      (index === 1 && uploadedThumbnail)
+    ) {
+      const confirmChange = confirm(
+        '링크 선택 시 업로드한 파일과 썸네일이 삭제됩니다.',
+      );
+      if (confirmChange) {
+        setUploadedVideo(undefined);
+        setUploadedThumbnail(undefined);
+        setThumbnail(undefined);
+        setSelectedTab(index);
+      } else {
+        return;
+      }
+    } else {
+      setSelectedTab(index);
+    }
+  };
+
   const handleVideoFileChange = async (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -337,7 +379,7 @@ export default function PostForm() {
   const addIngameInfo = (): void => {
     const newInfo = {
       id: ingameInfos.length,
-      position: '',
+      position: 'top',
       champion: '',
       tier: '',
     };
@@ -465,7 +507,8 @@ export default function PostForm() {
                 <button
                   type="button"
                   key={index}
-                  onClick={() => setSelectedTab(index)}
+                  // onClick={() => setSelectedTab(index)}
+                  onClick={() => handleTabChange(index)}
                   className={changeTabTitleStyle(index)}
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -520,12 +563,13 @@ export default function PostForm() {
                     </div>
                   ) : tab.id === 1 ? (
                     <div className="flex flex-row items-center ">
-                      <div className="flex flex-row items-center justify-center">
+                      <div className="flex w-full flex-row items-center justify-center">
                         <IoLinkOutline className="mr-[10px] text-[25px]" />
                         <input
                           type="text"
                           placeholder="링크를 붙여 넣어주세요"
-                          className="p-font-color-default outline-none"
+                          className="p-font-color-default grow outline-none"
+                          {...register('link')}
                         />
                       </div>
                     </div>
