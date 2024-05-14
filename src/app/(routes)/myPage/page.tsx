@@ -1,3 +1,7 @@
+'use client';
+
+import BarChart from '@/app/components/BarChart';
+import HalfDoughnutChart from '@/app/components/HalfDoughnutChart';
 import Logo from '@/app/components/Logo';
 
 const data = [
@@ -8,6 +12,8 @@ const data = [
     totalJudge: 100,
     winJudge: 30,
     loseJudge: 70,
+    judgeCount: 50,
+    winjudgeCount: 25,
   },
 ];
 
@@ -30,20 +36,20 @@ export default function MyPage() {
               <div className="h-0.5 w-full bg-[#8A1F21]"></div>
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="self-start text-xs">판결 승률</div>
-                <div>판결</div>
+                <HalfDoughnutChart win={user.winJudge} lose={user.loseJudge} />
                 <div className="text-xs text-[#C3C3C3]">
                   {user.totalJudge}전 {user.winJudge}승 {user.loseJudge}패
                 </div>
               </div>
               <div className="h-0.5 w-full bg-[#8A1F21]"></div>
-              <div className="flex flex-col justify-center gap-4">
+              <div className="flex w-full flex-col justify-center gap-4">
                 <div className="text-xs">다음 등급까지</div>
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <div>등급</div>
+                  <BarChart num={user.judgeCount} />
                   <div className="text-xs text-[#C3C3C3]">판결 50 / 100</div>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <div>판결</div>
+                  <BarChart num={user.winjudgeCount} />
                   <div className="text-xs text-[#C3C3C3]">
                     승리한 판결 10 / 40
                   </div>

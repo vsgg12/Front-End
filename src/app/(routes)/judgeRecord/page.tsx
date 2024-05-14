@@ -2,6 +2,7 @@
 
 import Logo from '@/app/components/Logo';
 import Pagination from 'react-js-pagination';
+import HalfDoughnutChart from '@/app/components/HalfDoughnutChart';
 import { useEffect, useState } from 'react';
 
 const data = [
@@ -94,7 +95,7 @@ export default function JudgeRecord() {
   }, [mockData, page]);
 
   return (
-    <div>
+    <div key="">
       <div className="mt-12 text-center">
         <Logo />
       </div>
@@ -104,7 +105,7 @@ export default function JudgeRecord() {
             <div className="flex flex-col items-center justify-center gap-5 rounded-xl bg-white px-10 py-5">
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="self-start text-xs">판결 승률</div>
-                <div>판결</div>
+                <HalfDoughnutChart win={30} lose={70} />
                 <div className="text-xs text-[#C3C3C3]">
                   {user.totalJudge}전 {user.winJudge}승 {user.loseJudge}패
                 </div>
