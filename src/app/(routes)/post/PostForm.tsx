@@ -8,10 +8,11 @@ import {
   KeyboardEvent,
   ChangeEvent,
 } from 'react';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ICreatePostProps, IWrappedComponent } from '@/app/types/form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
-import ReactQuill, { Quill } from 'react-quill';
+import ReactQuill from 'react-quill';
 
 import PostUploadDesc from './PostUploadDesc';
 
@@ -131,8 +132,10 @@ const intialIngameInfos: IGameInfoProps[] = [
 export default function PostForm() {
   //useState
   const [memberId, setMemberId] = useState(1);
+  const [uploadedVideo, setUploadedVideo] = useState<any>();
   const [thumbnail, setThumbnail] = useState<any>();
   const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
+  const [link, setLink] = useState<string>();
   const [content, setContent] = useState('');
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
@@ -172,18 +175,21 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
-    const thumbNailData = new FormData();
-    if (!uploadedThumbnail) {
-      thumbNailData.append('thumbnail', thumbnail, `${memberId}-thumbnail.jpg`);
-    } else {
-      thumbNailData.append(
-        'thumbnail',
-        uploadedThumbnail,
-        `${memberId}-thumbnail.jpg`,
-      );
+    const videoData = new FormData();
+
+    if (uploadedVideo) {
+      videoData.append('video', uploadedVideo);
     }
 
-    let values = thumbNailData.values();
+    if (!uploadedThumbnail) {
+      if (thumbnail) {
+        videoData.append('thumbnail', thumbnail);
+      }
+    } else {
+      videoData.append('thumbnail', uploadedThumbnail);
+    }
+
+    let values = videoData.values();
     for (const pair of values) {
       console.log(pair);
     }
@@ -198,7 +204,6 @@ export default function PostForm() {
       type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
       hashtag: hashtags,
       inGameInfoRequests: inGameInfoRequests,
-      thumbnail: thumbNailData, //비디오랑 같이 보내는 거 따로 빼기
     };
 
     console.log(postData);
@@ -225,10 +230,20 @@ export default function PostForm() {
   //handle
   //thumbnail upload
   const handleVideoFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.DragEvent<HTMLDivElement>,
   ) => {
-    const file = event.target.files?.[0];
+    let file: File | null = null;
+
+    if ('dataTransfer' in event) {
+      file = event.dataTransfer.files[0];
+    } else {
+      file = event.target.files?.[0] ?? null;
+    }
+
     if (file) {
+      setUploadedVideo(file);
       const url = URL.createObjectURL(file);
       if (videoRef.current) {
         videoRef.current.src = url;
@@ -262,11 +277,39 @@ export default function PostForm() {
     }
   };
 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleVideoDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleVideoFileChange(event);
+  };
+
+  const handleThumbnailDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleThumbnailFileChange(event);
+  };
+
   const handleThumbnailFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.DragEvent<HTMLDivElement>,
   ) => {
-    const file = event.target.files?.[0];
-    setUploadedThumbnail(file);
+    let file: File | null = null;
+
+    if ('dataTransfer' in event) {
+      file = event.dataTransfer.files[0];
+    } else {
+      file = (event.target as HTMLInputElement).files?.[0] ?? null;
+    }
+
+    if (file) {
+      setUploadedThumbnail(file);
+    }
   };
 
   //hashtags
@@ -444,7 +487,7 @@ export default function PostForm() {
               {tabs.map((tab, index) => (
                 <div key={index} className={changeTabContentStyle(index)}>
                   {tab.id === 0 ? (
-                    <div>
+                    <div onDragOver={handleDragOver} onDrop={handleVideoDrop}>
                       <input
                         type="file"
                         id="video"
@@ -453,12 +496,19 @@ export default function PostForm() {
                         accept="video/mp4"
                         onChange={handleVideoFileChange}
                       />
+
                       <label
                         htmlFor="video"
                         className="flex cursor-pointer flex-row items-center justify-center"
                       >
-                        <IoDocumentOutline className="mr-[10px] text-[20px]" />
-                        파일을 끌어오거나 클릭 후 업로드 하세요
+                        {uploadedVideo ? (
+                          <div>{uploadedVideo.name}</div>
+                        ) : (
+                          <>
+                            <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                            <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                          </>
+                        )}
                       </label>
                       <video ref={videoRef} style={{ display: 'none' }} />
                       <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -480,7 +530,10 @@ export default function PostForm() {
                       </div>
                     </div>
                   ) : tab.id === 2 ? (
-                    <div>
+                    <div
+                      onDragOver={handleDragOver}
+                      onDrop={handleThumbnailDrop}
+                    >
                       <input
                         type="file"
                         id="uploadedThumbnail"
@@ -493,8 +546,14 @@ export default function PostForm() {
                         htmlFor="uploadedThumbnail"
                         className="flex cursor-pointer flex-row items-center justify-center"
                       >
-                        <IoDocumentOutline className="mr-[10px] text-[20px]" />
-                        <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                        {uploadedThumbnail ? (
+                          <div>{uploadedThumbnail.name}</div>
+                        ) : (
+                          <>
+                            <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                            <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                          </>
+                        )}
                       </label>
                     </div>
                   ) : (
