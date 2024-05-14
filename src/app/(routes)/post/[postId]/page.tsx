@@ -22,6 +22,12 @@ export default function PostRead({
     //voting한 postId === postId면 해제하는 코드
   }, []);
 
+  // const changeHashtagStyle = (index: number) => {
+  //   const common =
+  //     'mb-1 mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-2 px-[15px] py-[5px]';
+  //   return index === 0 ? common + ' border-[#000000]' : common;
+  // };
+
   return (
     <>
       <main>
@@ -47,6 +53,11 @@ export default function PostRead({
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                 ></iframe>
+
+                <video controls className="rounded-[30px]">
+                  <source src="../../../../../cat.mp4" type="video/webm" />
+                </video>
+
                 <PostTag />
                 <div className="my-[1.125rem] h-[23.375rem] w-full bg-[#D9D9D9]">
                   사진

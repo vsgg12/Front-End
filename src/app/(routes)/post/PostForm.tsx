@@ -42,11 +42,6 @@ const ReactQuillBase = dynamic(
     const { ImageResize } = await import('quill-image-resize-module-ts');
     RQ.Quill.register('modules/imageResize', ImageResize);
 
-    // function QuillJS({ forwardedRef, ...props }: IWrappedComponent) {
-    //   return <RQ ref={forwardedRef} {...props} />;
-    // }
-
-    // return QuillJS;
     return function forwardRef({ forwardedRef, ...props }: IWrappedComponent) {
       const newProps = {
         ...props,
@@ -78,16 +73,16 @@ const positions = [
     svg: <Image alt="top" src={topSVG} />,
   },
   {
-    id: 'mid',
-    value: 'mid',
-    content: '미드',
-    svg: <Image alt="mid" src={midSVG} />,
-  },
-  {
     id: 'jungle',
     value: 'jungle',
     content: '정글',
     svg: <Image alt="jungle" src={jungleSVG} />,
+  },
+  {
+    id: 'mid',
+    value: 'mid',
+    content: '미드',
+    svg: <Image alt="mid" src={midSVG} />,
   },
   {
     id: 'onedeal',
@@ -125,8 +120,9 @@ const intialIngameInfos: IGameInfoProps[] = [
 
 export default function PostForm() {
   //useState
+  const [memberId, setMemberId] = useState(1);
+  const [thumbnail, setThumbnail] = useState<any>();
   const [content, setContent] = useState('');
-  const [videoType, setVideoType] = useState('FILE');
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [ingameInfos, setIngameInfos] =
@@ -137,7 +133,13 @@ export default function PostForm() {
     1: 0,
   });
   const [selectedTab, setSelectedTab] = useState<number>(0);
+
+  //useRef
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const quillRef = useRef<ReactQuill>(null);
+
   const quillPlaceHolder =
     '[게시글 내용 작성 가이드]\n\n' +
     '1. 리플레이 영상 업로드는 필수! 판결을 받고 싶은 부분만 편집해 업로드 하기\n' +
@@ -157,7 +159,16 @@ export default function PostForm() {
     formState: { errors },
   } = useForm<ICreatePostProps>();
 
+  //form submit
   const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
+    const thumbNailData = new FormData();
+    thumbNailData.append('thumbnail', thumbnail, `${memberId}-thumbnail.jpg`);
+
+    let values = thumbNailData.values();
+    for (const pair of values) {
+      console.log(pair);
+    }
+
     const inGameInfoRequests = ingameInfos.map(({ id, ...rest }) => ({
       ...rest,
     }));
@@ -165,15 +176,17 @@ export default function PostForm() {
     const postData = {
       title: data.title,
       content: content, //useState - react-quill
-      type: videoType,
+      type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
       hashtag: hashtags,
       inGameInfoRequests: inGameInfoRequests,
+      thumbnail: thumbNailData, //비디오랑 같이 보내는 거 따로 빼기
     };
 
     console.log(postData);
   };
 
   //functions
+  //change styles
   const changeTabTitleStyle = (index: number): string => {
     return selectedTab === index
       ? 'p-tab-title p-tab-selected'
@@ -190,6 +203,47 @@ export default function PostForm() {
       : 'p-position p-position-n-selected';
   };
 
+  //handle
+  //thumbnail upload
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      if (videoRef.current) {
+        videoRef.current.src = url;
+
+        videoRef.current.onloadeddata = () => {
+          videoRef.current!.currentTime = 5; // 원하는 시점 설정
+        };
+
+        videoRef.current.onseeked = async () => {
+          if (videoRef.current && canvasRef.current) {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+              if (imageRef.current) {
+                canvas.toBlob(async (blob) => {
+                  if (blob) {
+                    setThumbnail(blob);
+                    URL.revokeObjectURL(url);
+                  }
+                }, 'image/jpeg');
+              }
+            }
+          }
+        };
+      }
+    }
+  };
+
+  //hashtags
   const handleTagInput = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault(); // 폼 제출 방지
@@ -209,6 +263,8 @@ export default function PostForm() {
   const removeTag = (index: number) => {
     setHashtags(hashtags.filter((_, idx) => idx !== index)); // 특정 인덱스의 태그 제거
   };
+
+  //ingameInfos
   const addIngameInfo = (): void => {
     const newInfo = {
       id: ingameInfos.length,
@@ -304,6 +360,8 @@ export default function PostForm() {
 
         /*에디터의 커서 위치에 이미지 요소를 넣어준다.*/
         quillObj?.insertEmbed(range.index, 'image', `${imgUrl}`);
+        // Move cursor to the right of the inserted image
+        quillObj?.setSelection(range.index + 2, 0);
       } catch (error) {
         console.log(error);
       }
@@ -315,9 +373,9 @@ export default function PostForm() {
     () => ({
       toolbar: {
         container: [['image']],
-        // handlers: {
-        //   image: imageHandler,
-        // },
+        handlers: {
+          image: imageHandler,
+        },
       },
       clipboard: {
         matchVisual: true,
@@ -330,7 +388,7 @@ export default function PostForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full  bg-[#ffffff]">
           <PostUploadDesc />
           <div className="p-content-mb relative h-[150px]">
             <div className="absolute z-10 ml-[30px] ">
@@ -360,9 +418,29 @@ export default function PostForm() {
               {tabs.map((tab, index) => (
                 <div key={index} className={changeTabContentStyle(index)}>
                   {tab.id === 0 ? (
-                    <div className="flex flex-row items-center justify-center">
-                      <IoDocumentOutline className="mr-[10px] text-[20px]" />
-                      <div>파일을 끌어오거나 클릭 후 업로드 하세요</div>
+                    <div>
+                      <input
+                        type="file"
+                        id="video"
+                        name="video"
+                        className="p-input-hidden"
+                        accept="video/mp4"
+                        onChange={handleFileChange}
+                      />
+                      <label
+                        htmlFor="video"
+                        className="flex flex-row items-center justify-center"
+                      >
+                        <IoDocumentOutline className="mr-[10px] text-[20px]" />
+                        파일을 끌어오거나 클릭 후 업로드 하세요
+                      </label>
+                      <video ref={videoRef} style={{ display: 'none' }} />
+                      <canvas ref={canvasRef} style={{ display: 'none' }} />
+                      <img
+                        ref={imageRef}
+                        style={{ display: 'none' }}
+                        alt="Video Thumbnail"
+                      />
                     </div>
                   ) : tab.id === 1 ? (
                     <div className="flex flex-row items-center ">
@@ -389,7 +467,7 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full  bg-[#ffffff]">
           <div className="p-content-mb mx-[30px] text-[20px] font-semibold text-[#8A1F21]">
             글 작성
           </div>
@@ -398,7 +476,7 @@ export default function PostForm() {
             <input
               type="text"
               maxLength={35}
-              className=" grow rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[15px] text-[22px]  outline-none"
+              className=" grow rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[15px] text-[20px]  outline-none"
               placeholder="최대 35글자 입력 가능합니다."
               {...register('title')}
             />
@@ -413,7 +491,7 @@ export default function PostForm() {
               placeholder={quillPlaceHolder}
             />
           </div>
-          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold text-[#8A1F21]">
+          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
             해시태그
           </div>
           <input
@@ -425,9 +503,12 @@ export default function PostForm() {
             onKeyDown={handleTagInput}
           />
           {/* map으로 태그 돌리기, 엔터치면 태그내용에서 스페이스 다 빼서 밑에 태그에 입력 */}
-          <div className="ml-4 flex">
+          <div className="ml-4 flex flex-wrap ">
             {hashtags.map((hashtag, index) => (
-              <div className="mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-2 border-[#333333] px-[15px] py-[5px]">
+              <div
+                key={index}
+                className="mb-1 mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-[1.5px] border-[#333333] px-[15px] py-[5px]"
+              >
                 <div className="mr-[8px] text-[12px]"># {hashtag}</div>
                 <button type="button">
                   <IoCloseOutline
@@ -440,12 +521,12 @@ export default function PostForm() {
           </div>
         </div>
 
-        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full max-w-[950px] bg-[#ffffff]">
+        <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full  bg-[#ffffff]">
           <div className="p-content-mb p-font-color-default flex flex-row items-end">
             <div className=" mr-[20px] text-[20px] font-semibold text-[#8A1F21]">
               판결 참여자 입력
             </div>
-            <div className="text-[12px] text-[#8A1F21]">
+            <div className="text-[12px] text-[#333333]">
               본인을 포함해 판결에 참여할 대상의 정보를 입력해주세요
             </div>
           </div>
@@ -460,7 +541,7 @@ export default function PostForm() {
                 </div>
               ) : index === 1 ? (
                 <div className="flex flex-row justify-between">
-                  <div className="mb-[15px] text-[12px] text-[#333333]">
+                  <div className="mb-[15px] mt-[20px] text-[12px] text-[#333333]">
                     상대의 챔피언, 포지션, 티어를 선택해주세요.
                   </div>
                   <hr />
@@ -469,7 +550,7 @@ export default function PostForm() {
                 ''
               )}
 
-              <div className="mb-[20px] flex flex-col rounded-[30px] border-2 border-[#8A1F21] p-[20px]">
+              <div className="relative mb-[20px] flex flex-col overflow-hidden rounded-[30px] border-2 border-[#8A1F21] p-[20px]">
                 <div className="flex w-[100%] items-center">
                   {positions.map((pos, index) => (
                     <div key={index}>
@@ -528,7 +609,7 @@ export default function PostForm() {
                   ingameInfo.id > 1 ? (
                     <IoIosClose
                       onClick={() => removeIngameInfo(index)}
-                      className="cursor-pointer text-[23px] text-[#8A1F21] "
+                      className="absolute right-2 z-10 cursor-pointer text-[23px] text-[#8A1F21] "
                     />
                   ) : (
                     ''

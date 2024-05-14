@@ -17,6 +17,8 @@
         "name": "next"
       }
     ],
+    "target": "es5",
+    "downlevelIteration": true,
     "paths": {
       "@/*": ["./src/*"]
     }
