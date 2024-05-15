@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Search from '@/app/components/Search';
 import HomePostItems from './HomePostItems';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import writeSVG from '../../../../public/svg/writingWhite.svg';
 
@@ -34,8 +34,6 @@ export default function Home(): JSX.Element {
               </button>
               <div className="text-xs text-[#909090]">홈</div>
             </header>
-            <HomePostItems />
-            <HomePostItems />
             <HomePostItems />
           </div>
         </section>
