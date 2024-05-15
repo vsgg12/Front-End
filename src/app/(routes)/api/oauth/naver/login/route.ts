@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NEXT_AUTH_API_URL } from '@/app/constants';
+import { NEXT_AUTH_API_URL } from '../../../../../constants';
 
 export async function GET(req: NextRequest) {
   const redirectUri = `http://localhost:3000/api/auth/callback`;
