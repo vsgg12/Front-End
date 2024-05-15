@@ -10,11 +10,12 @@ import {
 } from 'react';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ICreatePostProps, IWrappedComponent } from '@/app/types/form';
+import { ICreatePostFormProps, IWrappedComponent } from '@/app/types/form';
 import { ChampionDataProps, IGameInfoProps } from '@/app/types/post';
 import ReactQuill from 'react-quill';
 
 import PostUploadDesc from './PostUploadDesc';
+import { useRouter } from 'next/navigation';
 
 import Image from 'next/image';
 import topSVG from '../../../../public/svg/top.svg';
@@ -41,6 +42,7 @@ import {
 } from 'react-icons/io5';
 
 import dynamic from 'next/dynamic';
+import { createPost, deleteS3Image, getImageUrl } from '@/app/utils/postApi';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -130,12 +132,16 @@ const intialIngameInfos: IGameInfoProps[] = [
 ];
 
 export default function PostForm() {
+  //useRouter
+  const router = useRouter();
+
   //useState
   const [memberId, setMemberId] = useState(1);
   const [uploadedVideo, setUploadedVideo] = useState<any>();
   const [thumbnail, setThumbnail] = useState<any>();
   const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
   const [content, setContent] = useState('');
+  const [contentUrls, setContentImgUrls] = useState<string[]>([]);
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [ingameInfos, setIngameInfos] =
@@ -171,10 +177,10 @@ export default function PostForm() {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<ICreatePostProps>();
+  } = useForm<ICreatePostFormProps>();
 
   //form submit
-  const onSubmit: SubmitHandler<ICreatePostProps> = (data) => {
+  const onSubmit: SubmitHandler<ICreatePostFormProps> = (data) => {
     const videoData = new FormData();
 
     if (uploadedVideo) {
@@ -198,18 +204,10 @@ export default function PostForm() {
       ...rest,
     }));
 
-    // const postData = {
-    //   title: data.title,
-    //   content: content, //useState - react-quill
-    //   type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
-    //   hashtag: hashtags,
-    //   inGameInfoRequests: inGameInfoRequests,
-    // };
-
     const postData = {
       uploadedVideos: videoData,
       videoUrl: data.link,
-      postAddRequest: {
+      postAddRequests: {
         title: data.title,
         content,
         type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
@@ -218,7 +216,9 @@ export default function PostForm() {
       inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
     };
 
+    createPost(postData);
     console.log(postData);
+    console.log(contentUrls);
   };
 
   //functions
@@ -440,6 +440,36 @@ export default function PostForm() {
       .catch((error) => console.error('Error loading the champions:', error));
   }, []);
 
+  const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
+    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+    event.preventDefault();
+    return message;
+  }, []);
+
+  useEffect(() => {
+    const originalPush = router.push;
+
+    const newPush = async (
+      href: string,
+      // options?: NavigateOptions | undefined,
+    ): Promise<void> => {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      if (confirm(message)) {
+        const res = await deleteS3Image(contentUrls);
+        console.log(res);
+        originalPush(href);
+      }
+    };
+
+    router.push = newPush;
+    window.onbeforeunload = beforeUnloadHandler;
+
+    return () => {
+      router.push = originalPush;
+      window.onbeforeunload = null;
+    };
+  }, [router, beforeUnloadHandler]);
+
   //useCallback
   const imageHandler = useCallback(() => {
     //input type= file DOM을 만든다.
@@ -455,7 +485,7 @@ export default function PostForm() {
       if (!file) return;
       /*서버에서 FormData형식으로 받기 때문에 이에 맞는 데이터형식으로 만들어준다.*/
       const formData = new FormData();
-      formData.append('profile', file);
+      formData.append('file', file);
       /*에디터 정보를 가져온다.*/
       let quillObj = quillRef.current?.getEditor();
       /*에디터 커서 위치를 가져온다.*/
@@ -465,9 +495,10 @@ export default function PostForm() {
         // const res = await axios.post('api주소', formData);\
         // const imgUrl = res.data;
 
-        const res =
-          'file:///C:/Users/User/Desktop/%EC%9D%B4%EB%AF%B8%EC%A7%80/KakaoTalk_20240510_213817411.jpg';
-        const imgUrl = res;
+        const res = await getImageUrl(formData);
+
+        const imgUrl = res.images[0];
+        setContentImgUrls((prevUrls) => [...prevUrls, imgUrl]);
 
         /*에디터의 커서 위치에 이미지 요소를 넣어준다.*/
         quillObj?.insertEmbed(range.index, 'image', `${imgUrl}`);

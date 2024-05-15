@@ -31,7 +31,7 @@ export async function createUser(data: ICreateMemberProps): Promise<any> {
     console.log(data);
     const requestOptions = createPostRequestOptions(data);
     const response = await fetch(`${API_URL}/users/signup`, requestOptions);
-    return response.json();
+    return response;
   } catch (error) {
     console.log(error);
   }

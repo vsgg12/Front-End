@@ -17,7 +17,13 @@ export default function uploadImage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      getImageUrl(formData);
+      getImageUrl(formData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
       // let values = formData.values();
       // for (const pair of values) {

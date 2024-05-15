@@ -9,6 +9,7 @@
     "lint": "next lint",
     "format": "prettier --write ."
   },
+  "proxy": "https://nid.naver.com",
   "dependencies": {
     "@ramonak/react-progress-bar": "^5.2.0",
     "@types/react-js-pagination": "^3.0.7",

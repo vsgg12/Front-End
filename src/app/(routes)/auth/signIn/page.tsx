@@ -23,14 +23,14 @@ export default function SignIn() {
         <Link href="/">VS.GG</Link>
       </div>
 
-      {/* <Link href="/api/oauth/naver/login"> */}
-      <div onClick={naverLogin}>
+      <Link href="/api/oauth/naver/login">
+        {/* <div onClick={naverLogin}> */}
         <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32 ">
           <SiNaver color="white" />
           <button className="text-white">네이버로 3초만에 시작하기</button>
+          {/* </div> */}
         </div>
-      </div>
-      {/* </Link> */}
+      </Link>
       <div className="flex gap-2">
         <div>아직 VS.GG 멤버가 아니신가요?</div>
         <Link href="/auth/signUp" className="text-[#8A1F21]">
