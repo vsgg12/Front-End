@@ -154,6 +154,7 @@ export default function PostForm() {
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
   //useRef
+  const isClickedFirst = useRef(false); //뒤로가기 방지용
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -418,58 +419,6 @@ export default function PostForm() {
     setIngameInfos(ingameInfos.filter((_, idx) => idx !== index));
   };
 
-  //useEffect
-  useEffect(() => {
-    console.log('postForm 렌더');
-
-    fetch(
-      'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
-    )
-      .then((response) => response.json())
-      .then((data: ChampionDataProps) => {
-        const loadedChampions = Object.keys(data.data).map(
-          (key) => data.data[key].name,
-        );
-
-        const sortedChampions = loadedChampions.sort(function (a, b) {
-          return a.localeCompare(b);
-        });
-
-        setChampions((prev) => [...prev, ...sortedChampions]);
-      })
-      .catch((error) => console.error('Error loading the champions:', error));
-  }, []);
-
-  const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
-    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-    event.preventDefault();
-    return message;
-  }, []);
-
-  useEffect(() => {
-    const originalPush = router.push;
-
-    const newPush = async (
-      href: string,
-      // options?: NavigateOptions | undefined,
-    ): Promise<void> => {
-      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-      if (confirm(message)) {
-        const res = await deleteS3Image(contentUrls);
-        console.log(res);
-        originalPush(href);
-      }
-    };
-
-    router.push = newPush;
-    window.onbeforeunload = beforeUnloadHandler;
-
-    return () => {
-      router.push = originalPush;
-      window.onbeforeunload = null;
-    };
-  }, [router, beforeUnloadHandler]);
-
   //useCallback
   const imageHandler = useCallback(() => {
     //input type= file DOM을 만든다.
@@ -509,6 +458,105 @@ export default function PostForm() {
       }
     };
   }, []);
+
+  const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
+    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+    event.preventDefault();
+    return message;
+  }, []);
+
+  const handlePopState = useCallback(async () => {
+    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+    if (!confirm(message)) {
+      history.pushState(null, '', '');
+      return;
+    }
+
+    await deleteS3Image(contentUrls);
+    history.back();
+  }, []);
+
+  //useEffect
+  useEffect(() => {
+    console.log('postForm 렌더');
+    if (!isClickedFirst.current) {
+      history.pushState(null, '', '');
+      isClickedFirst.current = true;
+    }
+
+    fetch(
+      'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
+    )
+      .then((response) => response.json())
+      .then((data: ChampionDataProps) => {
+        const loadedChampions = Object.keys(data.data).map(
+          (key) => data.data[key].name,
+        );
+
+        const sortedChampions = loadedChampions.sort(function (a, b) {
+          return a.localeCompare(b);
+        });
+
+        setChampions((prev) => [...prev, ...sortedChampions]);
+      })
+      .catch((error) => console.error('Error loading the champions:', error));
+  }, []);
+
+  //useEffect
+  useEffect(() => {
+    console.log('postForm 렌더');
+    if (!isClickedFirst.current) {
+      history.pushState(null, '', '');
+      isClickedFirst.current = true;
+    }
+
+    fetch(
+      'https://ddragon.leagueoflegends.com/cdn/14.9.1/data/ko_KR/champion.json',
+    )
+      .then((response) => response.json())
+      .then((data: ChampionDataProps) => {
+        const loadedChampions = Object.keys(data.data).map(
+          (key) => data.data[key].name,
+        );
+
+        const sortedChampions = loadedChampions.sort(function (a, b) {
+          return a.localeCompare(b);
+        });
+
+        setChampions((prev) => [...prev, ...sortedChampions]);
+      })
+      .catch((error) => console.error('Error loading the champions:', error));
+  }, []);
+
+  useEffect(() => {
+    const originalPush = router.push;
+
+    const newPush = async (
+      href: string,
+      // options?: NavigateOptions | undefined,
+    ): Promise<void> => {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      if (confirm(message)) {
+        await deleteS3Image(contentUrls);
+        originalPush(href);
+      }
+    };
+
+    router.push = newPush;
+    window.onbeforeunload = beforeUnloadHandler;
+
+    return () => {
+      router.push = originalPush;
+      window.onbeforeunload = null;
+    };
+  }, [router, beforeUnloadHandler]);
+
+  useEffect(() => {
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [handlePopState]);
 
   //useMemo
   const modules = useMemo(

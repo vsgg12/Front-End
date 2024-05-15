@@ -66,7 +66,12 @@ export default function PostRead({
         <section className="flex justify-center">
           <div className="w-4/5 max-w-[1400px]">
             <header className="mb-[44px] flex flex-row items-center  justify-between">
-              <button className=" mb-[44px] box-content flex h-[34px] w-[92px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white">
+              <button
+                onClick={() => {
+                  history.back();
+                }}
+                className=" mb-[44px] box-content flex h-[34px] w-[92px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white"
+              >
                 <div className="text-[13px]">글 목록</div>
               </button>
               <div className="text-xs text-[#909090]">홈{' > '}게시글</div>
