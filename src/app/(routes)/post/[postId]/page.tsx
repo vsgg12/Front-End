@@ -22,13 +22,19 @@ export default function PostRead({
     //voting한 postId === postId면 해제하는 코드
   }, []);
 
+  // const changeHashtagStyle = (index: number) => {
+  //   const common =
+  //     'mb-1 mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-2 px-[15px] py-[5px]';
+  //   return index === 0 ? common + ' border-[#000000]' : common;
+  // };
+
   return (
     <>
       <main>
         <Search />
         <section className="flex justify-center">
-          <div className="w-fit">
-            <header className="mb-[44px] flex flex-row items-center justify-between">
+          <div className="w-4/5 max-w-[1400px]">
+            <header className="mb-[44px] flex flex-row items-center  justify-between">
               <button className=" mb-[44px] box-content flex h-[34px] w-[92px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white">
                 <div className="text-[13px]">글 목록</div>
               </button>
@@ -36,7 +42,7 @@ export default function PostRead({
             </header>
 
             <div className="flex flex-row">
-              <div className="p-content-pd p-content-mr p-content-rounded mb-11 h-[91.125rem] w-full bg-white">
+              <div className="p-content-pd p-content-mr p-content-rounded mb-11 h-[1400px] bg-white">
                 <PostHeader />
                 <PostUploadInfo />
                 <iframe
@@ -47,14 +53,17 @@ export default function PostRead({
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                 ></iframe>
+
+                <video controls className="rounded-[30px]">
+                  <source src="../../../../../cat.mp4" type="video/webm" />
+                </video>
+
                 <PostTag />
-                <div className="my-[1.125rem] h-[23.375rem] w-full bg-[#D9D9D9]">
-                  사진
-                </div>
+                <div className="my-[1.125rem] w-full bg-[#D9D9D9]">사진</div>
                 <div className="whitespace-pre-wrap">본문내용...</div>
               </div>
 
-              <div className="p-content-pd p-content-rounded scroll mb-11 h-[91.125rem] w-1/2 bg-white">
+              <div className="p-content-pd p-content-rounded scroll mb-11 h-[1400px] w-1/2 bg-white">
                 <div>
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">

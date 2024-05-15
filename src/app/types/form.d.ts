@@ -15,10 +15,10 @@ export interface ICreateMemberProps {
 }
 
 export interface ICreatePostProps {
+  videoType: string;
+  link: string;
   title: string;
   content: string;
-  thumbnailUrl: string;
-  videoType: string;
   ingameInfo: [
     {
       champion: string;

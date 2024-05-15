@@ -16,7 +16,7 @@ export default function Home(): JSX.Element {
       <main>
         <Search />
         <section className="flex justify-center">
-          <div className="relative w-4/5">
+          <div className="relative w-4/5 max-w-[1400px]">
             <Link href={`/post/write`}>
               <button className=" fixed bottom-[60px] right-2 z-10 flex h-[7.125rem] w-[7.313rem] flex-col items-center justify-center rounded-full bg-[#8A1F21] text-white shadow-2xl">
                 <Image

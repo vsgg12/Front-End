@@ -16,7 +16,6 @@
     "chart.js": "^4.4.2",
     "next": "14.2.2",
     "next-auth": "^4.24.7",
-    "nextjs-cors": "^2.2.0",
     "quill-image-resize-module-ts": "^3.0.3",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
