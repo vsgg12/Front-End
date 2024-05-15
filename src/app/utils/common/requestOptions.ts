@@ -1,4 +1,4 @@
-import { ICreateMemberProps } from '@/app/types/form';
+import { ICreateMemberProps, ICreatePostDataProps } from '@/app/types/form';
 
 interface RequestOptions {
   method: string;
@@ -18,10 +18,21 @@ export function createGetRequestOptions(): RequestOptions {
 
 //2. POST 요청을 위한 옵션 생성
 //body:Record<string, unknown>
-export function createPostRequestOptions(
+export function createMemeberPostRequestOptions(
   body: ICreateMemberProps,
 ): RequestOptions {
-  console.log(body);
+  return {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+}
+
+export function createPostRequestOptions(
+  body: ICreatePostDataProps,
+): RequestOptions {
   return {
     method: 'POST',
     headers: {
@@ -65,12 +76,13 @@ export function createPutRequestOptions(
 }
 
 //4. DELETE 요청을 위한 옵션 생성
-export function createDeleteRequestOptions(): RequestOptions {
+export function createDeleteRequestOptions(body: string[]): RequestOptions {
   return {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify(body),
   };
 }
 

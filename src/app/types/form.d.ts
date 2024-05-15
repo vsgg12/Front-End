@@ -14,7 +14,7 @@ export interface ICreateMemberProps {
   agreePromotion: boolean; //직접 동의
 }
 
-export interface ICreatePostProps {
+export interface ICreatePostFormProps {
   videoType: string;
   link: string;
   title: string;
@@ -26,6 +26,22 @@ export interface ICreatePostProps {
       tier: string;
     },
   ];
+}
+
+export interface ICreatePostDataProps {
+  uploadedVideos: FormData;
+  videoUrl: string;
+  postAddRequests: {
+    title: string;
+    content: string;
+    type: string;
+    hashTag: string[];
+  };
+  inGameInfoRequests: {
+    position: string;
+    champion: string;
+    tier: string;
+  }[];
 }
 
 export interface IWrappedComponent

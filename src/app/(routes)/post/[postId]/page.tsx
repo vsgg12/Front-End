@@ -1,13 +1,9 @@
 'use client';
 import Search from '@/app/components/Search';
 
-import PostHeader from '../PostHeader';
-import PostUploadInfo from '../PostUploadInfo';
 import PostTag from '../PostTag';
 import PostCommentInput from '../PostCommentInput';
 import PostComment from '../PostComment';
-import PostVotingChampList from '../PostVotingChampList';
-import PostVotingGraph from '../PostVotingGraph';
 
 import { IPostReadParams } from '@/app/types/post';
 import { useEffect } from 'react';
@@ -17,16 +13,51 @@ export default function PostRead({
 }: {
   params: IPostReadParams;
 }): JSX.Element {
+  const ingameInfos = [
+    { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
+    { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
+    { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
+    { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
+    { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
+  ];
+
+  const userPost = {
+    memberId: 0,
+    postId: params.postId,
+    title: '제목입니다',
+    content: `
+    Lorem Ipsum is simply dummy text of the printing and typesetting
+    industry. Lorem Ipsum has been the industry's standard dummy
+    text ever since the 1500s, when an unknown printer took a galley
+    of type and scrambled it to make a type specimen book. It has
+    survived not only five centuries, but also the leap into
+    electronic typesetting, remaining essentially unchanged. It was
+    popularised in the 1960s with the release of Letraset sheets
+    containing Lorem Ipsum passages, and more recently with desktop
+    publishing software like Aldus PageMaker including versions of
+    Lorem Ipsum.
+    `,
+  };
+
+  const changeIngameInfoColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'bg-[#000000]';
+      case 1:
+        return 'bg-[#9D2A2C]';
+      case 2:
+        return 'bg-[#CACACA]';
+      case 3:
+        return 'bg-[#656565]';
+      case 4:
+        return 'bg-[#6C0000]';
+    }
+  };
+
   useEffect(() => {
     console.log('post read page 렌더');
     //voting한 postId === postId면 해제하는 코드
   }, []);
-
-  // const changeHashtagStyle = (index: number) => {
-  //   const common =
-  //     'mb-1 mr-3 flex w-fit flex-row items-center justify-center rounded-[150px] border-2 px-[15px] py-[5px]';
-  //   return index === 0 ? common + ' border-[#000000]' : common;
-  // };
 
   return (
     <>
@@ -42,9 +73,27 @@ export default function PostRead({
             </header>
 
             <div className="flex flex-row">
-              <div className="p-content-pd p-content-mr p-content-rounded mb-11 h-[1400px] bg-white">
-                <PostHeader />
-                <PostUploadInfo />
+              <div className="p-content-pd p-content-mr p-content-rounded scroll mb-11 h-[1400px] bg-white">
+                <div className="flex w-full flex-row place-items-start justify-between font-medium">
+                  <div className="p-content-s-mb text-[25px]">
+                    {userPost.title}
+                  </div>
+                  <div className="text-[12px] text-[#C8C8C8]">조회수 9,999</div>
+                </div>
+                <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
+                  <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
+                  <div>
+                    <div className="flex flex-row">
+                      <div className=" mr-[6px] text-[12px] text-[#333333]">
+                        닉네임
+                      </div>
+                      <div className="text-[12px] text-[#909090]">등급</div>
+                    </div>
+                    <div className="text-[12px] text-[#C8C8C8]">
+                      2024.04.24. 13:34
+                    </div>
+                  </div>
+                </div>
                 <iframe
                   className="p-content-rounded p-content-s-mb h-[40%] w-full"
                   src="https://www.youtube.com/embed/TByv13Yq4I4"
@@ -60,7 +109,7 @@ export default function PostRead({
 
                 <PostTag />
                 <div className="my-[1.125rem] w-full bg-[#D9D9D9]">사진</div>
-                <div className="whitespace-pre-wrap">본문내용...</div>
+                <div className="whitespace-pre-wrap">{userPost.content}</div>
               </div>
 
               <div className="p-content-pd p-content-rounded scroll mb-11 h-[1400px] w-1/2 bg-white">
@@ -91,12 +140,59 @@ export default function PostRead({
 
             <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
               <div className="relative flex w-full flex-row items-center">
-                <PostVotingChampList />
+                <div className="mx-2 flex flex-col ">
+                  {ingameInfos.map((ingameInfo, index) => (
+                    <div className="mb-1 flex flex-row items-center  ">
+                      <div
+                        className={
+                          'p-voting-champ-dot ' + changeIngameInfoColor(index)
+                        }
+                      ></div>
+                      <div className="whitespace-nowrap">
+                        {ingameInfo.champion}
+                      </div>
+                    </div>
+                  ))}
+                </div>
                 <div className="flex grow flex-col items-center justify-center">
                   <div className="mb-[3rem] text-[20px]">
                     이 게임의 과실은 몇 대 몇~?
                   </div>
-                  <PostVotingGraph />
+                  <div className="flex  flex-col items-center">
+                    <div className="p-content-s-mb flex flex-row">
+                      <div className="p-voting-number-element text-[#000000] ">
+                        2{' '}
+                      </div>
+                      <div className="p-voting-number-element "> : </div>
+                      <div className="p-voting-number-element text-[#9D2A2C]">
+                        2{' '}
+                      </div>
+                      <div className="p-voting-number-element "> : </div>
+                      <div className="p-voting-number-element text-[#CACACA]">
+                        2{' '}
+                      </div>
+                      <div className="p-voting-number-element "> : </div>
+                      <div className="p-voting-number-element text-[#656565] ">
+                        2{' '}
+                      </div>
+                      <div className="p-voting-number-element "> : </div>
+                      <div className="p-voting-number-element text-[#6C0000] ">
+                        2{' '}
+                      </div>
+                    </div>
+                    <div className="p-content-s-mb flex flex-row">
+                      <div className="p-voing-bar-element rounded-l-[30px] bg-[#000000]"></div>
+                      <div className="p-voing-bar-element bg-[#000000]"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element"></div>
+                      <div className="p-voing-bar-element rounded-r-[30px]"></div>
+                    </div>
+                  </div>
                   <div className="text-[12px] text-[#7B7B7B]">
                     [챔피언명]의 과실을 선택해주세요
                   </div>

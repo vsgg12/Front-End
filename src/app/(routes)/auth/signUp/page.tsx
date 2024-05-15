@@ -51,8 +51,8 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
 
-    // createUser({ ...naverValue, ...checkboxes, ...rest });
-    console.log({ ...naverValue, ...checkboxes, ...rest });
+    createUser({ ...naverValue, ...checkboxes, ...rest });
+    // console.log({ ...naverValue, ...checkboxes, ...rest });
   };
 
   useEffect(() => {

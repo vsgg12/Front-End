@@ -3,6 +3,7 @@ import { NEXT_AUTH_API_URL, NEXT_PUBLIC_API_URL } from '../constants';
 import { ICreateMemberProps } from '../types/form';
 import {
   createGetRequestOptions,
+  createMemeberPostRequestOptions,
   createPostRequestOptions,
 } from './common/requestOptions';
 
@@ -29,9 +30,9 @@ export async function signout() {
 export async function createUser(data: ICreateMemberProps): Promise<any> {
   try {
     console.log(data);
-    const requestOptions = createPostRequestOptions(data);
+    const requestOptions = createMemeberPostRequestOptions(data);
     const response = await fetch(`${API_URL}/users/signup`, requestOptions);
-    return response.json();
+    return response;
   } catch (error) {
     console.log(error);
   }
