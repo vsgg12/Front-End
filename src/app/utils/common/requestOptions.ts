@@ -18,6 +18,18 @@ export function createGetRequestOptions(): RequestOptions {
 
 //2. POST 요청을 위한 옵션 생성
 //body:Record<string, unknown>
+export function createMemeberPostRequestOptions(
+  body: ICreateMemberProps,
+): RequestOptions {
+  return {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  };
+}
+
 export function createPostRequestOptions(
   body: ICreatePostDataProps,
 ): RequestOptions {
