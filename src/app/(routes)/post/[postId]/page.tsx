@@ -1,14 +1,16 @@
 'use client';
-import Search from '@/app/components/Search';
+import { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
+import Search from '@/app/components/Search';
 import PostTag from '../PostTag';
 import PostCommentInput from '../PostCommentInput';
 import PostComment from '../PostComment';
+import VoteForm from '../VoteForm';
 
 import { IPostReadParams } from '@/app/types/post';
-import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import VoteForm from '../VoteForm';
+
+import { testComments } from '@/app/test/dummy';
 
 const userPost = {
   memberId: 0,
@@ -33,6 +35,26 @@ export default function PostRead({
 }: {
   params: IPostReadParams;
 }): JSX.Element {
+  const [displayedPosts, setDisplayedPosts] = useState(
+    testComments.slice(0, 5),
+  );
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchMoreData = () => {
+    if (displayedPosts.length >= testComments.length) {
+      setHasMore(false);
+      return;
+    }
+
+    setTimeout(() => {
+      const newPosts = testComments.slice(
+        displayedPosts.length,
+        displayedPosts.length + 5,
+      );
+      setDisplayedPosts([...displayedPosts, ...newPosts]);
+    }, 500);
+  };
+
   //useEffect
   useEffect(() => {
     console.log('post read page 렌더');
@@ -97,29 +119,33 @@ export default function PostRead({
                 <div className="whitespace-pre-wrap">{userPost.content}</div>
               </div>
 
-              <div className="p-content-pd p-content-rounded scroll mb-11 h-[1400px] w-1/2 bg-white">
-                <div>
+              <div className="p-content-rounded scroll relative mb-11 h-[1400px] w-1/2 bg-white px-[63px] pb-[44px]">
+                <div className="sticky top-[-1px] bg-[#ffffff] pt-[44px]">
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
                     <PostCommentInput />
                   </div>
                 </div>
-                <PostComment />
-                <div className="border-l-2 border-[#8A1F21] pl-5">
-                  <PostComment />
-                  <PostComment />
-                  <PostComment />
-                  <PostComment />
-                  <PostCommentInput />
-                </div>
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
-                <PostComment />
+
+                <InfiniteScroll
+                  dataLength={displayedPosts.length}
+                  next={fetchMoreData}
+                  hasMore={hasMore}
+                  loader={<p>Loading...</p>}
+                >
+                  {testComments.map((testComment, index) => (
+                    <div>
+                      <PostComment {...testComment} />
+                      {testComment.depth > 1 &&
+                        testComment.parentCommentId ===
+                          testComment.commentId && (
+                          <div className="border-l-2 border-[#8A1F21] pl-5">
+                            <PostComment {...testComment} />
+                          </div>
+                        )}
+                    </div>
+                  ))}
+                </InfiniteScroll>
               </div>
             </div>
             <VoteForm />

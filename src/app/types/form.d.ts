@@ -1,6 +1,6 @@
 import ReactQuill, { Quill } from 'react-quill';
 
-//백엔드로 보내는 용
+//회원가입 - 백엔드로 보내는 용
 export interface ICreateMemberProps {
   id: string;
   email: string;
@@ -15,7 +15,7 @@ export interface ICreateMemberProps {
   agreePromotion: boolean; //직접 동의
 }
 
-//form에서 입력된 데이터 받아오는 용
+//게시글 작성 - form에서 입력된 데이터 받아오는 용
 export interface ICreatePostFormProps {
   videoType: string;
   link: string;
@@ -30,7 +30,7 @@ export interface ICreatePostFormProps {
   ];
 }
 
-//백엔드로 보내는 용
+//게시글 작성 - 백엔드로 보내는 용
 export interface ICreatePostDataProps {
   uploadedVideos: FormData;
   videoUrl: string;
@@ -47,19 +47,42 @@ export interface ICreatePostDataProps {
   }[];
 }
 
+//투표 - 세부 구조
 export interface ICreateVoteProps {
   ingameInfoId: number;
   ratio: number;
 }
 
+//투표 - 백엔드로 보내는 용
 export interface ICreateVotingDataProps {
   memberId: number;
   vote: ICreateVoteProps[];
 }
 
+//react-quill
 export interface IWrappedComponent
   extends React.ComponentProps<typeof ReactQuill> {
   forwardedRef: LegacyRef<ReactQuill>;
 }
 
+//video
 export interface ICreateVideoProps {}
+
+//댓글 - 백엔드로 보내는 용
+export interface ICreateCommentDataProps {
+  postId: number;
+  parentCommentId: number | null;
+  depth: number;
+  comment: string; //내용
+}
+
+//댓글 - 불러오기 용 (나중에 실제 db에서 받아오는 값 보고 다시 바꿀 것)
+export interface ICreateCommentProps {
+  postId: number;
+  commentId: number;
+  nickname: string;
+  tier: string;
+  parentCommentId: number | null;
+  depth: number;
+  comment: string;
+}

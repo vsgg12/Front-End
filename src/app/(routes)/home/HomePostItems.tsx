@@ -6,11 +6,12 @@ import HomeNotVoted from './HomeNotVoted';
 import HomeVoted from './HomeVoted';
 import { testMember, testPost, testVid } from '@/app/test/dummy';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { set } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 // { postId, memberId }
 export default function HomePostItems() {
   const [isVoted, setIsVoted] = useState(true);
+
   useEffect(() => {
     console.log('homeitem 렌더');
     //voting한 postId === postId면 해제하는 코드
@@ -35,7 +36,7 @@ export default function HomePostItems() {
   };
 
   return (
-    <div key="">
+    <div>
       <InfiniteScroll
         dataLength={displayedPosts.length}
         next={fetchMoreData}
@@ -43,7 +44,7 @@ export default function HomePostItems() {
         loader={<p>Loading...</p>}
       >
         {displayedPosts.map((post, index) => (
-          <Link href={`/post/${index}/`}>
+          <Link key={index} href={`/post/${index}/`}>
             <div className="p-content-pd p-content-mb h-fit w-full rounded-[1.875rem] bg-[#ffffff]">
               <div className="flex w-full flex-row  justify-between font-medium">
                 <div className="p-content-s-mb text-[1.563rem]">

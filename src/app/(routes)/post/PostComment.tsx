@@ -1,18 +1,29 @@
-export default function PostComment() {
+'use client';
+import { useState } from 'react';
+import PostCommentInput from './PostCommentInput';
+import { ICreateCommentProps } from '@/app/types/form';
+
+export default function PostComment(props: ICreateCommentProps) {
+  const [showReplyInput, setShowReplyInput] = useState(false);
   return (
     <>
       <div className="my-[30px]">
         <div className="flex flex-row font-medium">
           <div className="p-content-ss-mb mr-[6px] text-[10px] text-[#333333]">
-            @ 방구쟁이 뿡뿡이
+            {props.nickname}
           </div>
-          <div className="text-[10px] text-[#666666]">등급</div>
+          <div className="text-[10px] text-[#666666]">{props.tier}</div>
         </div>
-        <div className="p-content-ss-mb text-[14px]">
-          댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표
-          참여 후 가능
-        </div>
-        <button className="text-[10px] font-medium text-[#8A1F21]">답글</button>
+        <div className="p-content-ss-mb text-[14px]">{props.comment}</div>
+        <button
+          onClick={() => {
+            setShowReplyInput((prev) => !prev);
+          }}
+          className="text-[10px] font-medium text-[#8A1F21]"
+        >
+          {showReplyInput ? '닫기' : '답글'}
+        </button>
+        {showReplyInput && <PostCommentInput />}
       </div>
     </>
   );
