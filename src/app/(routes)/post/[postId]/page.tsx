@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import * as DOMPurify from 'dompurify';
 
 import Search from '@/app/components/Search';
 import PostTag from '../PostTag';
