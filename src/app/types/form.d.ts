@@ -1,5 +1,6 @@
 import ReactQuill, { Quill } from 'react-quill';
 
+//백엔드로 보내는 용
 export interface ICreateMemberProps {
   id: string;
   email: string;
@@ -14,6 +15,7 @@ export interface ICreateMemberProps {
   agreePromotion: boolean; //직접 동의
 }
 
+//form에서 입력된 데이터 받아오는 용
 export interface ICreatePostFormProps {
   videoType: string;
   link: string;
@@ -28,6 +30,7 @@ export interface ICreatePostFormProps {
   ];
 }
 
+//백엔드로 보내는 용
 export interface ICreatePostDataProps {
   uploadedVideos: FormData;
   videoUrl: string;
@@ -42,6 +45,16 @@ export interface ICreatePostDataProps {
     champion: string;
     tier: string;
   }[];
+}
+
+export interface ICreateVoteProps {
+  ingameInfoId: number;
+  ratio: number;
+}
+
+export interface ICreateVotingDataProps {
+  memberId: number;
+  vote: ICreateVoteProps[];
 }
 
 export interface IWrappedComponent

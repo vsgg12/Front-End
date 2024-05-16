@@ -102,7 +102,7 @@ button {
   @apply mr-[0.625em] text-[1.375em] font-semibold;
 }
 .p-voing-bar-element {
-  @apply mr-[0.125em] h-[1.5em] w-[3.125em] border-[0.08125em] border-[#333333];
+  @apply mr-[0.125em] h-[1.5em] w-[3.125em] cursor-pointer border-[0.08125em] border-[#333333] hover:border-[1.5px];
 }
 
 .p-tab-title {

@@ -531,10 +531,7 @@ export default function PostForm() {
   useEffect(() => {
     const originalPush = router.push;
 
-    const newPush = async (
-      href: string,
-      // options?: NavigateOptions | undefined,
-    ): Promise<void> => {
+    const newPush = async (href: string): Promise<void> => {
       const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
       if (confirm(message)) {
         await deleteS3Image(contentUrls);
