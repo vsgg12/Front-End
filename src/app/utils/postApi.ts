@@ -1,5 +1,9 @@
 import { NEXT_PUBLIC_API_URL } from '../constants';
-import { ICreateMemberProps, ICreatePostDataProps } from '../types/form';
+import {
+  ICreateImageData,
+  ICreateMemberProps,
+  ICreatePostDataProps,
+} from '../types/form';
 import {
   createGetRequestOptions,
   createPostRequestOptions,
@@ -25,7 +29,7 @@ export async function getImageUrl(data: FormData): Promise<any> {
   }
 }
 
-export async function deleteS3Image(imgUrls: string[]): Promise<any> {
+export async function deleteS3Image(imgUrls: ICreateImageData): Promise<any> {
   try {
     const requestOptions = createDeleteRequestOptions(imgUrls);
     const response = await fetch(`${API_URL}/image`, requestOptions);

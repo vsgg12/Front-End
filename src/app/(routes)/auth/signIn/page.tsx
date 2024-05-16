@@ -1,36 +1,54 @@
 'use client';
-import { signIn } from '@/app/utils/userApi';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { SiNaver } from 'react-icons/si';
 
 export default function SignIn() {
+  const router = useRouter();
   const naverLogin = async () => {
-    const response = await fetch('/api/oauth/naver/login');
-    const data = await response.json();
-    // window.location.href = data.url; // 클라이언트에서 리다이렉트 실행
-    console.log(data);
+    try {
+      const response = await fetch('/api/oauth/naver/login', {
+        method: 'GET',
+      }).then();
+      const { redirectUrl } = await response.json();
+      window.location.href = redirectUrl; // 클라이언트에서 리다이렉트 실행
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   useEffect(() => {
-    console.log('로그인 페이지 렌더');
-    //voting한 postId === postId면 해제하는 코드
-  }, []);
+    const query = new URLSearchParams(window.location.search);
+    const code = query.get('code');
+    const state = query.get('state');
+
+    // if (code && state) {
+    // 네이버 콜백에서 받은 code와 state를 백엔드로 전달
+    fetch(`/api/oauth/naver/callback?code=${code}&state=${state}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Naver Callback Data:', data);
+        // 받아온 데이터를 사용하여 로그인 처리 후 원하는 페이지로 리다이렉트
+        router.push('/auth/signUp'); // 리다이렉트할 페이지로 변경
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    // }
+  }, [router]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="mb-10 mt-auto font-['SBAggroB'] text-5xl text-[#8A1F21] md:text-8xl">
         <Link href="/">VS.GG</Link>
       </div>
-
-      <Link href="/api/oauth/naver/login">
-        {/* <div onClick={naverLogin}> */}
-        <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32 ">
+      <div onClick={naverLogin}>
+        <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32">
           <SiNaver color="white" />
           <button className="text-white">네이버로 3초만에 시작하기</button>
-          {/* </div> */}
         </div>
-      </Link>
+      </div>
       <div className="flex gap-2">
         <div>아직 VS.GG 멤버가 아니신가요?</div>
         <Link href="/auth/signUp" className="text-[#8A1F21]">

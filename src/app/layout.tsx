@@ -5,6 +5,8 @@ import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
 import Script from 'next/script';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 

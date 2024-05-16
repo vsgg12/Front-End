@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import Search from '@/app/components/Search';
@@ -11,6 +11,7 @@ import VoteForm from '../VoteForm';
 import { IPostReadParams } from '@/app/types/post';
 
 import { testComments } from '@/app/test/dummy';
+import { ICreateCommentProps, ICreateCommentsProps } from '@/app/types/form';
 
 const userPost = {
   memberId: 0,
@@ -55,11 +56,63 @@ export default function PostRead({
     }, 500);
   };
 
+  // interface CommentWithChildren extends ICreateCommentsProps {
+  //   children: CommentWithChildren[];
+  // }
+
+  // const organizeComments = (
+  //   comments: ICreateCommentProps[],
+  // ): CommentWithChildren[] => {
+  //   const commentMap: { [key: number]: CommentWithChildren } = {};
+  //   comments.forEach((comment) => {
+  //     commentMap[comment.commentId] = { ...comment, children: [] };
+  //   });
+
+  //   const rootComments: CommentWithChildren[] = [];
+
+  //   comments.forEach((comment) => {
+  //     if (comment.parentCommentId === null) {
+  //       rootComments.push(commentMap[comment.commentId]);
+  //     } else if (commentMap[comment.parentCommentId]) {
+  //       commentMap[comment.parentCommentId].children.push(
+  //         commentMap[comment.commentId],
+  //       );
+  //     }
+  //   });
+
+  //   return rootComments;
+  // };
+
+  // const CommentThread = ({ comments }: { comments: CommentWithChildren[] }) => {
+  //   return (
+  //     <>
+  //       {comments.map((comment) => (
+  //         <div key={comment.commentId} className="mb-4">
+  //           <PostComment postId={userPost.postId} comment={comment} />
+  //           {comment.children.length > 0 && (
+  //             <div className="border-l-2 border-[#8A1F21] pl-5">
+  //               <CommentThread comments={comment.children} />
+  //             </div>
+  //           )}
+  //         </div>
+  //       ))}
+  //     </>
+  //   );
+  // };
+
+  // const organizedComments = useMemo(
+  //   () => organizeComments(displayedPosts),
+  //   [displayedPosts],
+  // );
+
   //useEffect
   useEffect(() => {
     console.log('post read page 렌더');
     //voting한 postId === postId면 해제하는 코드
   }, []);
+
+  // const [showReplyInput, setShowReplyInput] = useState(false);
+  const [showReply, setShowReply] = useState<number>();
 
   return (
     <>
@@ -123,7 +176,10 @@ export default function PostRead({
                 <div className="sticky top-[-1px] bg-[#ffffff] pt-[44px]">
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
-                    <PostCommentInput />
+                    <PostCommentInput
+                      postId={userPost.postId}
+                      parentId={null}
+                    />
                   </div>
                 </div>
 
@@ -133,16 +189,45 @@ export default function PostRead({
                   hasMore={hasMore}
                   loader={<p>Loading...</p>}
                 >
+                  {/* <CommentThread comments={organizedComments} /> */}
                   {testComments.map((testComment, index) => (
-                    <div>
-                      <PostComment {...testComment} />
-                      {testComment.depth > 1 &&
-                        testComment.parentCommentId ===
-                          testComment.commentId && (
-                          <div className="border-l-2 border-[#8A1F21] pl-5">
-                            <PostComment {...testComment} />
+                    <div className="mb-[20px] text-[13px]">
+                      <PostComment
+                        postId={userPost.postId}
+                        comment={testComment}
+                      />
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          if (index === showReply) {
+                            setShowReply(undefined);
+                          } else {
+                            setShowReply(index);
+                          }
+                        }}
+                        className="mb-[10px] text-[10px] font-medium text-[#8A1F21]"
+                      >
+                        {index === showReply ? '닫기' : '답글'}
+                      </button>
+                      {index === showReply && (
+                        <div className="text-[12px]">
+                          <PostCommentInput
+                            postId={userPost.postId}
+                            parentId={testComment.id}
+                          />
+                          <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
+                            {testComment.children.map((reply, index) => (
+                              <div className="mb-[10px]">
+                                <PostComment
+                                  postId={userPost.postId}
+                                  comment={reply}
+                                />
+                              </div>
+                            ))}
                           </div>
-                        )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </InfiniteScroll>
