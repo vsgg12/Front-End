@@ -5,12 +5,17 @@ import HomePostItems from './HomePostItems';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import writeSVG from '../../../../public/svg/writingWhite.svg';
+import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
+import { testPost } from '@/app/test/dummy';
 
 export default function Home(): JSX.Element {
+  const [sortOption, setSortOption] = useState('latest');
+
   useEffect(() => {
     console.log('home 렌더');
     //voting한 postId === postId면 해제하는 코드
   }, []);
+
   return (
     <>
       <main>
@@ -28,12 +33,25 @@ export default function Home(): JSX.Element {
                 <div className="text-[0.875rem]">글쓰기</div>
               </button>
             </Link>
-            <header className="mb-[44px] flex flex-row items-center justify-between ">
-              <button className="  box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white">
-                <div className="text-[13px]">최신순/추천순</div>
-              </button>
+            <div className="mb-[44px] flex flex-row items-center justify-between ">
+              {/* <button className="box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white"> */}
+              <div className="flex flex-col">
+                <Tabs key="default" aria-label="Options">
+                  <Tab key="latest" title="최신순">
+                    <Card>
+                      <CardBody>최신순</CardBody>
+                    </Card>
+                  </Tab>
+                  <Tab key="recommend" title="추천순">
+                    <Card>
+                      <CardBody>추천순</CardBody>
+                    </Card>
+                  </Tab>
+                </Tabs>
+              </div>
+              {/* </button> */}
               <div className="text-xs text-[#909090]">홈</div>
-            </header>
+            </div>
             <HomePostItems />
           </div>
         </section>

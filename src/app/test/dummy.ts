@@ -22,7 +22,8 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    recommendCount: 10,
+    createDateTime: '2024-04-22T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -43,7 +44,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-18T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -64,7 +65,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-29T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -85,7 +86,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-30T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -106,7 +107,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-01T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -127,7 +128,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-18T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
   {
@@ -148,7 +149,7 @@ export const testPost = [
     thumbnailUrl: '',
     viewCount: 99999,
     judgED: '',
-    createDateTime: '2024.04.24. 13:34',
+    createDateTime: '2024-04-09T13:34:00',
     tags: ['바론', '한타', '이게가능'], //현재 erd에 없음
   },
 ];

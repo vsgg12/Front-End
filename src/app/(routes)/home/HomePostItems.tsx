@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 // { postId, memberId }
-export default function HomePostItems() {
+export default function HomePostItems({ posts }: any) {
   const [isVoted, setIsVoted] = useState(true);
 
   useEffect(() => {
