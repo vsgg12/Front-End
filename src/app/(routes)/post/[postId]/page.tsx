@@ -11,6 +11,7 @@ import VoteForm from '../VoteForm';
 import { IPostReadParams } from '@/app/types/post';
 
 import { testComments } from '@/app/test/dummy';
+import VoteResult from '../VoteResult';
 
 const userPost = {
   memberId: 0,
@@ -149,6 +150,7 @@ export default function PostRead({
               </div>
             </div>
             <VoteForm />
+            <VoteResult />
           </div>
         </section>
       </main>
