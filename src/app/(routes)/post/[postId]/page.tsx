@@ -13,6 +13,7 @@ import { IPostReadParams } from '@/app/types/post';
 import { testComments } from '@/app/test/dummy';
 import VoteResult from '../VoteResult';
 import { ICreateCommentProps, ICreateCommentsProps } from '@/app/types/form';
+import Link from 'next/link';
 
 const userPost = {
   memberId: 0,
@@ -112,7 +113,10 @@ export default function PostRead({
               >
                 <div className="text-[13px]">글 목록</div>
               </button>
-              <div className="text-xs text-[#909090]">홈{' > '}게시글</div>
+              <div className="text-xs text-[#909090]">
+                <Link href="/">홈</Link>
+                {' > '}게시글
+              </div>
             </header>
 
             <div className="flex flex-row">
@@ -186,7 +190,7 @@ export default function PostRead({
                         postId={userPost.postId}
                         comment={testComment}
                       />
-                      <button
+                      {/* <button
                         key={index}
                         type="button"
                         onClick={() => {
@@ -217,7 +221,7 @@ export default function PostRead({
                             ))}
                           </div>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   ))}
                 </InfiniteScroll>

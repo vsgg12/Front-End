@@ -26,9 +26,6 @@ export default function Header(): JSX.Element {
               />
             </Link>
           </div>
-          <button className="hd-items mr-[0.6rem] ">
-            <IoMdNotificationsOutline />
-          </button>
           <Link href="/myPage">
             <button className="hd-items mr-[1rem] flex items-center justify-center overflow-hidden rounded-full">
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />

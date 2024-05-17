@@ -84,7 +84,7 @@ export default function HomePostItems({ posts }: any) {
                   <div className="mb-2 line-clamp-[8] cursor-pointer overflow-hidden text-ellipsis decoration-solid ">
                     {post.content}
                   </div>
-                  <div className="to-[#DCDCDC} relative flex h-[8.563rem] items-center justify-center rounded-[1.875rem] bg-gradient-to-b from-[#ADADAD]/30 to-[#DCDCDC]/30 ">
+                  <div className="flex flex-col items-center justify-center py-20">
                     {isVoted ? <HomeVoted /> : <HomeNotVoted />}
                   </div>
                 </div>
