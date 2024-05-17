@@ -44,11 +44,11 @@ export default function VoteResult() {
 
   //useForm
   const onSubmit: SubmitHandler<any> = (data) => {
-    const voteData: ICreateVotingDataProps = {
-      memberId: memberId,
-      vote: [...vote],
-    };
-    console.log(voteData);
+    // const voteData: ICreateVotingDataProps = {
+    //   memberId: memberId,
+    //   vote: [...vote],
+    // };
+    // console.log(voteData);
     console.log(votingButtonInfos);
   };
 
