@@ -10,7 +10,6 @@ import { testPost } from '@/app/test/dummy';
 
 export default function Home(): JSX.Element {
   const [sortOption, setSortOption] = useState('latest');
-
   useEffect(() => {
     console.log('home 렌더');
     //voting한 postId === postId면 해제하는 코드

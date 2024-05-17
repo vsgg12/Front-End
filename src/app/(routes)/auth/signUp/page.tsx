@@ -2,33 +2,32 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { createUser } from '@/app/utils/userApi';
 import { ICreateMemberProps } from '@/app/types/form';
-import { useRouter } from 'next/navigation';
-import { User } from 'next-auth';
+import { useSearchParams } from 'next/navigation';
+import { checkSameNickname, createMember } from '@/app/service/auth';
 
 export default function SignUp() {
-  const router = useRouter();
-  const [userData, setUserData] = useState<User>();
-  // const [naverValue, setNaverValue] = useState({
-  //   id: 'naverToken',
-  //   email: 'gg@naver.com',
-  //   age: '20-29',
-  //   gender: 'F',
-  //   mobile: '010-2314-4513',
-  //   profileImage: 'https://adfaefa.jpg',
-  // });
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
+  const name = searchParams.get('name');
+  const email = searchParams.get('email');
+  const profile_image = searchParams.get('profile_image');
+  const gender = searchParams.get('gender');
+  const mobile = searchParams.get('mobile');
+  const age = searchParams.get('age');
+
   const [naverValue, setNaverValue] = useState({
-    id: userData?.id,
-    email: userData?.email,
-    age: userData?.age,
-    gender: userData?.gender,
-    mobile: userData?.mobile,
-    profileImage: userData?.profile_image,
+    id: '',
+    name: '',
+    email: '',
+    profileImage: '',
+    gender: '',
+    mobile: '',
+    age: '',
   });
 
   const [sameNickname, setSameNickname] = useState(false);
-  const [wrongNumber, setWrongNumber] = useState(false);
+  const [isNicknameCheck, setIsNicknameCheck] = useState(false);
 
   const [checkboxes, setCheckboxes] = useState({
     agreeAge: false,
@@ -36,6 +35,20 @@ export default function SignUp() {
     agreePrivacy: false,
     agreePromotion: false,
   });
+
+  //form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<ICreateMemberProps>();
+
+  const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
+    const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
+
+    await createMember({ ...naverValue, ...checkboxes, ...rest });
+  };
 
   const handleCheckAll = (checked: boolean) => {
     setCheckboxes({
@@ -54,22 +67,28 @@ export default function SignUp() {
     });
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ICreateMemberProps>();
-
-  const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
-    const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
-
-    // createUser({ ...naverValue, ...checkboxes, ...rest });
-    console.log({ ...naverValue, ...checkboxes, ...rest });
+  const handleCheckNickname = async () => {
+    const nickname = watch('nickname');
+    await checkSameNickname(nickname).then((res) => {
+      console.log(res);
+    });
   };
 
   useEffect(() => {
     console.log('회원가입 페이지 렌더');
   }, []);
+
+  useEffect(() => {
+    setNaverValue({
+      id: id || '',
+      name: name || '',
+      email: email || '',
+      profileImage: profile_image || '',
+      gender: gender || '',
+      mobile: mobile || '',
+      age: age || '',
+    });
+  }, [name, email, profile_image, gender, mobile, age]);
 
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
@@ -124,19 +143,45 @@ export default function SignUp() {
           <p>닉네임</p>
           <div className="flex gap-2">
             <div className="flex grow flex-col">
-              <input type="text" {...register('nickname')} className="su-i" />
-              {errors.nickname && (
-                <span>닉네임은 2글자 이상, 20글자 이하로 입력해야 합니다.</span>
-              )}
+              <input
+                type="text"
+                {...register('nickname', {
+                  required: '닉네임은 필수 항목입니다.',
+                  minLength: {
+                    value: 2,
+                    message: '닉네임은 2글자 이상이어야 합니다.',
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: '닉네임은 20글자 이하이어야 합니다.',
+                  },
+                })}
+                className="su-i"
+              />
             </div>
 
-            <button type="button" className="su-btn text-[#8A1F21]">
+            <button
+              type="button"
+              onClick={handleCheckNickname}
+              className="su-btn text-[#8A1F21] "
+            >
               중복확인
             </button>
           </div>
-          {sameNickname && (
+          {errors.nickname && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              {errors.nickname.message}
+            </span>
+          )}
+
+          {isNicknameCheck && sameNickname && (
             <span className="pl-5 text-xs text-[#8A1F21]">
               중복된 닉네임입니다.
+            </span>
+          )}
+          {isNicknameCheck && !sameNickname && (
+            <span className="pl-5 text-xs text-[#7f9cdb]">
+              사용 가능한 닉네임입니다.
             </span>
           )}
         </div>
@@ -150,6 +195,7 @@ export default function SignUp() {
               name="agreeAge"
               checked={checkboxes.agreeAge}
               onChange={handleCheckboxChange}
+              required
             />
             <div className="flex flex-col gap-1">
               <p>만 14세 이상입니다. (필수)</p>
@@ -165,6 +211,7 @@ export default function SignUp() {
               name="agreeTerms"
               checked={checkboxes.agreeTerms}
               onChange={handleCheckboxChange}
+              required
             />
             <p>
               <span className="font-bold text-[#8A1F21]">이용약관</span>에
@@ -178,6 +225,7 @@ export default function SignUp() {
               name="agreePrivacy"
               checked={checkboxes.agreePrivacy}
               onChange={handleCheckboxChange}
+              required
             />
             <p>
               <span className="font-bold text-[#8A1F21]">개인정보처리방침</span>

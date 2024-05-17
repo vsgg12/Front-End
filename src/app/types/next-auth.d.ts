@@ -1,20 +1,23 @@
 import NextAuth, { type DefaultSession } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
+
+import { NextResponse } from 'next/server';
 
 declare module 'next-auth' {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
-  interface Session {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      profile_image: string;
-      gender: string;
-      mobile: string;
-      age: string;
-    } & DefaultSession['user'];
-  }
+  // interface Session {
+  //   user: {
+  //     id: string;
+  //     name: string;
+  //     email: string;
+  //     profile_image: string;
+  //     gender: string;
+  //     mobile: string;
+  //     age: string;
+  //   };
+  // }
 
   interface User {
     id: string;
@@ -26,16 +29,12 @@ declare module 'next-auth' {
     age: string;
   }
 
+  interface Session {
+    user: User & DefaultSession['user'];
+  }
+
   interface Profile {
-    response: {
-      id: string;
-      name: string;
-      email: string;
-      profile_image: string;
-      gender: string;
-      mobile: string;
-      age: string;
-    };
+    response: User;
   }
 
   interface AdapterUser {
@@ -46,6 +45,13 @@ declare module 'next-auth' {
     gender: string;
     mobile: string;
     age: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT {
+    profile: User;
   }
 }
 

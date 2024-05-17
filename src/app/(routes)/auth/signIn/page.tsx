@@ -3,18 +3,22 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SiNaver } from 'react-icons/si';
 import { signIn, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 
 export default function SignIn() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const naverLogin = async () => {
-    const res = await signIn('naver', { redirect: false });
-    if (res?.error) {
-      router.push('/auth/signUp');
-    } else {
-      router.push('/');
-    }
+    await signIn('naver', { redirect: false });
   };
+
+  // useEffect(() => {
+  //   // Check if the user is already logged in
+  //   if (status === 'authenticated') {
+  //     router.push('/'); // Redirect to home if already logged in
+  //   }
+  // }, [status, router]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
