@@ -5,9 +5,11 @@ import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+<<<<<<< Updated upstream
+import AuthSession from './(routes)/api/[...nextauth]/AuthSession';
+=======
 
+>>>>>>> Stashed changes
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -36,11 +38,11 @@ export default function RootLayout({
         ></Script>
       </head>
       <body className={inter.className}>
-        {/* <AuthSession> */}
-        <Header />
-        {children}
-        <Footer />
-        {/* </AuthSession> */}
+        <AuthSession>
+          <Header />
+          {children}
+          <Footer />
+        </AuthSession>
       </body>
     </html>
   );

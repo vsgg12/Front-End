@@ -142,7 +142,7 @@ button {
 }
 
 .si-input {
-  @apply mb-[20px] h-[45px] grow select-none rounded-[30px] border-2 border-[#8A1F21] p-[20px] outline-none;
+  @apply mb-[10px] h-[25px] grow select-none rounded-[30px] border-2 border-[#8A1F21] p-[20px] outline-none;
 }
 
 /* HTML: <div class="loader"></div> */

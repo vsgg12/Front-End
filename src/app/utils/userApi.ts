@@ -2,16 +2,15 @@
 import { NEXT_AUTH_API_URL, NEXT_PUBLIC_API_URL } from '../constants';
 import { ICreateMemberProps } from '../types/form';
 import {
-  createGetRequestOptions,
   createMemeberPostRequestOptions,
-  createPostRequestOptions,
-} from './common/requestOptions';
+  createSignInRequestOptions,
+} from './common/userOptions';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
 export async function signIn(): Promise<any> {
   try {
-    const requestOptions = createGetRequestOptions();
+    const requestOptions = createSignInRequestOptions();
     const response = await fetch(
       `${NEXT_AUTH_API_URL}/oauth2/authorization/naver?redirect_uri=http://localhost:3000&mode=login`,
       requestOptions,
@@ -33,17 +32,6 @@ export async function createUser(data: ICreateMemberProps): Promise<any> {
     const requestOptions = createMemeberPostRequestOptions(data);
     const response = await fetch(`${API_URL}/users/signup`, requestOptions);
     return response;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-//test
-export async function test1(data: any) {
-  try {
-    const requestOptions = createPostRequestOptions(data);
-    const response = await fetch(`${API_URL}/users/content`, requestOptions);
-    return response.json();
   } catch (error) {
     console.log(error);
   }

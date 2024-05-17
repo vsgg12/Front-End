@@ -1,5 +1,6 @@
 'use client';
 import { ICreateVotingDataProps } from '@/app/types/form';
+import { createVote } from '@/app/utils/postApi';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -41,12 +42,14 @@ export default function VoteForm() {
     formState: { errors },
   } = useForm<any>();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    const voteData: ICreateVotingDataProps = {
-      memberId: memberId,
-      vote: [...vote],
-    };
-    console.log(voteData);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    // const voteData: ICreateVotingDataProps = {
+    //   memberId: memberId,
+    //   vote: [...vote],
+    // };
+
+    console.log(vote);
+    await createVote(vote);
   };
 
   //function
