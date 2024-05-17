@@ -6,7 +6,6 @@ import HomeNotVoted from './HomeNotVoted';
 import HomeVoted from './HomeVoted';
 import { testMember, testPost, testVid } from '@/app/test/dummy';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { SubmitHandler, useForm } from 'react-hook-form';
 
 // { postId, memberId }
 export default function HomePostItems({ posts }: any) {

@@ -181,7 +181,7 @@ export default function PostRead({
                 >
                   {/* <CommentThread comments={organizedComments} /> */}
                   {testComments.map((testComment, index) => (
-                    <div className="mb-[20px] text-[13px]">
+                    <div key={index} className="mb-[20px] text-[13px]">
                       <PostComment
                         postId={userPost.postId}
                         comment={testComment}
@@ -208,7 +208,7 @@ export default function PostRead({
                           />
                           <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
                             {testComment.children.map((reply, index) => (
-                              <div className="mb-[10px]">
+                              <div key={index} className="mb-[10px]">
                                 <PostComment
                                   postId={userPost.postId}
                                   comment={reply}
