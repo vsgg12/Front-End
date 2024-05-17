@@ -29,6 +29,37 @@ const userPost = {
   containing Lorem Ipsum passages, and more recently with desktop
   publishing software like Aldus PageMaker including versions of
   Lorem Ipsum.
+  Lorem Ipsum is simply dummy text of the printing and typesetting
+  industry. Lorem Ipsum has been the industry's standard dummy
+  text ever since the 1500s, when an unknown printer took a galley
+  of type and scrambled it to make a type specimen book. It has
+  survived not only five centuries, but also the leap into
+  electronic typesetting, remaining essentially unchanged. It was
+  popularised in the 1960s with the release of Letraset sheets
+  containing Lorem Ipsum passages, and more recently with desktop
+  publishing software like Aldus PageMaker including versions of
+  Lorem Ipsum.
+  Lorem Ipsum is simply dummy text of the printing and typesetting
+  industry. Lorem Ipsum has been the industry's standard dummy
+  text ever since the 1500s, when an unknown printer took a galley
+  of type and scrambled it to make a type specimen book. It has
+  survived not only five centuries, but also the leap into
+  electronic typesetting, remaining essentially unchanged. It was
+  popularised in the 1960s with the release of Letraset sheets
+  containing Lorem Ipsum passages, and more recently with desktop
+  publishing software like Aldus PageMaker including versions of
+  Lorem Ipsum.
+  Lorem Ipsum is simply dummy text of the printing and typesetting
+  industry. Lorem Ipsum has been the industry's standard dummy
+  text ever since the 1500s, when an unknown printer took a galley
+  of type and scrambled it to make a type specimen book. It has
+  survived not only five centuries, but also the leap into
+  electronic typesetting, remaining essentially unchanged. It was
+  popularised in the 1960s with the release of Letraset sheets
+  containing Lorem Ipsum passages, and more recently with desktop
+  publishing software like Aldus PageMaker including versions of
+  Lorem Ipsum.
+
   `,
 };
 
@@ -57,55 +88,6 @@ export default function PostRead({
     }, 500);
   };
 
-  // interface CommentWithChildren extends ICreateCommentsProps {
-  //   children: CommentWithChildren[];
-  // }
-
-  // const organizeComments = (
-  //   comments: ICreateCommentProps[],
-  // ): CommentWithChildren[] => {
-  //   const commentMap: { [key: number]: CommentWithChildren } = {};
-  //   comments.forEach((comment) => {
-  //     commentMap[comment.commentId] = { ...comment, children: [] };
-  //   });
-
-  //   const rootComments: CommentWithChildren[] = [];
-
-  //   comments.forEach((comment) => {
-  //     if (comment.parentCommentId === null) {
-  //       rootComments.push(commentMap[comment.commentId]);
-  //     } else if (commentMap[comment.parentCommentId]) {
-  //       commentMap[comment.parentCommentId].children.push(
-  //         commentMap[comment.commentId],
-  //       );
-  //     }
-  //   });
-
-  //   return rootComments;
-  // };
-
-  // const CommentThread = ({ comments }: { comments: CommentWithChildren[] }) => {
-  //   return (
-  //     <>
-  //       {comments.map((comment) => (
-  //         <div key={comment.commentId} className="mb-4">
-  //           <PostComment postId={userPost.postId} comment={comment} />
-  //           {comment.children.length > 0 && (
-  //             <div className="border-l-2 border-[#8A1F21] pl-5">
-  //               <CommentThread comments={comment.children} />
-  //             </div>
-  //           )}
-  //         </div>
-  //       ))}
-  //     </>
-  //   );
-  // };
-
-  // const organizedComments = useMemo(
-  //   () => organizeComments(displayedPosts),
-  //   [displayedPosts],
-  // );
-
   //useEffect
   useEffect(() => {
     console.log('post read page 렌더');
@@ -121,7 +103,7 @@ export default function PostRead({
         <Search />
         <section className="flex justify-center">
           <div className="w-4/5 max-w-[1400px]">
-            <header className="mb-[44px] flex flex-row items-center  justify-between">
+            <header className="mb-[44px] flex flex-row items-center justify-between">
               <button
                 onClick={() => {
                   history.back();
@@ -134,29 +116,34 @@ export default function PostRead({
             </header>
 
             <div className="flex flex-row">
-              <div className="p-content-pd p-content-mr p-content-rounded scroll mb-11 h-[1400px] bg-white">
-                <div className="flex w-full flex-row place-items-start justify-between font-medium">
-                  <div className="p-content-s-mb text-[25px]">
-                    {userPost.title}
-                  </div>
-                  <div className="text-[12px] text-[#C8C8C8]">조회수 9,999</div>
-                </div>
-                <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
-                  <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
-                  <div>
-                    <div className="flex flex-row">
-                      <div className=" mr-[6px] text-[12px] text-[#333333]">
-                        닉네임
-                      </div>
-                      <div className="text-[12px] text-[#909090]">등급</div>
+              <div className=" p-content-mr p-content-rounded scroll relative mb-11 max-h-[1000px] w-2/3 bg-white  px-[63px] pb-[44px]">
+                <div className="sticky top-[-1px] bg-[#ffffff] pb-[30px] pt-[44px]">
+                  <div className="flex w-full flex-row place-items-start justify-between font-medium">
+                    <div className="p-content-s-mb text-[25px]">
+                      {userPost.title}
                     </div>
                     <div className="text-[12px] text-[#C8C8C8]">
-                      2024.04.24. 13:34
+                      조회수 9,999
+                    </div>
+                  </div>
+                  <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
+                    <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
+                    <div>
+                      <div className="flex flex-row">
+                        <div className=" mr-[6px] text-[12px] text-[#333333]">
+                          닉네임
+                        </div>
+                        <div className="text-[12px] text-[#909090]">등급</div>
+                      </div>
+                      <div className="text-[12px] text-[#C8C8C8]">
+                        2024.04.24. 13:34
+                      </div>
                     </div>
                   </div>
                 </div>
+
                 <iframe
-                  className="p-content-rounded p-content-s-mb h-[40%] w-full"
+                  className="p-content-rounded p-content-s-mb h-[50%] w-full"
                   src="https://www.youtube.com/embed/TByv13Yq4I4"
                   title="롤 랭크 4:5 바론한타"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -164,16 +151,18 @@ export default function PostRead({
                   allowFullScreen
                 ></iframe>
 
-                <video controls className="rounded-[30px]">
+                <video
+                  controls
+                  className="p-content-s-mb h-[50%] w-full overflow-hidden rounded-[30px]  "
+                >
                   <source src="../../../../../cat.mp4" type="video/webm" />
                 </video>
 
                 <PostTag />
-                <div className="my-[1.125rem] w-full bg-[#D9D9D9]">사진</div>
-                <div className="whitespace-pre-wrap">{userPost.content}</div>
+                <div className="w-full">{userPost.content}</div>
               </div>
 
-              <div className="p-content-rounded scroll relative mb-11 h-[1400px] w-1/2 bg-white px-[63px] pb-[44px]">
+              <div className="p-content-rounded scroll relative mb-11 max-h-[1000px] w-1/3 bg-white px-[63px] pb-[44px]">
                 <div className="sticky top-[-1px] bg-[#ffffff] pt-[44px]">
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
