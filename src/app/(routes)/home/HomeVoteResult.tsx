@@ -154,66 +154,6 @@ export default function HomeVoteResult() {
               ))}
             </div>
             <div className="flex grow flex-col items-center justify-center">
-              {/* <div className="flex flex-col items-center">
-                <div className="p-content-s-mb flex flex-row">
-                  {vote.map((eachVote, index) => (
-                    <div key={index} className="flex">
-                      <div
-                        className={
-                          changeVoteInfoColor(index) +
-                          ' p-voting-number-element'
-                        }
-                      >
-                        {eachVote.ratio}
-                      </div>
-                      {index !== vote.length - 1 && (
-                        <div className="p-voting-number-element "> : </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="p-content-s-mb flex flex-row">
-                  {votingButtonInfos.map((vBtnInfo, index) => (
-                    <div key={index} className="flex">
-                      <input
-                        type="radio"
-                        className="p-input-hidden"
-                        id={`vote-${index}`}
-                        onChange={() => handleVoteButtonChange(index)}
-                        checked={
-                          ingameInfos[selectedIngameInfoIndex].id ===
-                          vBtnInfo.selectedChampIndex
-                        }
-                      />
-                      {index === 0 ? (
-                        <label
-                          htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-l-[30px]'
-                          }
-                        ></label>
-                      ) : index === 9 ? (
-                        <label
-                          htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-r-[30px]'
-                          }
-                        ></label>
-                      ) : (
-                        <label
-                          htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element'
-                          }
-                        ></label>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div> */}
               <DoughnutChart
                 top="트위스티드 페이트"
                 jun="블리츠크랭크"

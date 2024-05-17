@@ -33,23 +33,7 @@ export default function Home(): JSX.Element {
                 <div className="text-[0.875rem]">글쓰기</div>
               </button>
             </Link>
-            <div className="mb-[44px] flex flex-row items-center justify-between ">
-              {/* <button className="box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white"> */}
-              <div className="flex flex-col">
-                <Tabs key="default" aria-label="Options">
-                  <Tab key="latest" title="최신순">
-                    <Card>
-                      <CardBody>최신순</CardBody>
-                    </Card>
-                  </Tab>
-                  <Tab key="recommend" title="추천순">
-                    <Card>
-                      <CardBody>추천순</CardBody>
-                    </Card>
-                  </Tab>
-                </Tabs>
-              </div>
-              {/* </button> */}
+            <div className="mb-[44px] flex flex-row items-center justify-end">
               <div className="text-xs text-[#909090]">홈</div>
             </div>
             <HomePostItems />
