@@ -4,15 +4,27 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createUser } from '@/app/utils/userApi';
 import { ICreateMemberProps } from '@/app/types/form';
+import { useRouter } from 'next/navigation';
+import { User } from 'next-auth';
 
 export default function SignUp() {
+  const router = useRouter();
+  const [userData, setUserData] = useState<User>();
+  // const [naverValue, setNaverValue] = useState({
+  //   id: 'naverToken',
+  //   email: 'gg@naver.com',
+  //   age: '20-29',
+  //   gender: 'F',
+  //   mobile: '010-2314-4513',
+  //   profileImage: 'https://adfaefa.jpg',
+  // });
   const [naverValue, setNaverValue] = useState({
-    id: 'naverToken',
-    email: 'gg@naver.com',
-    age: '20-29',
-    gender: 'F',
-    mobile: '010-2314-4513',
-    profileImage: 'https://adfaefa.jpg',
+    id: userData?.id,
+    email: userData?.email,
+    age: userData?.age,
+    gender: userData?.gender,
+    mobile: userData?.mobile,
+    profileImage: userData?.profile_image,
   });
 
   const [sameNickname, setSameNickname] = useState(false);
@@ -51,8 +63,8 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
 
-    createUser({ ...naverValue, ...checkboxes, ...rest });
-    // console.log({ ...naverValue, ...checkboxes, ...rest });
+    // createUser({ ...naverValue, ...checkboxes, ...rest });
+    console.log({ ...naverValue, ...checkboxes, ...rest });
   };
 
   useEffect(() => {
@@ -83,6 +95,32 @@ export default function SignUp() {
           />
         </div>
         <div className="flex flex-col gap-2">
+          <p>
+            전화번호
+            {/* <span className="text-red-500">*</span> */}
+          </p>
+          <div className="flex gap-2">
+            <input
+              value={naverValue.mobile}
+              type="text"
+              readOnly
+              className="su-i-blocked mb-1 grow"
+            />
+            {/* <button className="su-btn">인증요청</button> */}
+          </div>
+          {/* <div className="flex gap-2">
+            <input type="text" required className="su-i" />
+            <button type="button" className="su-btn bg-[#8A1F21]  text-white">
+              인증완료
+            </button>
+          </div> */}
+          {/* {wrongNumber && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              잘못된 인증번호입니다.
+            </span>
+          )} */}
+        </div>
+        <div className="flex flex-col gap-2">
           <p>닉네임</p>
           <div className="flex gap-2">
             <div className="flex grow flex-col">
@@ -102,31 +140,7 @@ export default function SignUp() {
             </span>
           )}
         </div>
-        <div className="flex flex-col gap-2">
-          <p>
-            전화번호 <span className="text-red-500">*</span>
-          </p>
-          <div className="flex gap-2">
-            <input
-              value={naverValue.mobile}
-              type="text"
-              readOnly
-              className="su-i-blocked mb-1 grow"
-            />
-            <button className="su-btn">인증요청</button>
-          </div>
-          <div className="flex gap-2">
-            <input type="text" required className="su-i" />
-            <button type="button" className="su-btn bg-[#8A1F21]  text-white">
-              인증완료
-            </button>
-          </div>
-          {wrongNumber && (
-            <span className="pl-5 text-xs text-[#8A1F21]">
-              잘못된 인증번호입니다.
-            </span>
-          )}
-        </div>
+
         <div className="h-0.5 bg-[#D9D9D9]"></div>
         <div className="flex flex-col gap-10">
           <div className="flex items-center gap-5">

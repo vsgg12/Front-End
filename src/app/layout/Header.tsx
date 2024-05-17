@@ -11,7 +11,6 @@ import writeSVG from '../../../public/svg/writing.svg';
 
 export default function Header() {
   const { data: session, status } = useSession();
-  // console.log(session);
 
   useEffect(() => {
     console.log('헤더 렌더링');
