@@ -7,6 +7,7 @@ import HomeVoted from './HomeVoted';
 import { testMember, testPost, testVid } from '@/app/test/dummy';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import HomeVoteResult from '../home/HomeVoteResult';
 
 // { postId, memberId }
 export default function HomePostItems({ posts }: any) {
@@ -83,8 +84,9 @@ export default function HomePostItems({ posts }: any) {
                   <div className="mb-2 line-clamp-[8] cursor-pointer overflow-hidden text-ellipsis decoration-solid ">
                     {post.content}
                   </div>
-                  <div className="to-[#DCDCDC} relative flex h-[8.563rem] items-center justify-center rounded-[1.875rem] bg-gradient-to-b from-[#ADADAD]/30 to-[#DCDCDC]/30 ">
+                  <div className="to-[#DCDCDC} flex flex-col items-center justify-center rounded-[1.875rem]">
                     {isVoted ? <HomeVoted /> : <HomeNotVoted />}
+                    {isVoted ? <HomeVoteResult /> : null}
                   </div>
                 </div>
               </div>
