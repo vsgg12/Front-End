@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import Script from 'next/script';
 import AuthSession from './(routes)/api/auth/[...nextauth]/AuthSession';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,7 +38,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthSession>
           <Header />
-          {children}
+          <Suspense>{children}</Suspense>
           <Footer />
         </AuthSession>
       </body>
