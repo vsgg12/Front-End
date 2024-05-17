@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { IoHappySharp } from 'react-icons/io5';
 import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
@@ -41,7 +40,7 @@ export default function Header(): JSX.Element {
             </button>
           </Link>
         </div>
-        <Link href={'/auth/signIn'}>
+        <Link href={'/user/signin'}>
           <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
             로그인
           </button>

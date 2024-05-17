@@ -108,7 +108,6 @@ export default function VoteResult() {
 
   useEffect(() => {
     updateVoteRatios();
-    console.log(vote);
   }, [votingButtonInfos]);
 
   return (

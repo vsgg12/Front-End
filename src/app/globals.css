@@ -141,6 +141,10 @@ button {
   @apply mr-[0.625rem] grow rounded-[1.875rem] border-[0.0625rem] border-[#333333] px-[5px] py-[0.3125rem] text-xs outline-none;
 }
 
+.si-input {
+  @apply mb-[20px] h-[45px] grow select-none rounded-[30px] border-2 border-[#8A1F21] p-[20px] outline-none;
+}
+
 /* HTML: <div class="loader"></div> */
 .loader {
   width: fit-content;
