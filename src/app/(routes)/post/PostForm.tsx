@@ -181,43 +181,44 @@ export default function PostForm() {
   } = useForm<ICreatePostFormProps>();
 
   //form submit
-  const onSubmit: SubmitHandler<ICreatePostFormProps> = (data) => {
-    const videoData = new FormData();
+  const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
+    const postFormData = new FormData();
 
     if (uploadedVideo) {
-      videoData.append('video', uploadedVideo);
+      postFormData.append('video', uploadedVideo);
     }
 
     if (!uploadedThumbnail) {
       if (thumbnail) {
-        videoData.append('thumbnail', thumbnail);
+        postFormData.append('thumbnail', thumbnail);
       }
     } else {
-      videoData.append('thumbnail', uploadedThumbnail);
+      postFormData.append('thumbnail', uploadedThumbnail);
     }
 
-    let values = videoData.values();
+    let values = postFormData.values();
     for (const pair of values) {
       console.log(pair);
     }
 
-    const inGameInfoRequests = ingameInfos.map(({ id, ...rest }) => ({
+    const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
+      championName: champion,
       ...rest,
     }));
 
     const postData = {
-      uploadedVideos: videoData,
+      uploadVideos: postFormData,
       videoUrl: data.link,
-      postAddRequests: {
+      postAddRequest: {
         title: data.title,
         content,
         type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
         hashTag: hashtags,
+        inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
       },
-      inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
     };
 
-    createPost(postData);
+    await createPost(postData);
     console.log(postData);
     console.log(contentUrls);
   };
@@ -472,7 +473,7 @@ export default function PostForm() {
       return;
     }
 
-    await deleteS3Image(contentUrls);
+    await handleDelete();
     history.back();
   }, []);
 
@@ -534,7 +535,7 @@ export default function PostForm() {
     const newPush = async (href: string): Promise<void> => {
       const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
       if (confirm(message)) {
-        await deleteS3Image(contentUrls);
+        await handleDelete();
         originalPush(href);
       }
     };
@@ -571,6 +572,11 @@ export default function PostForm() {
     [imageHandler],
   );
 
+  const handleDelete = async () => {
+    const deleteData = { imageUrl: contentUrls };
+    const data = await deleteS3Image(deleteData);
+    console.log(data);
+  };
   //tsx
   return (
     <>

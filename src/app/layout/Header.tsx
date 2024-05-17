@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 
 import { IoMdNotificationsOutline } from 'react-icons/io';
+import { IoHappySharp } from 'react-icons/io5';
+import { IoPersonCircle } from 'react-icons/io5';
+
 import writeSVG from '../../../public/svg/writing.svg';
 
 export default function Header(): JSX.Element {
@@ -24,11 +27,13 @@ export default function Header(): JSX.Element {
               />
             </Link>
           </div>
-          <button className="hd-items mr-[1rem] ">
+          <button className="hd-items mr-[0.6rem] ">
             <IoMdNotificationsOutline />
           </button>
           <Link href="/myPage">
-            <button className=" hd-items mr-[1.5rem] h-[2rem] w-[2rem] rounded-full border-2 border-[#8A1F21] bg-[#C3C3C3]"></button>
+            <button className="hd-items mr-[1rem] flex items-center justify-center overflow-hidden rounded-full">
+              <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
+            </button>
           </Link>
           <Link href="/api/oauth/naver/logout">
             <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">

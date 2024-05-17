@@ -168,6 +168,221 @@ export const testVotingResult = [
 
 export const testComments = [
   {
+    id: 0, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 0,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 1,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 1,
+          tier: '등급',
+        },
+      },
+      {
+        id: 2,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 2,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 3, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 3,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 4,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 4,
+          tier: '등급',
+        },
+      },
+      {
+        id: 5,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 5,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 6, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 6,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 7,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 7,
+          tier: '등급',
+        },
+      },
+      {
+        id: 8,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 8,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 9, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 9,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 10,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 10,
+          tier: '등급',
+        },
+      },
+      {
+        id: 11,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 11,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 12, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 12,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 13,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 13,
+          tier: '등급',
+        },
+      },
+      {
+        id: 14,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 14,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 15, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 15,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 16,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 16,
+          tier: '등급',
+        },
+      },
+      {
+        id: 17,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 17,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 18, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 18,
+      tier: '등급',
+    },
+    children: [
+      {
+        id: 19,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 19,
+          tier: '등급',
+        },
+      },
+      {
+        id: 20,
+        content:
+          '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+        member: {
+          nickname: 20,
+          tier: '등급',
+        },
+      },
+    ],
+  },
+  {
+    id: 22, //commetId,
+    content:
+      '댓글 달기 선플을 달아서 클린한 인터넷 문화를 만들어요 댓글 참여는 투표참여 후 가능',
+    member: {
+      nickname: 23232,
+      tier: '등급',
+    },
+    children: [],
+  },
+];
+export const testCommentss = [
+  {
     postId: 0,
     commentId: 0,
     nickname: '방귀쟁이 뿡뿡이',

@@ -40,9 +40,6 @@ button {
   @apply p-0.5 text-[2rem] text-[#8A1F21];
 }
 
-.hd-items-desc {
-}
-
 .hd-items:hover {
   @apply rounded-full bg-white;
 }

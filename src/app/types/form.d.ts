@@ -32,19 +32,19 @@ export interface ICreatePostFormProps {
 
 //게시글 작성 - 백엔드로 보내는 용
 export interface ICreatePostDataProps {
-  uploadedVideos: FormData;
+  uploadVideos: FormData;
   videoUrl: string;
-  postAddRequests: {
+  postAddRequest: {
     title: string;
     content: string;
     type: string;
     hashTag: string[];
+    inGameInfoRequests: {
+      position: string;
+      championName: string;
+      tier: string;
+    }[];
   };
-  inGameInfoRequests: {
-    position: string;
-    champion: string;
-    tier: string;
-  }[];
 }
 
 //투표 - 세부 구조
@@ -65,6 +65,11 @@ export interface IWrappedComponent
   forwardedRef: LegacyRef<ReactQuill>;
 }
 
+//image
+interface ICreateImageData {
+  imageUrl: string[];
+}
+
 //video
 export interface ICreateVideoProps {}
 
@@ -76,8 +81,13 @@ export interface ICreateCommentDataProps {
   comment: string; //내용
 }
 
+export interface ICreateCommentPostDataProps {
+  parentId: number | null;
+  content: string; //내용
+}
+
 //댓글 - 불러오기 용 (나중에 실제 db에서 받아오는 값 보고 다시 바꿀 것)
-export interface ICreateCommentProps {
+export interface ICreateCommentProps0 {
   postId: number;
   commentId: number;
   nickname: string;
@@ -85,4 +95,31 @@ export interface ICreateCommentProps {
   parentCommentId: number | null;
   depth: number;
   comment: string;
+}
+
+export interface ICreateCommentProps {
+  id: number;
+  content: string;
+  member: {
+    nickname: number;
+    tier: string;
+  };
+}
+export interface ICreateCommentsProps {
+  id: number;
+  content: string;
+  member: {
+    nickname: number;
+    tier: string;
+  };
+  children: ICreateReplyProps[];
+}
+
+export interface ICreateReplyProps {
+  id: number;
+  content: string;
+  member: {
+    nickname: number;
+    tier: string;
+  };
 }
