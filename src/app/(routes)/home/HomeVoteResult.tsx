@@ -5,16 +5,21 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 const ingameInfos = [
-  { id: 0, champion: '이렐리아', position: 'top', tier: 'grandmaster' },
-  { id: 1, champion: '마스터 이', position: 'jungle', tier: 'silver' },
-  { id: 2, champion: '카타리나', position: 'mid', tier: 'gold' },
-  { id: 3, champion: '이즈리얼', position: 'onedeal', tier: 'bronze' },
-  { id: 4, champion: '잔나', position: 'support', tier: 'iron' },
+  {
+    id: 0,
+    champion: '트위스티드 페이트',
+    position: 'top',
+    tier: 'grandmaster',
+  },
+  { id: 1, champion: '블리츠크랭크', position: 'jungle', tier: 'silver' },
+  { id: 2, champion: '아우렐리온 솔', position: 'mid', tier: 'gold' },
+  { id: 3, champion: '레나타 글라스크', position: 'onedeal', tier: 'bronze' },
+  { id: 4, champion: '누누와 윌럼프', position: 'support', tier: 'iron' },
 ];
 
 const memberId = 0;
 
-export default function VoteResult() {
+export default function HomeVoteResult() {
   //useState
   const [vote, setVote] = useState(
     ingameInfos.map((info) => ({
@@ -112,7 +117,7 @@ export default function VoteResult() {
   }, [votingButtonInfos]);
 
   return (
-    <>
+    <div className="h-full rounded-[1.875em] bg-gray-100">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
           <div className="relative flex w-full flex-row items-center">
@@ -149,9 +154,6 @@ export default function VoteResult() {
               ))}
             </div>
             <div className="flex grow flex-col items-center justify-center">
-              <div className="mb-[3rem] text-[20px]">
-                이 게임의 과실은 몇 대 몇~?
-              </div>
               {/* <div className="flex flex-col items-center">
                 <div className="p-content-s-mb flex flex-row">
                   {vote.map((eachVote, index) => (
@@ -213,24 +215,17 @@ export default function VoteResult() {
                 </div>
               </div> */}
               <DoughnutChart
-                top="이렐리아"
-                jun="마스터 이"
-                mid="카타리나"
-                adc="이즈리얼"
-                sup="잔나"
+                top="트위스티드 페이트"
+                jun="블리츠크랭크"
+                mid="아우렐리온 솔"
+                adc="레나타 글라스크"
+                sup="누누와 윌럼프"
               />
             </div>
           </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="h-9 w-28 rounded-full bg-[#8A1F21] text-lg text-white hover:bg-red-800"
-            >
-              제출하기
-            </button>
-          </div>
+          <div className="flex justify-end"></div>
         </div>
       </form>
-    </>
+    </div>
   );
 }
