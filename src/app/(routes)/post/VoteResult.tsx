@@ -12,8 +12,6 @@ const ingameInfos = [
   { id: 4, champion: '잔나', position: 'support', tier: 'iron' },
 ];
 
-const memberId = 0;
-
 export default function VoteResult() {
   //useState
   const [vote, setVote] = useState(

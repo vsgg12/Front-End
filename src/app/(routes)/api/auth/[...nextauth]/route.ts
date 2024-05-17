@@ -59,6 +59,7 @@ const handler = NextAuth({
         return false; // 로그인 실패로 처리
       }
 
+      //로그인 되면 next cookie에 cookie set 하기
       return true;
     },
     async jwt({ token, user, account }) {

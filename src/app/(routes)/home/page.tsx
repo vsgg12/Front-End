@@ -2,19 +2,11 @@
 import Link from 'next/link';
 import Search from '@/app/components/Search';
 import HomePostItems from './HomePostItems';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import writeSVG from '../../../../public/svg/writingWhite.svg';
 import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
-import { testPost } from '@/app/test/dummy';
 
 export default function Home(): JSX.Element {
-  const [sortOption, setSortOption] = useState('latest');
-  useEffect(() => {
-    console.log('home 렌더');
-    //voting한 postId === postId면 해제하는 코드
-  }, []);
-
   return (
     <>
       <main>
