@@ -9,10 +9,17 @@ import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
 
-export default function Header(): JSX.Element {
+export default function Header() {
+  const { data: session, status } = useSession();
+  // console.log(session);
+
   useEffect(() => {
     console.log('헤더 렌더링');
   });
+
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -35,20 +42,25 @@ export default function Header(): JSX.Element {
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
           </Link>
-          {/* <Link href="/api/oauth/naver/logout"> */}
-          <div onClick={() => signOut}>
+          <div onClick={() => signOut()}>
             <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
               로그아웃
             </button>
           </div>
-          {/* </Link> */}
+          {session ? (
+            <div onClick={() => signOut()}>
+              <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <Link href={'/auth/signIn'}>
+              <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
+                로그인
+              </button>
+            </Link>
+          )}
         </div>
-        {/* <Link href={'/user/signin'}> */}
-        <Link href={'/auth/signIn'}>
-          <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
-            로그인
-          </button>
-        </Link>
       </div>
     </>
   );

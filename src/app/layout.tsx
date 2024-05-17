@@ -5,11 +5,8 @@ import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
 import Script from 'next/script';
-<<<<<<< Updated upstream
-import AuthSession from './(routes)/api/[...nextauth]/AuthSession';
-=======
+import AuthSession from './(routes)/api/auth/[...nextauth]/AuthSession';
 
->>>>>>> Stashed changes
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
