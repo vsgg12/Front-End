@@ -47,7 +47,6 @@ import {
   saveImageAndRequestUrlToS3,
   sendDeleteRequestToS3,
 } from '@/app/service/post';
-import { getImageUrl } from '@/app/utils/postApi';
 
 const ReactQuillBase = dynamic(
   async () => {
