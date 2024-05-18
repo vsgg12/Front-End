@@ -17,10 +17,6 @@ export default function Header() {
     console.log('헤더 렌더링');
   });
 
-  // if (status === 'loading') {
-  //   return <p>Loading...</p>;
-  // }
-
   const handleSignOut = async () => {
     await signOut().then(async (res) => {
       await deleteToken();
@@ -48,11 +44,6 @@ export default function Header() {
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
           </Link>
-          <div onClick={handleSignOut}>
-            <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
-              로그아웃
-            </button>
-          </div>
           {session ? (
             <div onClick={handleSignOut}>
               <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
