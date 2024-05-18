@@ -1,6 +1,5 @@
 import { BsArrowUpCircle } from 'react-icons/bs';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { createComment } from '@/app/utils/commentApi';
 
 export default function PostCommentInput({ postId, parentId }: any) {
   const {
@@ -17,7 +16,7 @@ export default function PostCommentInput({ postId, parentId }: any) {
       content: data.content,
     };
 
-    await createComment(postId, commentData);
+    // await createComment(postId, commentData);
     console.log(commentData);
   };
 

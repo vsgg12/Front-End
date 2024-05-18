@@ -1,6 +1,4 @@
 'use client';
-import { useState } from 'react';
-import PostCommentInput from './PostCommentInput';
 import { ICreateCommentsProps, ICreateReplyProps } from '@/app/types/form';
 
 export default function PostComment({
