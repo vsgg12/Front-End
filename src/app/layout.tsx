@@ -39,7 +39,7 @@ export default function RootLayout({
         <AuthSession>
           <Header />
           <Suspense>{children}</Suspense>
-          <Footer />
+          {/* <Footer /> */}
         </AuthSession>
       </body>
     </html>

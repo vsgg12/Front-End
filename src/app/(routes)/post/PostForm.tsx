@@ -47,6 +47,7 @@ import {
   saveImageAndRequestUrlToS3,
   sendDeleteRequestToS3,
 } from '@/app/service/post';
+import { useSession } from 'next-auth/react';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -138,9 +139,14 @@ const intialIngameInfos: IGameInfoProps[] = [
 export default function PostForm() {
   //useRouter
   const router = useRouter();
+  const { data: session } = useSession();
+
+  if (!session) {
+    alert('로그인이 필요한 서비스입니다.');
+    router.push('/');
+  }
 
   //useState
-  const [memberId, setMemberId] = useState(1);
   const [uploadedVideo, setUploadedVideo] = useState<any>();
   const [thumbnail, setThumbnail] = useState<any>();
   const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
@@ -186,41 +192,6 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
-    // const postVideoFormData = new FormData();
-    // const postThumbnailFormData = new FormData();
-
-    // if (uploadedVideo) {
-    //   postVideoFormData.append('uploadVideos', uploadedVideo);
-    // }
-
-    // if (!uploadedThumbnail) {
-    //   if (thumbnail) {
-    //     postThumbnailFormData.append('thumbnailImage', thumbnail);
-    //   }
-    // } else {
-    //   postThumbnailFormData.append('thumbnailImage', uploadedThumbnail);
-    // }
-
-    // let values = postFormData.values();
-    // for (const pair of values) {
-    //   console.log(pair);
-    // }
-
-    // const postData = {
-    //   uploadVideos: postVideoFormData,
-    //   thumbnailImage: postThumbnailFormData,
-    //   videoUrl: data.link,
-    //   postAddRequest: {
-    //     title: data.title,
-    //     content,
-    //     type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
-    //     hashTag: hashtags,
-    //     inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
-    //   },
-    // };
-
-    // await createPost(postData);
-
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
       ...rest,
@@ -236,8 +207,6 @@ export default function PostForm() {
     };
 
     const postFormData = new FormData();
-    // postFormData.append('postAddRequest', JSON.stringify(postRequestData));
-
     postFormData.append(
       'postAddRequest',
       new Blob([JSON.stringify(postRequestData)], { type: 'application/json' }),
@@ -246,10 +215,13 @@ export default function PostForm() {
     if (!uploadedThumbnail) {
       if (thumbnail) {
         postFormData.append('thumbnailImage', thumbnail);
+      } else {
+        postFormData.append('thumbnailImage', thumbnail);
       }
     } else {
       postFormData.append('thumbnailImage', uploadedThumbnail);
     }
+
     postFormData.append('content', contentData, 'content.html');
 
     let values = postFormData.values();
@@ -508,20 +480,24 @@ export default function PostForm() {
   }, []);
 
   const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
-    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-    event.preventDefault();
-    return message;
+    if (session) {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      event.preventDefault();
+      return message;
+    }
   }, []);
 
   const handlePopState = useCallback(async () => {
-    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-    if (!confirm(message)) {
-      history.pushState(null, '', '');
-      return;
-    }
+    if (session) {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      if (!confirm(message)) {
+        history.pushState(null, '', '');
+        return;
+      }
 
-    await handleDelete();
-    history.back();
+      await handleDelete();
+      history.back();
+    }
   }, []);
 
   //useEffect

@@ -10,7 +10,7 @@ import { cookies } from 'next/headers';
 
 const handler = NextAuth({
   pages: {
-    signIn: '/',
+    signIn: '/home',
     signOut: '/',
     newUser: '/auth/signUp',
   },

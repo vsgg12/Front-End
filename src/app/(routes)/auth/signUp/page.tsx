@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ICreateMemberProps } from '@/app/types/form';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { checkSameNickname, createMember } from '@/app/service/auth';
 
 export default function SignUp() {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const name = searchParams.get('name');
@@ -41,14 +43,29 @@ export default function SignUp() {
     handleSubmit,
     formState: { errors },
     watch,
+    setError,
+    clearErrors,
   } = useForm<ICreateMemberProps>();
 
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
-
-    const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
-    console.log(res);
-    console.log({ ...naverValue, ...checkboxes, ...rest });
+    if (sameNickname) {
+      alert('중복된 닉네임입니다.');
+    } else {
+      const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
+      if (res?.message === '이미 존재하는 유저입니다.') {
+        if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
+          router.push('/auth/signIn');
+        } else {
+          return;
+        }
+      }
+      // {resultCode: 201, resultMsg: 'CREATED'}
+      if (res?.resultMsg === 'CREATED') {
+        alert(`${data.nickname}님, 회원가입을 축하합니다.`);
+        router.push('/auth/signIn');
+      }
+    }
   };
 
   const handleCheckAll = (checked: boolean) => {
@@ -70,9 +87,17 @@ export default function SignUp() {
 
   const handleCheckNickname = async () => {
     const nickname = watch('nickname');
-    await checkSameNickname(nickname).then((res) => {
-      console.log(res);
-    });
+    const res = await checkSameNickname(nickname);
+    if (res.nicknameCheck) {
+      setSameNickname(true);
+      setError('nickname', {
+        type: 'manual',
+      });
+    } else {
+      setSameNickname(false);
+      clearErrors('nickname');
+    }
+    setIsNicknameCheck(true);
   };
 
   useEffect(() => {

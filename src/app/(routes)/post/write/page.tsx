@@ -1,7 +1,6 @@
 'use client';
 import Logo from '@/app/components/Logo';
 import PostForm from '../PostForm';
-
 export default function PostWrite() {
   return (
     <>

@@ -3,16 +3,19 @@ import Link from 'next/link';
 import { SiNaver } from 'react-icons/si';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function SignIn() {
   const router = useRouter();
+  const { data: session } = useSession();
+
   const naverLogin = async () => {
-    await signIn('naver', { redirect: false }).then((res) => {
-      if (res?.ok) {
-        router.push('/');
-      }
-    });
+    await signIn('naver', { redirect: false });
   };
+
+  if (session) {
+    router.push('/');
+  }
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
