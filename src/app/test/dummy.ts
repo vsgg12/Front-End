@@ -7,20 +7,22 @@ export const testPost = [
   {
     postId: '0',
     title: '바론 한타 갔어야 한다 말았어야 한다',
-    content: `
-    Lorem Ipsum is simply dummy text of the printing and typesetting
-    industry. Lorem Ipsum has been the industry's standard dummy
-    text ever since the 1500s, when an unknown printer took a galley
-    of type and scrambled it to make a type specimen book. It has
-    survived not only five centuries, but also the leap into
-    electronic typesetting, remaining essentially unchanged. It was
-    popularised in the 1960s with the release of Letraset sheets
-    containing Lorem Ipsum passages, and more recently with desktop
-    publishing software like Aldus PageMaker including versions of
-    Lorem Ipsum.
-    `,
+    content:
+      '롤(League of Legends) 게임에서 바론 한타를 갈지 말지를 결정하는 것은 팀의 승패를 좌우할 수 있는 중요한 선택입니다. 바론 내셔는 게임 후반에 막대한 버프를 제공하며, 이를 통해 팀은 더욱 강력해져 게임을 유리하게 이끌 수 있습니다. 하지만 바론 사냥은 매우 위험하며 잘못된 판단으로 인해 오히려 게임을 패배로 이끌 수 있습니다. 따라서 바론 한타를 갈지 말지에 대한 결정은 다양한 상황을 고려해야 합니다.',
+    // content: `
+    // Lorem Ipsum is simply dummy text of the printing and typesetting
+    // industry. Lorem Ipsum has been the industry's standard dummy
+    // text ever since the 1500s, when an unknown printer took a galley
+    // of type and scrambled it to make a type specimen book. It has
+    // survived not only five centuries, but also the leap into
+    // electronic typesetting, remaining essentially unchanged. It was
+    // popularised in the 1960s with the release of Letraset sheets
+    // containing Lorem Ipsum passages, and more recently with desktop
+    // publishing software like Aldus PageMaker including versions of
+    // Lorem Ipsum.
+    // `,
     thumbnailUrl: '',
-    viewCount: 99999,
+    viewCount: 19,
     judgED: '',
     recommendCount: 10,
     createDateTime: '2024-04-22T13:34:00',

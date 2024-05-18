@@ -4,26 +4,69 @@ import Search from '@/app/components/Search';
 import HomePostItems from './HomePostItems';
 import Image from 'next/image';
 import writeSVG from '../../../../public/svg/writingWhite.svg';
+import { useEffect } from 'react';
+import { userStore } from '@/app/store/userStoe';
+import { checkToken } from '@/app/service/auth';
+import { useRouter } from 'next/navigation';
 // import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
 
 export default function Home(): JSX.Element {
+  const router = useRouter();
+
+  const { setIsLogin, isLogin } = userStore();
+  useEffect(() => {
+    async function checkSignIn() {
+      const isToken = await checkToken();
+      if (isToken) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }
+    checkSignIn();
+  }, []);
+
+  useEffect(() => {
+    async function checkSignIn() {
+      const isToken = await checkToken();
+      if (isToken) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }
+    checkSignIn();
+  }, [isLogin]);
+
+  const handleWriteClick = () => {
+    if (!isLogin) {
+      if (typeof window !== 'undefined') {
+        alert('로그인이 필요한 서비스입니다.');
+      }
+      router.push('/');
+    } else {
+      router.push('/post/write');
+    }
+  };
+
   return (
     <>
       <main>
         <Search />
         <section className="flex justify-center">
           <div className="relative w-4/5 max-w-[1400px]">
-            <Link href={`/post/write`}>
-              <button className=" fixed bottom-[60px] right-2 z-10 flex h-[7.125rem] w-[7.313rem] flex-col items-center justify-center rounded-full bg-[#8A1F21] text-white shadow-2xl">
-                <Image
-                  className="h-[32px] w-[32px]"
-                  src={writeSVG}
-                  alt="writeIcon"
-                />
+            <button
+              onClick={handleWriteClick}
+              className=" fixed bottom-[60px] right-2 z-10 flex h-[7.125rem] w-[7.313rem] flex-col items-center justify-center rounded-full bg-[#8A1F21] text-white shadow-2xl"
+            >
+              <Image
+                className="h-[32px] w-[32px]"
+                src={writeSVG}
+                alt="writeIcon"
+              />
 
-                <div className="text-[0.875rem]">글쓰기</div>
-              </button>
-            </Link>
+              <div className="text-[0.875rem]">글쓰기</div>
+            </button>
             <div className="mb-[44px] flex flex-row items-center justify-between ">
               {/* <button className="box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white"> */}
               <div className="flex flex-col">

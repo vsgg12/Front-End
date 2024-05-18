@@ -60,3 +60,12 @@ export async function checkSameNickname(nickname: string) {
 export async function deleteToken() {
   cookies().delete('token');
 }
+
+export async function checkToken() {
+  const token = cookies().get('token');
+  if (token) {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -8,14 +8,36 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
-import { deleteToken } from '../service/auth';
+import { checkToken, deleteToken } from '../service/auth';
+import { userStore } from '../store/userStoe';
 
 export default function Header() {
   const { data: session, status } = useSession();
 
+  const { setIsLogin, isLogin } = userStore();
   useEffect(() => {
-    console.log('헤더 렌더링');
-  });
+    async function checkSignIn() {
+      const isToken = await checkToken();
+      if (isToken) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }
+    checkSignIn();
+  }, []);
+
+  useEffect(() => {
+    async function checkSignIn() {
+      const isToken = await checkToken();
+      if (isToken) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    }
+    checkSignIn();
+  }, [isLogin]);
 
   const handleSignOut = async () => {
     await signOut().then(async (res) => {
@@ -44,7 +66,7 @@ export default function Header() {
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
           </Link> */}
-          {session ? (
+          {isLogin ? (
             <div onClick={handleSignOut}>
               <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
                 로그아웃

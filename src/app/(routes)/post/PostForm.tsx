@@ -31,6 +31,7 @@ import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
 import supportWSVG from '../../../../public/svg/supporter-w.svg';
 
 import { IoIosClose } from 'react-icons/io';
+
 import {
   IoVideocamOutline,
   IoEaselOutline,
@@ -48,6 +49,7 @@ import {
   sendDeleteRequestToS3,
 } from '@/app/service/post';
 import { useSession } from 'next-auth/react';
+import { userStore } from '@/app/store/userStoe';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -137,16 +139,9 @@ const intialIngameInfos: IGameInfoProps[] = [
 ];
 
 export default function PostForm() {
+  const { isLogin } = userStore();
   //useRouter
   const router = useRouter();
-  const { data: session } = useSession();
-
-  if (!session) {
-    if (typeof window !== 'undefined') {
-      alert('로그인이 필요한 서비스입니다.');
-    }
-    router.push('/');
-  }
 
   //useState
   const [uploadedVideo, setUploadedVideo] = useState<any>();
@@ -164,6 +159,7 @@ export default function PostForm() {
     1: 0,
   });
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [postCreated, setPostcreated] = useState(false);
 
   //useRef
   const isClickedFirst = useRef(false); //뒤로가기 방지용
@@ -231,8 +227,18 @@ export default function PostForm() {
       console.log(pair);
     }
 
-    const res = await createPost(postFormData);
-    console.log(res);
+    const postComfirm = confirm('게시글 작성을 완료하시겠습니까?');
+    if (postComfirm) {
+      const res = await createPost(postFormData);
+      if (res.resultMsg === 'CREATED') {
+        if (typeof window !== 'undefined') {
+          alert('게시글 작성이 완료되었습니다.');
+          router.push('/');
+        }
+      }
+    } else {
+      return;
+    }
   };
 
   //functions
@@ -482,7 +488,7 @@ export default function PostForm() {
   }, []);
 
   const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
-    if (session) {
+    if (isLogin || !postCreated) {
       const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
       event.preventDefault();
       return message;
@@ -490,7 +496,7 @@ export default function PostForm() {
   }, []);
 
   const handlePopState = useCallback(async () => {
-    if (session) {
+    if (isLogin || !postCreated) {
       const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
       if (!confirm(message)) {
         history.pushState(null, '', '');
