@@ -142,7 +142,9 @@ export default function PostForm() {
   const { data: session } = useSession();
 
   if (!session) {
-    window.alert('로그인이 필요한 서비스입니다.');
+    if (typeof window !== 'undefined') {
+      alert('로그인이 필요한 서비스입니다.');
+    }
     router.push('/');
   }
 

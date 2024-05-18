@@ -50,19 +50,23 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
     if (sameNickname) {
-      window.alert('중복된 닉네임입니다.');
+      if (typeof window !== 'undefined') {
+        alert('로그인이 필요한 서비스입니다.');
+      }
     } else {
       const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
       if (res?.message === '이미 존재하는 유저입니다.') {
-        if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
-          router.push('/auth/signIn');
-        } else {
-          return;
+        if (typeof window !== 'undefined') {
+          if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
+            router.push('/auth/signIn');
+          } else {
+            return;
+          }
         }
       }
       // {resultCode: 201, resultMsg: 'CREATED'}
       if (res?.resultMsg === 'CREATED') {
-        window.alert(`${data.nickname}님, 회원가입을 축하합니다.`);
+        alert(`${data.nickname}님, 회원가입을 축하합니다.`);
         router.push('/auth/signIn');
       }
     }
