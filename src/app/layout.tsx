@@ -5,8 +5,8 @@ import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import AuthSession from './(routes)/api/auth/[...nextauth]/AuthSession';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,11 +36,11 @@ export default function RootLayout({
         ></Script>
       </head>
       <body className={inter.className}>
-        {/* <AuthSession> */}
-        <Header />
-        {children}
-        <Footer />
-        {/* </AuthSession> */}
+        <AuthSession>
+          <Header />
+          <Suspense>{children}</Suspense>
+          <Footer />
+        </AuthSession>
       </body>
     </html>
   );

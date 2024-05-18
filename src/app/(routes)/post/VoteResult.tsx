@@ -12,8 +12,6 @@ const ingameInfos = [
   { id: 4, champion: '잔나', position: 'support', tier: 'iron' },
 ];
 
-const memberId = 0;
-
 export default function VoteResult() {
   //useState
   const [vote, setVote] = useState(
@@ -44,11 +42,11 @@ export default function VoteResult() {
 
   //useForm
   const onSubmit: SubmitHandler<any> = (data) => {
-    const voteData: ICreateVotingDataProps = {
-      memberId: memberId,
-      vote: [...vote],
-    };
-    console.log(voteData);
+    // const voteData: ICreateVotingDataProps = {
+    //   memberId: memberId,
+    //   vote: [...vote],
+    // };
+    // console.log(voteData);
     console.log(votingButtonInfos);
   };
 

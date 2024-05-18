@@ -1,5 +1,5 @@
 'use client';
-import { ICreateVotingDataProps } from '@/app/types/form';
+import { createVote } from '@/app/service/vote';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -10,8 +10,6 @@ const ingameInfos = [
   { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
   { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
 ];
-
-const memberId = 0;
 
 export default function VoteForm() {
   //useState
@@ -34,19 +32,13 @@ export default function VoteForm() {
 
   //useForm
   const {
-    register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<any>();
 
-  const onSubmit: SubmitHandler<any> = (data) => {
-    const voteData: ICreateVotingDataProps = {
-      memberId: memberId,
-      vote: [...vote],
-    };
-    console.log(voteData);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    console.log(vote);
+    await createVote(vote);
   };
 
   //function

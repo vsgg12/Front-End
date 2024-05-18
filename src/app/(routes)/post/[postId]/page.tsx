@@ -13,6 +13,8 @@ import { IPostReadParams } from '@/app/types/post';
 import { testComments } from '@/app/test/dummy';
 import VoteResult from '../VoteResult';
 import { ICreateCommentProps, ICreateCommentsProps } from '@/app/types/form';
+import { getPost } from '@/app/service/post';
+import { getComments } from '@/app/service/comment';
 import Link from 'next/link';
 
 const userPost = {
@@ -69,6 +71,8 @@ export default function PostRead({
 }: {
   params: IPostReadParams;
 }): JSX.Element {
+  const [post, setPost] = useState<any[]>();
+  const [comments, setComments] = useState<any[]>();
   const [displayedPosts, setDisplayedPosts] = useState(
     testComments.slice(0, 5),
   );
@@ -91,11 +95,18 @@ export default function PostRead({
 
   //useEffect
   useEffect(() => {
-    console.log('post read page 렌더');
-    //voting한 postId === postId면 해제하는 코드
+    async function getOnePost() {
+      const onePost = await getPost(Number(params.postId));
+      setPost(onePost);
+    }
+
+    const commentId = 0;
+    async function getPostComments() {
+      const postComments = await getComments(Number(params.postId), commentId);
+      setComments(postComments);
+    }
   }, []);
 
-  // const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReply, setShowReply] = useState<number>();
 
   return (

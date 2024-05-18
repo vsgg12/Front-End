@@ -1,6 +1,6 @@
 import { NEXT_PUBLIC_API_URL } from '../constants';
 import { ICreateCommentPostDataProps } from '../types/form';
-import { createCommentPostRequestOptions } from './common/requestOptions';
+import { createCommentPostRequestOptions } from './common/commentOptions';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 

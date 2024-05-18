@@ -42,7 +42,11 @@ import {
 } from 'react-icons/io5';
 
 import dynamic from 'next/dynamic';
-import { createPost, deleteS3Image, getImageUrl } from '@/app/utils/postApi';
+import {
+  createPost,
+  saveImageAndRequestUrlToS3,
+  sendDeleteRequestToS3,
+} from '@/app/service/post';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -445,7 +449,7 @@ export default function PostForm() {
         // const res = await axios.post('api주소', formData);\
         // const imgUrl = res.data;
 
-        const res = await getImageUrl(formData);
+        const res = await saveImageAndRequestUrlToS3(formData);
 
         const imgUrl = res.images[0];
         setContentImgUrls((prevUrls) => [...prevUrls, imgUrl]);
@@ -574,7 +578,7 @@ export default function PostForm() {
 
   const handleDelete = async () => {
     const deleteData = { imageUrl: contentUrls };
-    const data = await deleteS3Image(deleteData);
+    const data = await sendDeleteRequestToS3(deleteData);
     console.log(data);
   };
   //tsx

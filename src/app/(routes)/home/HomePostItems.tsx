@@ -6,18 +6,14 @@ import HomeNotVoted from './HomeNotVoted';
 import HomeVoted from './HomeVoted';
 import { testMember, testPost, testVid } from '@/app/test/dummy';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import HomeVoteResult from '../home/HomeVoteResult';
+import { getPostsSortedByDate, getPostsSortedByView } from '@/app/service/post';
 
 // { postId, memberId }
-export default function HomePostItems({ posts }: any) {
+export default function HomePostItems() {
   const [isVoted, setIsVoted] = useState(true);
-
-  useEffect(() => {
-    console.log('homeitem 렌더');
-    //voting한 postId === postId면 해제하는 코드
-  }, []);
-
+  const [sortOption, setSortOption] = useState('latest');
+  const [posts, setPosts] = useState<any[]>();
   const [displayedPosts, setDisplayedPosts] = useState(testPost.slice(0, 5));
   const [hasMore, setHasMore] = useState(true);
 
@@ -27,6 +23,7 @@ export default function HomePostItems({ posts }: any) {
       return;
     }
 
+    //test
     setTimeout(() => {
       const newPosts = testPost.slice(
         displayedPosts.length,
@@ -35,6 +32,40 @@ export default function HomePostItems({ posts }: any) {
       setDisplayedPosts([...displayedPosts, ...newPosts]);
     }, 500);
   };
+
+  //   setTimeout(() => {
+  //     const newPosts = posts.slice(
+  //       //post type 적용하면됨
+  //       displayedPosts.length,
+  //       displayedPosts.length + 5,
+  //     );
+  //     setDisplayedPosts([...displayedPosts, ...newPosts]);
+  //   }, 500);
+  // };
+
+  useEffect(() => {
+    // console.log('home 렌더');
+    async function getPostsByDates() {
+      const postsSortedByDate = await getPostsSortedByDate();
+      setPosts(postsSortedByDate);
+    }
+
+    getPostsByDates();
+  }, []);
+
+  useEffect(() => {
+    async function getPosts() {
+      if (sortOption === 'latest') {
+        const postsSortedByDate = await getPostsSortedByDate();
+        setPosts(postsSortedByDate);
+      } else {
+        const postsSortedByViews = await getPostsSortedByView();
+        setPosts(postsSortedByViews);
+      }
+    }
+
+    getPosts();
+  }, [sortOption]);
 
   return (
     <div>

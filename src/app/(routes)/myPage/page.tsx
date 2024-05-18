@@ -3,6 +3,9 @@
 import BarChart from '@/app/components/BarChart';
 import HalfDoughnutChart from '@/app/components/HalfDoughnutChart';
 import Logo from '@/app/components/Logo';
+import { getVotingHistorys, getVotingResults } from '@/app/service/vote';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 const data = [
   {
@@ -18,6 +21,25 @@ const data = [
 ];
 
 export default function MyPage() {
+  const [voteResults, setVoteResults] = useState<any[]>();
+  const [voteHistorys, setVoteHistorys] = useState<any[]>();
+  const [memberInfos, setMemberInfos] = useState(); //data 대체, session 정보 가져오기
+
+  useEffect(() => {
+    async function getVoteResult() {
+      const results = await getVotingResults();
+      setVoteResults(results);
+    }
+
+    async function getVoteHistory() {
+      const historys = await getVotingHistorys();
+      setVoteHistorys(historys);
+    }
+
+    getVoteResult();
+    getVoteHistory();
+  }, []);
+
   return (
     <div>
       <div className="mt-12 text-center">

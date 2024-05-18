@@ -64,13 +64,7 @@ export default function SignUp() {
       <Link href="/">
         <div className="font-['SBAggroB'] text-4xl text-[#8A1F21]">VS.GG</div>
       </Link>
-      <div className="flex w-full items-center justify-center px-40">
-        <div className="flex w-1/2 items-center">
-          <div className="h-0.5 grow bg-[#D9D9D9]"></div>
-          <div className="mx-[30px] text-[#7B7B7B]">간단 회원가입</div>
-          <div className="h-0.5 grow bg-[#D9D9D9]"></div>
-        </div>
-      </div>
+      <div className="flex w-full items-center justify-center px-40"></div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
         <div className="flex flex-col gap-2">

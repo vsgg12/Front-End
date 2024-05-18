@@ -1,3 +1,4 @@
+import { getSession } from 'next-auth/react';
 import { ICreateMemberProps } from '@/app/types/form';
 
 interface RequestOptions {
@@ -5,13 +6,6 @@ interface RequestOptions {
   headers?: Record<string, string>;
   body?: string | FormData;
 }
-
-const getCookie = (name: string): string | undefined => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return undefined;
-};
 
 export function createSignInRequestOptions(): RequestOptions {
   return {
@@ -25,12 +19,10 @@ export function createSignInRequestOptions(): RequestOptions {
 export function createMemeberPostRequestOptions(
   body: ICreateMemberProps,
 ): RequestOptions {
-  const sessionId = getCookie('JSESSIONID');
   return {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${sessionId}`,
     },
     body: JSON.stringify(body),
   };

@@ -54,10 +54,11 @@ export interface ICreateVoteProps {
 }
 
 //투표 - 백엔드로 보내는 용
-export interface ICreateVotingDataProps {
-  memberId: number;
-  vote: ICreateVoteProps[];
-}
+// export interface ICreateVotingDataProps {
+//   memberId: number;
+//   vote: ICreateVoteProps[];
+// }
+export type ICreateVotingDataProps = ICreateVoteProps[];
 
 //react-quill
 export interface IWrappedComponent
