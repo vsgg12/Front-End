@@ -1,6 +1,6 @@
 'use server';
 import { NEXT_PUBLIC_API_URL } from '../constants';
-import { ICreateImageData, ICreatePostDataProps } from '../types/form';
+import { ICreateImageData } from '../types/form';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
