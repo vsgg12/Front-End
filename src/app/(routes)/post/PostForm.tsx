@@ -47,6 +47,7 @@ import {
   saveImageAndRequestUrlToS3,
   sendDeleteRequestToS3,
 } from '@/app/service/post';
+import { getImageUrl } from '@/app/utils/postApi';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -80,35 +81,35 @@ const tabs = [
 const positions = [
   {
     id: 'top',
-    value: 'top',
+    value: 'TOP',
     content: '탑',
     svg: <Image alt="top" src={topSVG} />,
     svgW: <Image alt="top" src={topWSVG} />,
   },
   {
     id: 'jungle',
-    value: 'jungle',
+    value: 'JUNGLE',
     content: '정글',
     svg: <Image alt="jungle" src={jungleSVG} />,
     svgW: <Image alt="top" src={jungleWSVG} />,
   },
   {
     id: 'mid',
-    value: 'mid',
+    value: 'MID',
     content: '미드',
     svg: <Image alt="mid" src={midSVG} />,
     svgW: <Image alt="top" src={midWSVG} />,
   },
   {
     id: 'onedeal',
-    value: 'onedeal',
+    value: 'ADCARRY',
     content: '원딜',
     svg: <Image alt="onedeal" src={onedealSVG} />,
     svgW: <Image alt="top" src={onedealWSVG} />,
   },
   {
     id: 'support',
-    value: 'support',
+    value: 'SUPPORT',
     content: '서폿',
     svg: <Image alt="support" src={supportSVG} />,
     svgW: <Image alt="top" src={supportWSVG} />,
@@ -117,17 +118,17 @@ const positions = [
 
 const tiers = [
   { id: undefined, value: undefined, content: '티어 선택' },
-  { id: 'unrank', value: 'unrank', content: '언랭' },
-  { id: 'iron', value: 'iron', content: '아이언' },
-  { id: 'bronze', value: 'bronze', content: '브론즈' },
-  { id: 'silver', value: 'silver', content: '실버' },
-  { id: 'gold', value: 'gold', content: '골드' },
-  { id: 'platinum', value: 'platinum', content: '플래티넘' },
-  { id: 'emerald', value: 'emerald', content: '에메랄드' },
-  { id: 'diamond', value: 'diamond', content: '다이아' },
-  { id: 'master', value: 'master', content: '마스터' },
-  { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
-  { id: 'challenger', value: 'challenger', content: '챌린저' },
+  { id: 'unrank', value: 'UNRANK', content: '언랭' },
+  { id: 'iron', value: 'IRON', content: '아이언' },
+  { id: 'bronze', value: 'BRONZE', content: '브론즈' },
+  { id: 'silver', value: 'SILVER', content: '실버' },
+  { id: 'gold', value: 'GOLD', content: '골드' },
+  { id: 'platinum', value: 'PLATINUM', content: '플래티넘' },
+  { id: 'emerald', value: 'EMERALD', content: '에메랄드' },
+  { id: 'diamond', value: 'DIAMOND', content: '다이아' },
+  { id: 'master', value: 'MASTER', content: '마스터' },
+  { id: 'grand_master', value: 'GREANDMASTER', content: '그랜드마스터' },
+  { id: 'challenger', value: 'CHALLENGER', content: '챌린저' },
 ];
 
 const intialIngameInfos: IGameInfoProps[] = [
@@ -186,45 +187,79 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
-    const postFormData = new FormData();
+    // const postVideoFormData = new FormData();
+    // const postThumbnailFormData = new FormData();
 
-    if (uploadedVideo) {
-      postFormData.append('video', uploadedVideo);
-    }
+    // if (uploadedVideo) {
+    //   postVideoFormData.append('uploadVideos', uploadedVideo);
+    // }
 
-    if (!uploadedThumbnail) {
-      if (thumbnail) {
-        postFormData.append('thumbnail', thumbnail);
-      }
-    } else {
-      postFormData.append('thumbnail', uploadedThumbnail);
-    }
+    // if (!uploadedThumbnail) {
+    //   if (thumbnail) {
+    //     postThumbnailFormData.append('thumbnailImage', thumbnail);
+    //   }
+    // } else {
+    //   postThumbnailFormData.append('thumbnailImage', uploadedThumbnail);
+    // }
 
-    let values = postFormData.values();
-    for (const pair of values) {
-      console.log(pair);
-    }
+    // let values = postFormData.values();
+    // for (const pair of values) {
+    //   console.log(pair);
+    // }
+
+    // const postData = {
+    //   uploadVideos: postVideoFormData,
+    //   thumbnailImage: postThumbnailFormData,
+    //   videoUrl: data.link,
+    //   postAddRequest: {
+    //     title: data.title,
+    //     content,
+    //     type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
+    //     hashTag: hashtags,
+    //     inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
+    //   },
+    // };
+
+    // await createPost(postData);
 
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
       ...rest,
     }));
 
-    const postData = {
-      uploadVideos: postFormData,
+    const contentData = new Blob([content], { type: 'text/html' });
+    const postRequestData = {
+      title: data.title,
+      type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
+      hashtag: hashtags,
+      inGameInfoRequests: inGameInfoRequests,
       videoUrl: data.link,
-      postAddRequest: {
-        title: data.title,
-        content,
-        type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
-        hashTag: hashtags,
-        inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
-      },
     };
 
-    await createPost(postData);
-    console.log(postData);
-    console.log(contentUrls);
+    const postFormData = new FormData();
+    // postFormData.append('postAddRequest', JSON.stringify(postRequestData));
+
+    postFormData.append(
+      'postAddRequest',
+      new Blob([JSON.stringify(postRequestData)], { type: 'application/json' }),
+    );
+    postFormData.append('uploadVideos', uploadedVideo);
+    if (!uploadedThumbnail) {
+      if (thumbnail) {
+        postFormData.append('thumbnailImage', thumbnail);
+      }
+    } else {
+      postFormData.append('thumbnailImage', uploadedThumbnail);
+    }
+    postFormData.append('content', contentData, 'content.html');
+
+    let values = postFormData.values();
+    for (const pair of values) {
+      console.log(pair);
+    }
+
+    const res = await createPost(postFormData);
+    console.log(res);
   };
 
   //functions
@@ -449,7 +484,16 @@ export default function PostForm() {
         // const res = await axios.post('api주소', formData);\
         // const imgUrl = res.data;
 
+        let values = formData.values();
+        for (const pair of values) {
+          console.log(pair);
+        }
+
         const res = await saveImageAndRequestUrlToS3(formData);
+        console.log(res);
+
+        // const res = await getImageUrl(formData);
+        // console.log(res);
 
         const imgUrl = res.images[0];
         setContentImgUrls((prevUrls) => [...prevUrls, imgUrl]);

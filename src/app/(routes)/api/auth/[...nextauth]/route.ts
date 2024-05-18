@@ -4,13 +4,13 @@ import {
   NEXTAUTH_SECRET,
 } from '@/app/constants';
 import { mobileCheck } from '@/app/service/auth';
-import { userStore } from '@/app/store/userStoe';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
+import { cookies } from 'next/headers';
 
 const handler = NextAuth({
   pages: {
-    signIn: '/auth/signIn',
+    signIn: '/',
     signOut: '/',
     newUser: '/auth/signUp',
   },
@@ -40,6 +40,7 @@ const handler = NextAuth({
 
       try {
         const res = await mobileCheck(user.mobile);
+
         if (res.token === null) {
           console.log('없는 사용자');
           const params = new URLSearchParams({
@@ -53,6 +54,11 @@ const handler = NextAuth({
           }).toString();
 
           return `/auth/signUp?${params}`; // 로그인 실패 시 리디렉션 경로에 파라미터 추가
+        }
+
+        if (res.token) {
+          cookies().set('token', res.token);
+          return true;
         }
       } catch (error) {
         console.log(error);

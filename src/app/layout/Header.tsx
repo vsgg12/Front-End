@@ -8,6 +8,7 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
+import { deleteToken } from '../service/auth';
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -16,9 +17,15 @@ export default function Header() {
     console.log('헤더 렌더링');
   });
 
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
+  // if (status === 'loading') {
+  //   return <p>Loading...</p>;
+  // }
+
+  const handleSignOut = async () => {
+    await signOut().then(async (res) => {
+      await deleteToken();
+    });
+  };
 
   return (
     <>
@@ -41,13 +48,13 @@ export default function Header() {
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
           </Link>
-          <div onClick={() => signOut()}>
+          <div onClick={handleSignOut}>
             <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
               로그아웃
             </button>
           </div>
           {session ? (
-            <div onClick={() => signOut()}>
+            <div onClick={handleSignOut}>
               <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
                 로그아웃
               </button>

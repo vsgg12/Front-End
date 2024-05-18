@@ -17,8 +17,7 @@ export default function SignUp() {
   const age = searchParams.get('age');
 
   const [naverValue, setNaverValue] = useState({
-    id: '',
-    name: '',
+    token: '',
     email: '',
     profileImage: '',
     gender: '',
@@ -47,7 +46,9 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
 
-    await createMember({ ...naverValue, ...checkboxes, ...rest });
+    const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
+    console.log(res);
+    console.log({ ...naverValue, ...checkboxes, ...rest });
   };
 
   const handleCheckAll = (checked: boolean) => {
@@ -80,8 +81,8 @@ export default function SignUp() {
 
   useEffect(() => {
     setNaverValue({
-      id: id || '',
-      name: name || '',
+      token: id || '',
+      // name: name || '',
       email: email || '',
       profileImage: profile_image || '',
       gender: gender || '',

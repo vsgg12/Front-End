@@ -67,6 +67,10 @@ export default function HomePostItems() {
     getPosts();
   }, [sortOption]);
 
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
+
   return (
     <div>
       <InfiniteScroll
