@@ -76,8 +76,8 @@ const ReactQuillBase = dynamic(
 
 const tabs = [
   { id: 0, title: '파일 불러오기' },
-  { id: 1, title: '링크로 불러오기' },
-  { id: 2, title: '썸네일 업로드' },
+  // { id: 1, title: '링크로 불러오기' },
+  { id: 1, title: '썸네일 업로드' },
 ];
 
 const positions = [
@@ -190,6 +190,27 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
+    if (content.length > 1000) {
+      setContent(content.slice(0, 1000)); // 1000자 이하로 잘라서 설정
+      alert('본문은 1000자 이내로 작성해주세요.');
+      return;
+    }
+
+    if (content.length < 1) {
+      alert('내용을 작성해주세요');
+      return;
+    }
+
+    if (!uploadedVideo) {
+      alert('영상을 업로드 해주세요');
+      return;
+    }
+
+    if (!thumbnail || !uploadedThumbnail!) {
+      alert('썸네일을 업로드 해주세요');
+      return;
+    }
+
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
       ...rest,
@@ -284,22 +305,25 @@ export default function PostForm() {
       } else {
         return;
       }
-    } else if (
-      (index === 1 && uploadedVideo) ||
-      (index === 1 && uploadedThumbnail)
-    ) {
-      const confirmChange = confirm(
-        '링크 선택 시 업로드한 파일과 썸네일이 삭제됩니다.',
-      );
-      if (confirmChange) {
-        setUploadedVideo(undefined);
-        setUploadedThumbnail(undefined);
-        setThumbnail(undefined);
-        setSelectedTab(index);
-      } else {
-        return;
-      }
-    } else {
+    }
+
+    // else if (
+    //   (index === 1 && uploadedVideo) ||
+    //   (index === 1 && uploadedThumbnail)
+    // ) {
+    //   const confirmChange = confirm(
+    //     '링크 선택 시 업로드한 파일과 썸네일이 삭제됩니다.',
+    //   );
+    //   if (confirmChange) {
+    //     setUploadedVideo(undefined);
+    //     setUploadedThumbnail(undefined);
+    //     setThumbnail(undefined);
+    //     setSelectedTab(index);
+    //   } else {
+    //     return;
+    //   }
+    // }
+    else {
       setSelectedTab(index);
     }
   };
@@ -402,6 +426,12 @@ export default function PostForm() {
 
   const handleTagInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTagInput(event.target.value); // 입력값 상태 업데이트
+  };
+
+  const handleChange = (value: string) => {
+    // if (value.length <= 1000) {
+    //   setContent(value);
+    // }
   };
 
   const removeTag = (index: number) => {
@@ -687,19 +717,20 @@ export default function PostForm() {
                         alt="Video Thumbnail"
                       />
                     </div>
-                  ) : tab.id === 1 ? (
-                    <div className="flex flex-row items-center ">
-                      <div className="flex w-full flex-row items-center justify-center">
-                        <IoLinkOutline className="mr-[10px] text-[25px]" />
-                        <input
-                          type="text"
-                          placeholder="링크를 붙여 넣어주세요"
-                          className="p-font-color-default grow outline-none"
-                          {...register('link')}
-                        />
-                      </div>
-                    </div>
-                  ) : tab.id === 2 ? (
+                  ) : // ) : tab.id === 1 ? (
+                  //   <div className="flex flex-row items-center ">
+                  //     <div className="flex w-full flex-row items-center justify-center">
+                  //       <IoLinkOutline className="mr-[10px] text-[25px]" />
+                  //       <input
+                  //         type="text"
+                  //         placeholder="링크를 붙여 넣어주세요"
+                  //         className="p-font-color-default grow outline-none"
+                  //         {...register('link')}
+                  //       />
+                  //     </div>
+                  //   </div>
+                  // )
+                  tab.id === 1 ? (
                     <div
                       onDragOver={handleDragOver}
                       onDrop={handleThumbnailDrop}
@@ -755,7 +786,7 @@ export default function PostForm() {
               modules={modules}
               className=" h-[100%] w-full whitespace-pre-wrap outline-none"
               value={content}
-              onChange={setContent}
+              onChange={handleChange}
               placeholder={quillPlaceHolder}
             />
           </div>

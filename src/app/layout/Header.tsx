@@ -14,31 +14,6 @@ import { userStore } from '../store/userStoe';
 export default function Header() {
   const { data: session, status } = useSession();
 
-  const { setIsLogin, isLogin } = userStore();
-  useEffect(() => {
-    async function checkSignIn() {
-      const isToken = await checkToken();
-      if (isToken) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    }
-    checkSignIn();
-  }, []);
-
-  useEffect(() => {
-    async function checkSignIn() {
-      const isToken = await checkToken();
-      if (isToken) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    }
-    checkSignIn();
-  }, [isLogin]);
-
   const handleSignOut = async () => {
     await signOut().then(async (res) => {
       await deleteToken();
@@ -66,7 +41,7 @@ export default function Header() {
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
           </Link> */}
-          {isLogin ? (
+          {session ? (
             <div onClick={handleSignOut}>
               <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
                 로그아웃

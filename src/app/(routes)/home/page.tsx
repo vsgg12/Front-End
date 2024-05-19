@@ -8,38 +8,16 @@ import { useEffect } from 'react';
 import { userStore } from '@/app/store/userStoe';
 import { checkToken } from '@/app/service/auth';
 import { useRouter } from 'next/navigation';
+import Header from '@/app/layout/Header';
+import { useSession } from 'next-auth/react';
 // import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
-
-  const { setIsLogin, isLogin } = userStore();
-  useEffect(() => {
-    async function checkSignIn() {
-      const isToken = await checkToken();
-      if (isToken) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    }
-    checkSignIn();
-  }, []);
-
-  useEffect(() => {
-    async function checkSignIn() {
-      const isToken = await checkToken();
-      if (isToken) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    }
-    checkSignIn();
-  }, [isLogin]);
+  const { data: session } = useSession();
 
   const handleWriteClick = () => {
-    if (!isLogin) {
+    if (!session) {
       if (typeof window !== 'undefined') {
         alert('로그인이 필요한 서비스입니다.');
       }
@@ -51,6 +29,7 @@ export default function Home(): JSX.Element {
 
   return (
     <>
+      <Header />
       <main>
         <Search />
         <section className="flex justify-center">

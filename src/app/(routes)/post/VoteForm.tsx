@@ -1,37 +1,58 @@
 'use client';
+import Loading from '@/app/components/Loading';
 import { createVote } from '@/app/service/vote';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 // const ingameInfos = [
-//   { id: 0, championName: '챔1', position: 'top', tier: 'grandmaster' },
-//   { id: 11, championName: '챔2', position: 'jungle', tier: 'siver' },
-//   { id: 22, championName: '챔3', position: 'mid', tier: 'gold' },
-//   { id: 3, championName: '챔4', position: 'onedeal', tier: 'bronze' },
-//   { id: 4, championName: '챔5', position: 'support', tier: 'iron' },
+//   { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
+//   { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
+//   { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
+//   { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
+//   { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
 // ];
 
-export default function VoteForm({ ingameInfos }: any) {
+// const ingameInfos = [
+//   {
+//     inGameInfoId: 0,
+//     championName: '챔1',
+//     position: 'top',
+//     tier: 'grandmaster',
+//   },
+//   { inGameInfoId: 1, championName: '챔2', position: 'jungle', tier: 'siver' },
+//   { inGameInfoId: 2, championName: '챔3', position: 'mid', tier: 'gold' },
+//   { inGameInfoId: 3, championName: '챔4', position: 'onedeal', tier: 'bronze' },
+//   { inGameInfoId: 4, championName: '챔5', position: 'support', tier: 'iron' },
+// ];
+
+export default function VoteForm({ ingameInfos, setIsVoted }: any) {
+  const router = useRouter();
+  if (!ingameInfos) {
+    return <Loading />;
+  }
   //useState
   const [vote, setVote] = useState(
     ingameInfos.map((info: any) => ({
-      ingameInfoId: info.inGameInfoId,
+      inGameInfoId: info.inGameInfoId,
       ratio: 0,
     })),
   );
 
-  // ingameInfos 배열이 비어있을 경우 대비
-  const [selectedIngameInfoIndex, setSelectedIngameInfoIndex] =
-    useState<number>(
-      ingameInfos.length > 0 ? 0 : -1, // 처음에 0번 인덱스를 선택
-    );
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
+    ingameInfos[0].inGameInfoId,
+  );
   const [selectedChamp, setSelectedChamp] = useState<string>(
-    ingameInfos.length > 0 ? ingameInfos[0].championName : '',
+    ingameInfos[0].championName,
   );
 
   const [votingButtonInfos, setVotingButtonInfos] = useState(
-    Array(10).fill({ selectedChampIndex: undefined }),
+    Array(10).fill({ selectedChampId: undefined }),
   );
+
+  const [changedStyle, setChangedStyle] = useState('');
 
   //useForm
   const {
@@ -40,17 +61,19 @@ export default function VoteForm({ ingameInfos }: any) {
   } = useForm<any>();
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    // 0: {ingameInfoId: 11, ratio: 0}1: {ingameInfoId: 12, ratio: 0}
-
-    const voteData = [
-      { ingameInfoId: 11, ratio: 2 },
-      { ingameInfoId: 12, ratio: 8 },
-    ];
+    const voteData = vote.map(({ inGameInfoId, ...rest }: any) => ({
+      ingameInfoId: inGameInfoId,
+      ...rest,
+    }));
     console.log(voteData);
-    // const res = await createVote(vote);
     const res = await createVote(voteData);
-
-    // console.log(res);
+    console.log(res);
+    if (res.resultCode === 200) {
+      setIsVoted(true);
+      router.refresh();
+    } else {
+      setIsVoted(false);
+    }
   };
 
   //function
@@ -85,10 +108,10 @@ export default function VoteForm({ ingameInfos }: any) {
   };
 
   const handleVoteButtonChange = (index: number) => {
-    if (selectedIngameInfoIndex !== undefined) {
+    if (selectedIngameInfoId !== undefined) {
       const newVotingButtonInfos = votingButtonInfos.map((vBtnInfo, idx) => {
         if (idx === index) {
-          return { selectedChampIndex: selectedIngameInfoIndex };
+          return { selectedChampId: selectedIngameInfoId };
         }
         return vBtnInfo;
       });
@@ -97,36 +120,42 @@ export default function VoteForm({ ingameInfos }: any) {
     }
   };
 
+  const handleVoteButtonStyleChange = (index: number): string => {
+    const currentColorClass =
+      votingButtonInfos[index].selectedChampId !== undefined
+        ? changeIngameInfoColor(
+            ingameInfos.findIndex(
+              (info: any) =>
+                info.inGameInfoId === votingButtonInfos[index].selectedChampId,
+            ),
+          )
+        : '';
+
+    return votingButtonInfos[index].selectedChampId === selectedIngameInfoId
+      ? changeIngameInfoColor(selectedIndex) + ' p-voing-bar-element'
+      : currentColorClass + ' p-voing-bar-element';
+  };
   const updateVoteRatios = () => {
     const newVote = vote.map((v: any) => ({
       ...v,
       ratio: votingButtonInfos.filter(
-        (vBtnInfo) => vBtnInfo.selectedChampIndex === v.ingameInfoId,
+        (vBtnInfo) => vBtnInfo.selectedChampId === v.inGameInfoId,
       ).length,
     }));
     setVote(newVote);
   };
 
   useEffect(() => {
-    if (ingameInfos && ingameInfos.length > 0) {
-      setVote(
-        ingameInfos.map((info: any) => ({
-          ingameInfoId: info.id,
-          ratio: 0,
-        })),
-      );
-      setSelectedIngameInfoIndex(0); // 초기 상태로 첫 번째 챔피언 선택
-      setSelectedChamp(ingameInfos[0].championName);
-    }
-  }, [ingameInfos]);
-
-  useEffect(() => {
     updateVoteRatios();
   }, [votingButtonInfos]);
 
-  if (!ingameInfos || ingameInfos.length === 0) {
-    return <div>게임 정보를 불러오는 중...</div>;
-  }
+  useEffect(() => {
+    console.log(ingameInfos);
+    if (ingameInfos.length > 0) {
+      setSelectedIngameInfoId(ingameInfos[0].inGameInfoId);
+      setSelectedChamp(ingameInfos[0].championName);
+    }
+  }, [ingameInfos]);
 
   return (
     <>
@@ -142,13 +171,11 @@ export default function VoteForm({ ingameInfos }: any) {
                     name={`id-${ingameInfo.inGameInfoId}`}
                     id={`${ingameInfo.inGameInfoId}`}
                     onChange={() => {
-                      setSelectedIngameInfoIndex(index);
+                      setSelectedIngameInfoId(ingameInfos[index].inGameInfoId);
                       setSelectedChamp(ingameInfo.championName);
+                      setSelectedIndex(index);
                     }}
-                    checked={
-                      ingameInfos[selectedIngameInfoIndex].inGameInfoId ===
-                      ingameInfo.inGameInfoId
-                    }
+                    checked={selectedIngameInfoId === ingameInfo.inGameInfoId}
                   />
                   <label
                     htmlFor={`${ingameInfo.inGameInfoId}`}
@@ -197,33 +224,23 @@ export default function VoteForm({ ingameInfos }: any) {
                         id={`vote-${index}`}
                         onChange={() => handleVoteButtonChange(index)}
                         checked={
-                          ingameInfos[selectedIngameInfoIndex].inGameInfoId ===
-                          vBtnInfo.selectedChampIndex
+                          selectedIngameInfoId === vBtnInfo.selectedChampId
                         }
                       />
                       {index === 0 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-l-[30px]'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       ) : index === 9 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-r-[30px]'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       ) : (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       )}
                     </div>

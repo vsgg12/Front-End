@@ -1,8 +1,14 @@
 import { BsArrowUpCircle } from 'react-icons/bs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createComments } from '@/app/service/comment';
+import { useRouter } from 'next/navigation';
 
-export default function PostCommentInput({ postId, parentId }: any) {
+export default function PostCommentInput({
+  postId,
+  parentId,
+  refreshComments,
+  setCommentCreated,
+}: any) {
   const {
     register,
     handleSubmit,
@@ -11,6 +17,7 @@ export default function PostCommentInput({ postId, parentId }: any) {
     formState: { errors },
   } = useForm<any>();
 
+  const router = useRouter();
   const onSubmit: SubmitHandler<any> = async (data) => {
     const commentData = {
       parentId: parentId,
@@ -18,8 +25,9 @@ export default function PostCommentInput({ postId, parentId }: any) {
     };
 
     const res = await createComments(postId, commentData);
-    console.log(commentData);
-    console.log(res);
+    if (res.resultMsg === 'OK') {
+      setCommentCreated(true);
+    }
   };
 
   return (

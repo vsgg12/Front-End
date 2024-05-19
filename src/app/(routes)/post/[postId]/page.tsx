@@ -15,6 +15,8 @@ import VoteResult from '../VoteResult';
 import { getPost } from '@/app/service/post';
 import { getComments } from '@/app/service/comment';
 import Loading from '@/app/components/Loading';
+import Header from '@/app/layout/Header';
+import { useRouter } from 'next/navigation';
 
 export default function PostRead({
   params,
@@ -25,12 +27,13 @@ export default function PostRead({
     return DOMPurify.sanitize(html);
   };
 
+  const router = useRouter();
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
-
+  const [isVoted, setIsVoted] = useState(false);
   const fetchMoreData = () => {
     if (displayedPosts.length >= comments.length) {
       setHasMore(false);
@@ -45,6 +48,7 @@ export default function PostRead({
       setDisplayedPosts([...displayedPosts, ...newPosts]);
     }, 500);
   };
+  const [commentCreated, setCommentCreated] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -56,15 +60,29 @@ export default function PostRead({
     return `${year}.${month}.${day}. ${hours}:${minutes}`;
   };
 
+  const refreshComments = async () => {
+    try {
+      const postComments = await getComments(Number(params.postId));
+      if (postComments.resultMsg === 'OK') {
+        setComments(postComments.comments);
+        setDisplayedPosts(postComments.comments.slice(0, 5));
+        setHasMore(postComments.comments.length > 5);
+      } else {
+        setDisplayedPosts([]);
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch comments:', error);
+    }
+  };
+
   useEffect(() => {
     async function getOnePost() {
       try {
         const onePost = await getPost(Number(params.postId));
-        console.log(onePost);
         if (onePost.resultMsg === 'OK') {
           setPost(onePost.postDTO);
           setIngameInfos(onePost.inGameInfo);
-          getPostComments();
         }
       } catch (error) {
         console.error('Failed to fetch post:', error);
@@ -87,7 +105,7 @@ export default function PostRead({
     }
 
     getOnePost();
-    // getPostComments();
+    getPostComments();
   }, [params.postId]);
 
   useEffect(() => {
@@ -95,6 +113,10 @@ export default function PostRead({
       setDisplayedPosts(comments);
     }
   }, [comments]);
+
+  useEffect(() => {
+    router.refresh();
+  }, [commentCreated]);
 
   const [showReply, setShowReply] = useState<number>();
 
@@ -109,6 +131,7 @@ export default function PostRead({
 
   return (
     <>
+      <Header />
       <main>
         <Search />
         <section className="flex justify-center">
@@ -184,7 +207,12 @@ export default function PostRead({
                 <div className="sticky top-[-1px] bg-[#ffffff] pt-[44px]">
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
-                    <PostCommentInput postId={params.postId} parentId={null} />
+                    <PostCommentInput
+                      // refreshComments={refreshComments}
+                      postId={params.postId}
+                      parentId={null}
+                      setCommentCreated={setCommentCreated}
+                    />
                   </div>
                 </div>
                 <InfiniteScroll
@@ -234,8 +262,12 @@ export default function PostRead({
                 </InfiniteScroll>
               </div>
             </div>
-            <VoteForm ingameInfos={ingameInfos} />
-            <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
+            {!isVoted && (
+              <VoteForm setIsVoted={setIsVoted} ingameInfos={ingameInfos} />
+            )}
+            {isVoted && (
+              <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
+            )}
           </div>
         </section>
       </main>

@@ -61,7 +61,7 @@ export async function deleteToken() {
   cookies().delete('token');
 }
 
-export async function checkToken() {
+export async function checkToken(): Promise<boolean> {
   const token = cookies().get('token');
   if (token) {
     return true;

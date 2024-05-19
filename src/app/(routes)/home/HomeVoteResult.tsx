@@ -17,8 +17,6 @@ const ingameInfos = [
   { id: 4, champion: '누누와 윌럼프', position: 'support', tier: 'iron' },
 ];
 
-const memberId = 0;
-
 export default function HomeVoteResult() {
   //useState
   const [vote, setVote] = useState(

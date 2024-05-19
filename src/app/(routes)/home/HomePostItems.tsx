@@ -11,8 +11,14 @@ import DOMPurify from 'dompurify';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { IoPersonCircleSharp } from 'react-icons/io5';
 import Loading from '@/app/components/Loading';
+import { checkToken } from '@/app/service/auth';
+import { useRouter } from 'next/navigation';
+import { userStore } from '@/app/store/userStoe';
 
 export default function HomePostItems() {
+  const router = useRouter();
+  const { setIsLogin, isLogin } = userStore();
+
   const [isVoted, setIsVoted] = useState(false);
   const [sortOption, setSortOption] = useState('latest');
   const [posts, setPosts] = useState<any[]>([]);
@@ -59,32 +65,17 @@ export default function HomePostItems() {
   useEffect(() => {
     async function getPostsByDates() {
       const postsSortedByDate = await getPostsSortedByDate();
-      setPosts(postsSortedByDate?.postDTO || []);
-      setDisplayedPosts(postsSortedByDate?.postDTO.slice(0, 5) || []);
+      console.log(postsSortedByDate);
+      if (postsSortedByDate.resultMsg === 'OK') {
+        const fetchedPosts = postsSortedByDate?.postDTO || [];
+        setPosts(fetchedPosts);
+        setDisplayedPosts(fetchedPosts.slice(0, 5));
+      } else {
+        router.push('/auth/signIn');
+      }
     }
-
     getPostsByDates();
   }, []);
-
-  useEffect(() => {
-    // console.log(posts);
-  }, [posts]);
-
-  useEffect(() => {
-    async function getPosts() {
-      let sortedPosts;
-      if (sortOption === 'latest') {
-        sortedPosts = await getPostsSortedByDate();
-      } else {
-        sortedPosts = await getPostsSortedByView();
-      }
-      setPosts(sortedPosts?.postDTO || []);
-      setDisplayedPosts(sortedPosts?.postDTO.slice(0, 5) || []);
-      setHasMore(true);
-    }
-
-    getPosts();
-  }, [sortOption]);
 
   return (
     <div>
@@ -128,7 +119,7 @@ export default function HomePostItems() {
                   controls
                   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
                 >
-                  <source src="../../../../../cat.mp4" type="video/webm" />
+                  <source src={post.video.url} type="video/webm" />
                 </video>
               ) : (
                 // <img
