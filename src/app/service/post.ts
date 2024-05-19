@@ -60,17 +60,15 @@ export async function getPostsByKeyword(keyword: string) {
 
 export async function getPost(postId: number) {
   try {
-    console.log(`${API_URL}/post/"${encodeURIComponent(postId)}"`);
-    const response = await fetch(
-      `${API_URL}/post/"${encodeURIComponent(postId)}"`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    const token = cookies().get('token')?.value;
+    const response = await fetch(`${API_URL}/post/${postId}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     return response.json();
   } catch (error) {
     console.log(error);

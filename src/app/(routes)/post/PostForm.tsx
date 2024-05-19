@@ -196,6 +196,7 @@ export default function PostForm() {
     }));
 
     const contentData = new Blob([content], { type: 'text/html' });
+
     const postRequestData = {
       title: data.title,
       type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
@@ -204,17 +205,28 @@ export default function PostForm() {
       videoUrl: data.link,
     };
 
+    console.log(postRequestData);
+
+    //아무것도 없을 때 보내는거
+    const emptyBlob = new Blob([]);
+    const emptyFile = new File([emptyBlob], '');
+
     const postFormData = new FormData();
     postFormData.append(
       'postAddRequest',
       new Blob([JSON.stringify(postRequestData)], { type: 'application/json' }),
     );
-    postFormData.append('uploadVideos', uploadedVideo);
+    if (uploadedVideo) {
+      postFormData.append('uploadVideos', uploadedVideo);
+    } else {
+      postFormData.append('uploadVideos', emptyFile);
+    }
+
     if (!uploadedThumbnail) {
       if (thumbnail) {
         postFormData.append('thumbnailImage', thumbnail);
       } else {
-        postFormData.append('thumbnailImage', thumbnail);
+        postFormData.append('thumbnailImage', emptyFile);
       }
     } else {
       postFormData.append('thumbnailImage', uploadedThumbnail);
@@ -230,6 +242,7 @@ export default function PostForm() {
     const postComfirm = confirm('게시글 작성을 완료하시겠습니까?');
     if (postComfirm) {
       const res = await createPost(postFormData);
+      console.log(res);
       if (res.resultMsg === 'CREATED') {
         if (typeof window !== 'undefined') {
           alert('게시글 작성이 완료되었습니다.');

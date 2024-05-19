@@ -6,18 +6,18 @@ const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
 import { cookies } from 'next/headers';
 
-export async function getComments(postId: number, commentId: number) {
+export async function getComments(postId: number) {
   try {
-    const response = await fetch(
-      `${API_URL}/post/${encodeURIComponent(postId)}/comment/${encodeURIComponent(commentId)}`,
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    const token = cookies().get('token')?.value;
+    console.log(postId);
+    const response = await fetch(`${API_URL}/post/${Number(postId)}/comment`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
     return response.json();
   } catch (error) {
     console.log(error);
@@ -30,18 +30,15 @@ export async function createComments(
 ): Promise<any> {
   try {
     const token = cookies().get('token')?.value;
-    const response = await fetch(
-      `${API_URL}/post/${encodeURIComponent(postId)}/comment/`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(comment),
+    const response = await fetch(`${API_URL}/post/${postId}/comment`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+      body: JSON.stringify(comment),
+    });
     return response.json();
   } catch (error) {
     console.log(error);

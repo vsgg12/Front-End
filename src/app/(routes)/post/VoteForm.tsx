@@ -5,13 +5,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 const ingameInfos = [
   { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
-  { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
-  { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
+  { id: 11, champion: '챔2', position: 'jungle', tier: 'siver' },
+  { id: 22, champion: '챔3', position: 'mid', tier: 'gold' },
   { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
   { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
 ];
 
-export default function VoteForm() {
+export default function VoteForm({}) {
   //useState
   const [vote, setVote] = useState(
     ingameInfos.map((info) => ({

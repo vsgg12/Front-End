@@ -1,5 +1,6 @@
 import { BsArrowUpCircle } from 'react-icons/bs';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { createComments } from '@/app/service/comment';
 
 export default function PostCommentInput({ postId, parentId }: any) {
   const {
@@ -16,15 +17,15 @@ export default function PostCommentInput({ postId, parentId }: any) {
       content: data.content,
     };
 
-    // await createComment(postId, commentData);
+    const res = await createComments(postId, commentData);
     console.log(commentData);
+    console.log(res);
   };
 
   return (
     <>
       <form className="grow" onSubmit={handleSubmit(onSubmit)}>
         <textarea
-          // text-[#8A1F21]
           {...register('content')}
           className=" h-[35px] w-[100%] resize-none overflow-hidden rounded-[20px] border-2 border-[#8A1F21] px-[10px] py-[5px] text-[13px] focus:outline-none"
         />

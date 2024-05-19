@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import PostTag from '../post/PostTag';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import HomeNotVoted from './HomeNotVoted';
 import HomeVoted from './HomeVoted';
 import { getPostsSortedByDate, getPostsSortedByView } from '@/app/service/post';
@@ -10,6 +10,7 @@ import DOMPurify from 'dompurify';
 
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { IoPersonCircleSharp } from 'react-icons/io5';
+import Loading from '@/app/components/Loading';
 
 export default function HomePostItems() {
   const [isVoted, setIsVoted] = useState(false);
@@ -66,7 +67,7 @@ export default function HomePostItems() {
   }, []);
 
   useEffect(() => {
-    console.log(posts);
+    // console.log(posts);
   }, [posts]);
 
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function HomePostItems() {
         dataLength={displayedPosts.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<p>Loading...</p>}
+        loader={<Loading />}
       >
         {displayedPosts.map((post, index) => (
           <div
@@ -122,19 +123,19 @@ export default function HomePostItems() {
             </div>
             <div className="flex h-fit flex-row">
               {post.video.type === 'FILE' ? (
-                // <video
-                //   muted
-                //   controls
-                //   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
-                // >
-                //   <source src="../../../../../cat.mp4" type="video/webm" />
-                // </video>
-                <img
-                  src={post?.video.url}
-                  alt={post.title}
+                <video
+                  muted
+                  controls
                   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
-                ></img>
+                >
+                  <source src="../../../../../cat.mp4" type="video/webm" />
+                </video>
               ) : (
+                // <img
+                //   src={post?.video.url}
+                //   alt={post.title}
+                //   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
+                // ></img>
                 <iframe
                   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
                   src={post.video.url}
@@ -161,7 +162,7 @@ export default function HomePostItems() {
                 </Link>
               </div>
             </div>
-            <PostTag />
+            {/* <PostTag /> */}
           </div>
         ))}
       </InfiniteScroll>

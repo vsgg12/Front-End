@@ -19,7 +19,7 @@ export default function PostComment({
             {comment?.member.tier}
           </div>
         </div>
-        <div>{comment.content}</div>
+        <div>{comment?.content}</div>
       </div>
     </>
   );
