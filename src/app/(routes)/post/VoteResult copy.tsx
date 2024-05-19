@@ -1,32 +1,30 @@
 'use client';
-import { createVote } from '@/app/service/vote';
+import DoughnutChart from '@/app/components/DoughnutChart';
+import { ICreateVotingDataProps } from '@/app/types/form';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-// const ingameInfos = [
-//   { id: 0, championName: '챔1', position: 'top', tier: 'grandmaster' },
-//   { id: 11, championName: '챔2', position: 'jungle', tier: 'siver' },
-//   { id: 22, championName: '챔3', position: 'mid', tier: 'gold' },
-//   { id: 3, championName: '챔4', position: 'onedeal', tier: 'bronze' },
-//   { id: 4, championName: '챔5', position: 'support', tier: 'iron' },
-// ];
+const ingameInfos = [
+  { id: 0, champion: '이렐리아', position: 'top', tier: 'grandmaster' },
+  { id: 1, champion: '마스터 이', position: 'jungle', tier: 'silver' },
+  { id: 2, champion: '카타리나', position: 'mid', tier: 'gold' },
+  { id: 3, champion: '이즈리얼', position: 'onedeal', tier: 'bronze' },
+  { id: 4, champion: '잔나', position: 'support', tier: 'iron' },
+];
 
-export default function VoteForm({ ingameInfos }: any) {
+export default function VoteResult() {
   //useState
   const [vote, setVote] = useState(
-    ingameInfos.map((info: any) => ({
-      ingameInfoId: info.inGameInfoId,
+    ingameInfos.map((info) => ({
+      ingameInfoId: info.id,
       ratio: 0,
     })),
   );
 
-  // ingameInfos 배열이 비어있을 경우 대비
   const [selectedIngameInfoIndex, setSelectedIngameInfoIndex] =
-    useState<number>(
-      ingameInfos.length > 0 ? 0 : -1, // 처음에 0번 인덱스를 선택
-    );
+    useState<number>(ingameInfos[0].id);
   const [selectedChamp, setSelectedChamp] = useState<string>(
-    ingameInfos.length > 0 ? ingameInfos[0].championName : '',
+    ingameInfos[0].champion,
   );
 
   const [votingButtonInfos, setVotingButtonInfos] = useState(
@@ -35,22 +33,21 @@ export default function VoteForm({ ingameInfos }: any) {
 
   //useForm
   const {
+    register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<any>();
 
-  const onSubmit: SubmitHandler<any> = async (data) => {
-    // 0: {ingameInfoId: 11, ratio: 0}1: {ingameInfoId: 12, ratio: 0}
-
-    const voteData = [
-      { ingameInfoId: 11, ratio: 2 },
-      { ingameInfoId: 12, ratio: 8 },
-    ];
-    console.log(voteData);
-    // const res = await createVote(vote);
-    const res = await createVote(voteData);
-
-    // console.log(res);
+  //useForm
+  const onSubmit: SubmitHandler<any> = (data) => {
+    // const voteData: ICreateVotingDataProps = {
+    //   memberId: memberId,
+    //   vote: [...vote],
+    // };
+    // console.log(voteData);
+    console.log(votingButtonInfos);
   };
 
   //function
@@ -98,7 +95,7 @@ export default function VoteForm({ ingameInfos }: any) {
   };
 
   const updateVoteRatios = () => {
-    const newVote = vote.map((v: any) => ({
+    const newVote = vote.map((v) => ({
       ...v,
       ratio: votingButtonInfos.filter(
         (vBtnInfo) => vBtnInfo.selectedChampIndex === v.ingameInfoId,
@@ -108,25 +105,10 @@ export default function VoteForm({ ingameInfos }: any) {
   };
 
   useEffect(() => {
-    if (ingameInfos && ingameInfos.length > 0) {
-      setVote(
-        ingameInfos.map((info: any) => ({
-          ingameInfoId: info.id,
-          ratio: 0,
-        })),
-      );
-      setSelectedIngameInfoIndex(0); // 초기 상태로 첫 번째 챔피언 선택
-      setSelectedChamp(ingameInfos[0].championName);
-    }
-  }, [ingameInfos]);
-
-  useEffect(() => {
     updateVoteRatios();
   }, [votingButtonInfos]);
 
-  if (!ingameInfos || ingameInfos.length === 0) {
-    return <div>게임 정보를 불러오는 중...</div>;
-  }
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -134,24 +116,23 @@ export default function VoteForm({ ingameInfos }: any) {
         <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
           <div className="relative flex w-full flex-row items-center">
             <div className="mx-2 flex flex-col ">
-              {ingameInfos.map((ingameInfo: any, index: any) => (
+              {ingameInfos.map((ingameInfo, index) => (
                 <div key={index}>
                   <input
                     type="radio"
                     className="p-input-hidden"
-                    name={`id-${ingameInfo.inGameInfoId}`}
-                    id={`${ingameInfo.inGameInfoId}`}
+                    name={`id-${ingameInfo.id}`}
+                    id={`${ingameInfo.id}`}
                     onChange={() => {
                       setSelectedIngameInfoIndex(index);
-                      setSelectedChamp(ingameInfo.championName);
+                      setSelectedChamp(ingameInfo.champion);
                     }}
                     checked={
-                      ingameInfos[selectedIngameInfoIndex].inGameInfoId ===
-                      ingameInfo.inGameInfoId
+                      ingameInfos[selectedIngameInfoIndex].id === ingameInfo.id
                     }
                   />
                   <label
-                    htmlFor={`${ingameInfo.inGameInfoId}`}
+                    htmlFor={`${ingameInfo.id}`}
                     className="mb-1 flex cursor-pointer flex-row items-center hover:underline  "
                   >
                     <div
@@ -160,7 +141,7 @@ export default function VoteForm({ ingameInfos }: any) {
                       }
                     ></div>
                     <div className="whitespace-nowrap">
-                      {ingameInfo.championName}
+                      {ingameInfo.champion}
                     </div>
                   </label>
                 </div>
@@ -170,9 +151,9 @@ export default function VoteForm({ ingameInfos }: any) {
               <div className="mb-[3rem] text-[20px]">
                 이 게임의 과실은 몇 대 몇~?
               </div>
-              <div className="flex  flex-col items-center">
+              {/* <div className="flex flex-col items-center">
                 <div className="p-content-s-mb flex flex-row">
-                  {vote.map((eachVote: any, index: any) => (
+                  {vote.map((eachVote, index) => (
                     <div key={index} className="flex">
                       <div
                         className={
@@ -197,7 +178,7 @@ export default function VoteForm({ ingameInfos }: any) {
                         id={`vote-${index}`}
                         onChange={() => handleVoteButtonChange(index)}
                         checked={
-                          ingameInfos[selectedIngameInfoIndex].inGameInfoId ===
+                          ingameInfos[selectedIngameInfoIndex].id ===
                           vBtnInfo.selectedChampIndex
                         }
                       />
@@ -229,10 +210,14 @@ export default function VoteForm({ ingameInfos }: any) {
                     </div>
                   ))}
                 </div>
-              </div>
-              <div className="text-[12px] text-[#7B7B7B]">
-                {selectedChamp}의 과실을 선택해주세요
-              </div>
+              </div> */}
+              <DoughnutChart
+                top="이렐리아"
+                jun="마스터 이"
+                mid="카타리나"
+                adc="이즈리얼"
+                sup="잔나"
+              />
             </div>
           </div>
           <div className="flex justify-end">

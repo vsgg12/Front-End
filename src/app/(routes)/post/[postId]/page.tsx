@@ -11,60 +11,10 @@ import DOMPurify from 'dompurify';
 
 import { IPostReadParams } from '@/app/types/post';
 
-import { testComments } from '@/app/test/dummy';
 import VoteResult from '../VoteResult';
-import { ICreateCommentProps, ICreateCommentsProps } from '@/app/types/form';
 import { getPost } from '@/app/service/post';
 import { getComments } from '@/app/service/comment';
-
-const userPost = {
-  memberId: 0,
-  postId: 0,
-  title: '제목입니다',
-  content: `
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-
-  `,
-};
+import Loading from '@/app/components/Loading';
 
 export default function PostRead({
   params,
@@ -79,6 +29,7 @@ export default function PostRead({
   const [comments, setComments] = useState<any[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [ingameInfos, setIngameInfos] = useState<any[]>([]);
 
   const fetchMoreData = () => {
     if (displayedPosts.length >= comments.length) {
@@ -112,6 +63,7 @@ export default function PostRead({
         console.log(onePost);
         if (onePost.resultMsg === 'OK') {
           setPost(onePost.postDTO);
+          setIngameInfos(onePost.inGameInfo);
           getPostComments();
         }
       } catch (error) {
@@ -146,8 +98,13 @@ export default function PostRead({
 
   const [showReply, setShowReply] = useState<number>();
 
-  if (!post || comments.length === 0) {
-    return <div>Loading...</div>; // post가 없을 때 로딩 메시지를 보여줍니다.
+  if (!post) {
+    return (
+      <div className="flex flex-col">
+        <Search />
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -277,8 +234,8 @@ export default function PostRead({
                 </InfiniteScroll>
               </div>
             </div>
-            <VoteForm />
-            <VoteResult />
+            <VoteForm ingameInfos={ingameInfos} />
+            <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
           </div>
         </section>
       </main>

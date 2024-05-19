@@ -10,7 +10,7 @@ export async function createVote(data: ICreateVotingDataProps): Promise<any> {
   try {
     const token = cookies().get('token')?.value;
 
-    const response = await fetch(`${API_URL}/voting/users`, {
+    const response = await fetch(`${API_URL}/vote/save`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -26,9 +26,9 @@ export async function createVote(data: ICreateVotingDataProps): Promise<any> {
 }
 
 //내 판결 조회
-export async function getVotingResults() {
+export async function getVotingResults(postId: any) {
   try {
-    const response = await fetch(`${API_URL}/voting/users`, {
+    const response = await fetch(`${API_URL}/vote/${postId}/avg`, {
       method: 'GET',
       credentials: 'include',
       headers: {

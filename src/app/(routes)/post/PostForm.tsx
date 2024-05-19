@@ -82,39 +82,39 @@ const tabs = [
 
 const positions = [
   {
-    id: 'top',
+    id: 'TOP',
     value: 'TOP',
     content: '탑',
-    svg: <Image alt="top" src={topSVG} />,
-    svgW: <Image alt="top" src={topWSVG} />,
+    svg: <Image alt="TOP" src={topSVG} />,
+    svgW: <Image alt="TOP" src={topWSVG} />,
   },
   {
     id: 'jungle',
     value: 'JUNGLE',
     content: '정글',
     svg: <Image alt="jungle" src={jungleSVG} />,
-    svgW: <Image alt="top" src={jungleWSVG} />,
+    svgW: <Image alt="jungle" src={jungleWSVG} />,
   },
   {
     id: 'mid',
     value: 'MID',
     content: '미드',
     svg: <Image alt="mid" src={midSVG} />,
-    svgW: <Image alt="top" src={midWSVG} />,
+    svgW: <Image alt="mid" src={midWSVG} />,
   },
   {
     id: 'onedeal',
     value: 'ADCARRY',
     content: '원딜',
     svg: <Image alt="onedeal" src={onedealSVG} />,
-    svgW: <Image alt="top" src={onedealWSVG} />,
+    svgW: <Image alt="onedeal" src={onedealWSVG} />,
   },
   {
     id: 'support',
     value: 'SUPPORT',
     content: '서폿',
     svg: <Image alt="support" src={supportSVG} />,
-    svgW: <Image alt="top" src={supportWSVG} />,
+    svgW: <Image alt="support" src={supportWSVG} />,
   },
 ];
 
@@ -129,13 +129,13 @@ const tiers = [
   { id: 'emerald', value: 'EMERALD', content: '에메랄드' },
   { id: 'diamond', value: 'DIAMOND', content: '다이아' },
   { id: 'master', value: 'MASTER', content: '마스터' },
-  { id: 'grand_master', value: 'GREANDMASTER', content: '그랜드마스터' },
+  { id: 'grand_master', value: 'GRANDMASTER', content: '그랜드마스터' },
   { id: 'challenger', value: 'CHALLENGER', content: '챌린저' },
 ];
 
 const intialIngameInfos: IGameInfoProps[] = [
-  { id: 0, position: 'top', champion: '', tier: '' },
-  { id: 1, position: 'top', champion: '', tier: '' },
+  { id: 0, position: 'TOP', champion: '', tier: '' },
+  { id: 1, position: 'TOP', champion: '', tier: '' },
 ];
 
 export default function PostForm() {
@@ -412,7 +412,7 @@ export default function PostForm() {
   const addIngameInfo = (): void => {
     const newInfo = {
       id: ingameInfos.length,
-      position: 'top',
+      position: 'TOP',
       champion: '',
       tier: '',
     };
@@ -759,17 +759,17 @@ export default function PostForm() {
               placeholder={quillPlaceHolder}
             />
           </div>
-          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
+          {/* <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
             해시태그
-          </div>
-          <input
+          </div> */}
+          {/* <input
             type="text"
             className="mb-4 w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
             placeholder="#해시태그를 등록하세요 (최대 5개)"
             value={tagInput}
             onChange={handleTagInputChange}
             onKeyDown={handleTagInput}
-          />
+          /> */}
           <div className="ml-4 flex flex-wrap ">
             {hashtags.map((hashtag, index) => (
               <div
