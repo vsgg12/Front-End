@@ -20,7 +20,7 @@ export default function SignIn() {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="mb-10 mt-auto font-['SBAggroB'] text-5xl text-[#8A1F21] md:text-8xl">
-        <Link href="/">VS.GG</Link>
+        <Link href="/home">VS.GG</Link>
       </div>
       <div onClick={naverLogin}>
         <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32">
