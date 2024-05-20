@@ -278,11 +278,11 @@ export default function PostForm() {
           router.push('/');
         }
       }
-    } else {
-      if (typeof window !== 'undefined') {
-        alert('작성 오류입니다.업로드된 파일을 확인해주세요.');
-        return;
+      if (res.status === 500) {
+        alert('작성 오류입니다. 업로드한 파일을 확인해주세요');
       }
+    } else {
+      return;
     }
   };
 
