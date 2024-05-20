@@ -875,7 +875,7 @@ export default function PostForm() {
                           selectedPos[ingameInfo.id] === index,
                         )}
                       >
-                        <div className="mr-1">
+                        <div className="mr-1 py-1">
                           {' '}
                           {selectedPos[ingameInfo.id] === index
                             ? pos.svgW
@@ -935,7 +935,7 @@ export default function PostForm() {
           <div className="flex flex-row justify-end">
             <button
               type="submit"
-              className="flex flex-row items-center rounded-[50px] bg-[#8A1F21] px-[20px] py-[5px] text-[17px] text-white"
+              className="flex flex-row items-center rounded-[50px] bg-[#8A1F21] px-[22px] py-[14px] text-[17px] text-white"
             >
               <IoSaveOutline className="mr-[5px]" />
               작성완료

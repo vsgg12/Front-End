@@ -37,6 +37,7 @@ export default function Header() {
             <IoMdNotificationsOutline />
           </button> */}
           {/* <Link href="/myPage">
+          <Link href="/myPage">
             <button className="hd-items mr-[1rem] flex items-center justify-center overflow-hidden rounded-full">
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>

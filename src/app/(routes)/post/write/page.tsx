@@ -2,6 +2,8 @@
 import Logo from '@/app/components/Logo';
 import PostForm from '../PostForm';
 import Header from '@/app/layout/Header';
+import Link from 'next/link';
+
 export default function PostWrite() {
   return (
     <>
@@ -21,7 +23,10 @@ export default function PostWrite() {
               >
                 <div className="text-[13px]">뒤로가기</div>
               </button>
-              <div className="text-[12px] text-[#909090]">홈{' > '}게시글</div>
+              <div className="text-[12px] text-[#909090]">
+                <Link href="/">홈</Link>
+                {' > '}게시글
+              </div>
             </header>
             <PostForm />
           </div>

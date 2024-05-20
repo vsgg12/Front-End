@@ -14,6 +14,7 @@ import { IPostReadParams } from '@/app/types/post';
 import VoteResult from '../VoteResult';
 import { getPost } from '@/app/service/post';
 import { getComments } from '@/app/service/comment';
+import Link from 'next/link';
 import Loading from '@/app/components/Loading';
 import Header from '@/app/layout/Header';
 import { useRouter } from 'next/navigation';
@@ -154,7 +155,10 @@ export default function PostRead({
               >
                 <div className="text-[13px]">글 목록</div>
               </button>
-              <div className="text-xs text-[#909090]">홈{' > '}게시글</div>
+              <div className="text-xs text-[#909090]">
+                <Link href="/">홈</Link>
+                {' > '}게시글
+              </div>
             </header>
 
             <div className="flex flex-row">
@@ -231,7 +235,10 @@ export default function PostRead({
                 >
                   {displayedPosts.map((comment, index) => (
                     <div key={index} className="mb-[20px] text-[13px]">
-                      <PostComment postId={params.postId} comment={comment} />
+                      <PostComment
+                        postId={userPost.postId}
+                        comment={testComment}
+                      />
                       <button
                         key={index}
                         type="button"
@@ -264,7 +271,7 @@ export default function PostRead({
                               ))}
                           </div>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   ))}
                 </InfiniteScroll>
