@@ -3,8 +3,8 @@ import SignIn from './(routes)/auth/signIn/page';
 export default function Main() {
   return (
     <>
-      <Home />
-      {/* <SignIn /> */}
+      {/* <Home /> */}
+      <SignIn />
     </>
   );
 }
