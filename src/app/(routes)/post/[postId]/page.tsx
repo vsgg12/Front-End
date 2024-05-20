@@ -35,6 +35,8 @@ export default function PostRead({
   const [hasMore, setHasMore] = useState(true);
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
+  const [commentCreated, setCommentCreated] = useState(false);
+
   const fetchMoreData = () => {
     if (displayedPosts.length >= comments.length) {
       setHasMore(false);
@@ -49,7 +51,6 @@ export default function PostRead({
       setDisplayedPosts([...displayedPosts, ...newPosts]);
     }, 500);
   };
-  const [commentCreated, setCommentCreated] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -59,22 +60,6 @@ export default function PostRead({
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}.${month}.${day}. ${hours}:${minutes}`;
-  };
-
-  const refreshComments = async () => {
-    try {
-      const postComments = await getComments(Number(params.postId));
-      if (postComments.resultMsg === 'OK') {
-        setComments(postComments.comments);
-        setDisplayedPosts(postComments.comments.slice(0, 5));
-        setHasMore(postComments.comments.length > 5);
-      } else {
-        setDisplayedPosts([]);
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Failed to fetch comments:', error);
-    }
   };
 
   useEffect(() => {
@@ -116,8 +101,15 @@ export default function PostRead({
   }, [comments]);
 
   useEffect(() => {
-    router.refresh();
-  }, [commentCreated]);
+    if (commentCreated) {
+      console.log(commentCreated);
+      router.refresh();
+    }
+  }, [commentCreated, router]);
+
+  useEffect(() => {
+    setCommentCreated(false);
+  }, []);
 
   const [showReply, setShowReply] = useState<number>();
 
@@ -212,7 +204,6 @@ export default function PostRead({
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
                     <PostCommentInput
-                      // refreshComments={refreshComments}
                       postId={params.postId}
                       parentId={null}
                       setCommentCreated={setCommentCreated}
@@ -223,7 +214,7 @@ export default function PostRead({
                   dataLength={displayedPosts.length}
                   next={fetchMoreData}
                   hasMore={hasMore}
-                  loader={<p>Loading...</p>}
+                  loader={<Loading />}
                 >
                   {displayedPosts.map((comment, index) => (
                     <div key={index} className="mb-[20px] text-[13px]">
