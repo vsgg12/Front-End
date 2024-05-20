@@ -187,14 +187,6 @@ export default function VoteResult({ postId }: any) {
               <DoughnutChart ingameInfos={ingameInfoDummy} />
             </div>
           </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="h-9 w-28 rounded-full bg-[#8A1F21] text-lg text-white hover:bg-red-800"
-            >
-              제출하기
-            </button>
-          </div>
         </div>
       </form>
     </>
