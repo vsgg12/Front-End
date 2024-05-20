@@ -14,7 +14,7 @@ export default function SignIn() {
   };
 
   if (session) {
-    router.push('/');
+    router.push('/home');
   }
 
   return (
