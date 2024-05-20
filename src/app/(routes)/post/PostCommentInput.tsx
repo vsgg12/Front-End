@@ -2,33 +2,49 @@ import { BsArrowUpCircle } from 'react-icons/bs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createComments } from '@/app/service/comment';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function PostCommentInput({
   postId,
   parentId,
-  refreshComments,
   setCommentCreated,
 }: any) {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
+    reset,
     formState: { errors },
   } = useForm<any>();
 
+  const [isSend, setIsSend] = useState(false);
   const router = useRouter();
+
   const onSubmit: SubmitHandler<any> = async (data) => {
+    if (data.content === '') {
+      alert('댓글 내용을 작성해주세요');
+      return;
+    }
+
     const commentData = {
       parentId: parentId,
       content: data.content,
     };
 
     const res = await createComments(postId, commentData);
-    if (res.resultMsg === 'OK') {
+    if (res.resultCode === 201) {
       setCommentCreated(true);
+      setIsSend(true);
     }
   };
+
+  useEffect(() => {
+    if (isSend) {
+      reset({
+        content: '',
+      });
+      setIsSend(false);
+    }
+  }, [isSend, reset]);
 
   return (
     <>

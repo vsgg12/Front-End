@@ -195,14 +195,10 @@ export default function PostForm() {
       return;
     }
 
-    if (!thumbnail || !uploadedThumbnail!) {
+    if (!thumbnail) {
       alert('썸네일을 업로드 해주세요');
       return;
     }
-
-    // if (content === '') {
-    //   alert('내용을 작성해주세요');
-    // }
 
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
