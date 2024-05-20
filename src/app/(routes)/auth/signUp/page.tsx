@@ -48,6 +48,11 @@ export default function SignUp() {
   } = useForm<ICreateMemberProps>();
 
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
+    if (!isNicknameCheck) {
+      alert('닉네임 중복 확인을 해주세요.');
+      return;
+    }
+
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
     if (sameNickname) {
       if (typeof window !== 'undefined') {
@@ -91,11 +96,21 @@ export default function SignUp() {
 
   const handleCheckNickname = async () => {
     const nickname = watch('nickname');
+    if (!nickname) {
+      setError('nickname', {
+        type: 'manual',
+        message: '닉네임은 필수 항목입니다.', // 이 부분을 추가
+      });
+      setIsNicknameCheck(false);
+      return;
+    }
+
     const res = await checkSameNickname(nickname);
     if (res.nicknameCheck) {
       setSameNickname(true);
       setError('nickname', {
         type: 'manual',
+        message: '중복된 닉네임입니다.',
       });
     } else {
       setSameNickname(false);
@@ -214,6 +229,7 @@ export default function SignUp() {
               사용 가능한 닉네임입니다.
             </span>
           )}
+          {}
         </div>
 
         <div className="h-0.5 bg-[#D9D9D9]"></div>
@@ -289,7 +305,7 @@ export default function SignUp() {
         </div>
         <button
           type="submit"
-          className="rounded-full bg-[#8A1F21] py-2 text-white"
+          className="mb-10 rounded-full bg-[#8A1F21] py-2 text-white"
         >
           가입하기
         </button>
