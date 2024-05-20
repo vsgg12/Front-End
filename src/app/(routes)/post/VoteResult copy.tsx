@@ -5,11 +5,8 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 const ingameInfos = [
-  { id: 0, champion: '이렐리아', position: 'top', tier: 'grandmaster' },
-  { id: 1, champion: '마스터 이', position: 'jungle', tier: 'silver' },
-  { id: 2, champion: '카타리나', position: 'mid', tier: 'gold' },
-  { id: 3, champion: '이즈리얼', position: 'onedeal', tier: 'bronze' },
-  { id: 4, champion: '잔나', position: 'support', tier: 'iron' },
+  { id: 0, championName: '이렐리아', averageValue: 4 },
+  { id: 1, championName: '마스터 이', averageValue: 6 },
 ];
 
 export default function VoteResult() {
@@ -24,7 +21,7 @@ export default function VoteResult() {
   const [selectedIngameInfoIndex, setSelectedIngameInfoIndex] =
     useState<number>(ingameInfos[0].id);
   const [selectedChamp, setSelectedChamp] = useState<string>(
-    ingameInfos[0].champion,
+    ingameInfos[0].championName,
   );
 
   const [votingButtonInfos, setVotingButtonInfos] = useState(
