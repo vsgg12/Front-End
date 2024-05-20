@@ -276,6 +276,7 @@ export default function PostRead({
             {isVoted && (
               <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
             )}
+            {/* <VoteResult postId={params.postId} ingameInfos={ingameInfos} /> */}
           </div>
         </section>
       </main>

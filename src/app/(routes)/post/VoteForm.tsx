@@ -221,12 +221,18 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
                       {index === 0 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={handleVoteButtonStyleChange(index)}
+                          className={
+                            handleVoteButtonStyleChange(index) +
+                            ' rounded-l-[30px]'
+                          }
                         ></label>
                       ) : index === 9 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={handleVoteButtonStyleChange(index)}
+                          className={
+                            handleVoteButtonStyleChange(index) +
+                            ' rounded-r-[30px]'
+                          }
                         ></label>
                       ) : (
                         <label
