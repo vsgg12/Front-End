@@ -1,11 +1,13 @@
 'use client';
 import Logo from '@/app/components/Logo';
 import PostForm from '../PostForm';
+import Header from '@/app/layout/Header';
 import Link from 'next/link';
 
 export default function PostWrite() {
   return (
     <>
+      <Header />
       <main>
         <div className="flex items-center justify-center p-[100px]">
           <Logo />

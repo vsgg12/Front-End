@@ -37,9 +37,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthSession>
-          <Header />
+          {/* <Header />*/}
           <Suspense>{children}</Suspense>
-          <Footer />
+          {/* <Footer /> */}
         </AuthSession>
       </body>
     </html>

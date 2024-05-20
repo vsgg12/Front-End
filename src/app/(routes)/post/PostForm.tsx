@@ -31,6 +31,7 @@ import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
 import supportWSVG from '../../../../public/svg/supporter-w.svg';
 
 import { IoIosClose } from 'react-icons/io';
+
 import {
   IoVideocamOutline,
   IoEaselOutline,
@@ -47,6 +48,8 @@ import {
   saveImageAndRequestUrlToS3,
   sendDeleteRequestToS3,
 } from '@/app/service/post';
+import { useSession } from 'next-auth/react';
+import { userStore } from '@/app/store/userStoe';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -74,76 +77,76 @@ const ReactQuillBase = dynamic(
 const tabs = [
   { id: 0, title: '파일 불러오기' },
   // { id: 1, title: '링크로 불러오기' },
-  // { id: 2, title: '썸네일 업로드' },
+  { id: 1, title: '썸네일 업로드' },
 ];
 
 const positions = [
   {
-    id: 'top',
-    value: 'top',
+    id: 'TOP',
+    value: 'TOP',
     content: '탑',
-    svg: <Image alt="top" src={topSVG} />,
-    svgW: <Image alt="top" src={topWSVG} />,
+    svg: <Image alt="TOP" src={topSVG} />,
+    svgW: <Image alt="TOP" src={topWSVG} />,
   },
   {
     id: 'jungle',
-    value: 'jungle',
+    value: 'JUNGLE',
     content: '정글',
     svg: <Image alt="jungle" src={jungleSVG} />,
-    svgW: <Image alt="top" src={jungleWSVG} />,
+    svgW: <Image alt="jungle" src={jungleWSVG} />,
   },
   {
     id: 'mid',
-    value: 'mid',
+    value: 'MID',
     content: '미드',
     svg: <Image alt="mid" src={midSVG} />,
-    svgW: <Image alt="top" src={midWSVG} />,
+    svgW: <Image alt="mid" src={midWSVG} />,
   },
   {
     id: 'onedeal',
-    value: 'onedeal',
+    value: 'ADCARRY',
     content: '원딜',
     svg: <Image alt="onedeal" src={onedealSVG} />,
-    svgW: <Image alt="top" src={onedealWSVG} />,
+    svgW: <Image alt="onedeal" src={onedealWSVG} />,
   },
   {
     id: 'support',
-    value: 'support',
+    value: 'SUPPORT',
     content: '서폿',
     svg: <Image alt="support" src={supportSVG} />,
-    svgW: <Image alt="top" src={supportWSVG} />,
+    svgW: <Image alt="support" src={supportWSVG} />,
   },
 ];
 
 const tiers = [
   { id: undefined, value: undefined, content: '티어 선택' },
-  { id: 'unrank', value: 'unrank', content: '언랭' },
-  { id: 'iron', value: 'iron', content: '아이언' },
-  { id: 'bronze', value: 'bronze', content: '브론즈' },
-  { id: 'silver', value: 'silver', content: '실버' },
-  { id: 'gold', value: 'gold', content: '골드' },
-  { id: 'platinum', value: 'platinum', content: '플래티넘' },
-  { id: 'emerald', value: 'emerald', content: '에메랄드' },
-  { id: 'diamond', value: 'diamond', content: '다이아' },
-  { id: 'master', value: 'master', content: '마스터' },
-  { id: 'grand_master', value: 'grand_master', content: '그랜드마스터' },
-  { id: 'challenger', value: 'challenger', content: '챌린저' },
+  { id: 'unrank', value: 'UNRANK', content: '언랭' },
+  { id: 'iron', value: 'IRON', content: '아이언' },
+  { id: 'bronze', value: 'BRONZE', content: '브론즈' },
+  { id: 'silver', value: 'SILVER', content: '실버' },
+  { id: 'gold', value: 'GOLD', content: '골드' },
+  { id: 'platinum', value: 'PLATINUM', content: '플래티넘' },
+  { id: 'emerald', value: 'EMERALD', content: '에메랄드' },
+  { id: 'diamond', value: 'DIAMOND', content: '다이아' },
+  { id: 'master', value: 'MASTER', content: '마스터' },
+  { id: 'grand_master', value: 'GRANDMASTER', content: '그랜드마스터' },
+  { id: 'challenger', value: 'CHALLENGER', content: '챌린저' },
 ];
 
 const intialIngameInfos: IGameInfoProps[] = [
-  { id: 0, position: 'top', champion: '', tier: '' },
-  { id: 1, position: 'top', champion: '', tier: '' },
+  { id: 0, position: 'TOP', champion: '', tier: '' },
+  { id: 1, position: 'TOP', champion: '', tier: '' },
 ];
 
 export default function PostForm() {
+  const { isLogin } = userStore();
   //useRouter
   const router = useRouter();
 
   //useState
-  const [memberId, setMemberId] = useState(1);
-  const [uploadedVideo, setUploadedVideo] = useState<any>();
-  const [thumbnail, setThumbnail] = useState<any>();
-  const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
+  const [uploadedVideo, setUploadedVideo] = useState<any>(null);
+  const [thumbnail, setThumbnail] = useState<any>(null);
+  const [uploadedThumbnail, setUploadedThumbnail] = useState<any>(null);
   const [content, setContent] = useState('');
   const [contentUrls, setContentImgUrls] = useState<string[]>([]);
   const [hashtags, setHashtags] = useState<string[]>([]);
@@ -156,6 +159,7 @@ export default function PostForm() {
     1: 0,
   });
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [postCreated, setPostcreated] = useState(false);
 
   //useRef
   const isClickedFirst = useRef(false); //뒤로가기 방지용
@@ -186,45 +190,96 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
-    const postFormData = new FormData();
-
-    if (uploadedVideo) {
-      postFormData.append('video', uploadedVideo);
+    if (!uploadedVideo) {
+      alert('영상을 업로드 해주세요');
+      return;
     }
 
-    if (!uploadedThumbnail) {
-      if (thumbnail) {
-        postFormData.append('thumbnail', thumbnail);
-      }
-    } else {
-      postFormData.append('thumbnail', uploadedThumbnail);
+    if (!thumbnail || !uploadedThumbnail!) {
+      alert('썸네일을 업로드 해주세요');
+      return;
     }
 
-    let values = postFormData.values();
-    for (const pair of values) {
-      console.log(pair);
-    }
+    // if (content === '') {
+    //   alert('내용을 작성해주세요');
+    // }
 
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
       ...rest,
     }));
 
-    const postData = {
-      uploadVideos: postFormData,
+    for (const info of inGameInfoRequests) {
+      if (!info.championName || !info.position || !info.tier) {
+        alert('모든 챔피언, 포지션 및 티어를 입력해주세요.');
+        return;
+      }
+    }
+
+    const contentData = new Blob([content], { type: 'text/html' });
+
+    const postRequestData = {
+      title: data.title,
+      type: 'FILE',
+      hashtag: hashtags,
+      inGameInfoRequests: inGameInfoRequests,
       videoUrl: data.link,
-      postAddRequest: {
-        title: data.title,
-        content,
-        type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
-        hashTag: hashtags,
-        inGameInfoRequests, //championName을 champion이라고 해줄 수 있는지 물어보기
-      },
     };
 
-    await createPost(postData);
-    console.log(postData);
-    console.log(contentUrls);
+    for (const info of inGameInfoRequests) {
+      if (!info.championName || !info.position || !info.tier) {
+        alert('모든 챔피언, 포지션 및 티어를 입력해주세요.');
+        return;
+      }
+    }
+
+    console.log(postRequestData);
+
+    //아무것도 없을 때 보내는거
+    const emptyBlob = new Blob([]);
+    const emptyFile = new File([emptyBlob], '');
+
+    const postFormData = new FormData();
+    postFormData.append(
+      'postAddRequest',
+      new Blob([JSON.stringify(postRequestData)], { type: 'application/json' }),
+    );
+    if (uploadedVideo) {
+      postFormData.append('uploadVideos', uploadedVideo);
+    } else {
+      postFormData.append('uploadVideos', emptyFile);
+    }
+
+    if (!uploadedThumbnail) {
+      if (thumbnail) {
+        postFormData.append('thumbnailImage', thumbnail);
+      } else {
+        postFormData.append('thumbnailImage', emptyFile);
+      }
+    } else {
+      postFormData.append('thumbnailImage', uploadedThumbnail);
+    }
+
+    postFormData.append('content', contentData, 'content.html');
+
+    let values = postFormData.values();
+    for (const pair of values) {
+      console.log(pair);
+    }
+
+    const postComfirm = confirm('게시글 작성을 완료하시겠습니까?');
+    if (postComfirm) {
+      const res = await createPost(postFormData);
+      console.log(res);
+      if (res.resultMsg === 'CREATED') {
+        if (typeof window !== 'undefined') {
+          alert('게시글 작성이 완료되었습니다.');
+          router.push('/');
+        }
+      }
+    } else {
+      return;
+    }
   };
 
   //functions
@@ -257,22 +312,25 @@ export default function PostForm() {
       } else {
         return;
       }
-    } else if (
-      (index === 1 && uploadedVideo) ||
-      (index === 1 && uploadedThumbnail)
-    ) {
-      const confirmChange = confirm(
-        '링크 선택 시 업로드한 파일과 썸네일이 삭제됩니다.',
-      );
-      if (confirmChange) {
-        setUploadedVideo(undefined);
-        setUploadedThumbnail(undefined);
-        setThumbnail(undefined);
-        setSelectedTab(index);
-      } else {
-        return;
-      }
-    } else {
+    }
+
+    // else if (
+    //   (index === 1 && uploadedVideo) ||
+    //   (index === 1 && uploadedThumbnail)
+    // ) {
+    //   const confirmChange = confirm(
+    //     '링크 선택 시 업로드한 파일과 썸네일이 삭제됩니다.',
+    //   );
+    //   if (confirmChange) {
+    //     setUploadedVideo(undefined);
+    //     setUploadedThumbnail(undefined);
+    //     setThumbnail(undefined);
+    //     setSelectedTab(index);
+    //   } else {
+    //     return;
+    //   }
+    // }
+    else {
       setSelectedTab(index);
     }
   };
@@ -377,6 +435,10 @@ export default function PostForm() {
     setTagInput(event.target.value); // 입력값 상태 업데이트
   };
 
+  const handleChange = (value: string) => {
+    setContent(value);
+  };
+
   const removeTag = (index: number) => {
     setHashtags(hashtags.filter((_, idx) => idx !== index)); // 특정 인덱스의 태그 제거
   };
@@ -385,7 +447,7 @@ export default function PostForm() {
   const addIngameInfo = (): void => {
     const newInfo = {
       id: ingameInfos.length,
-      position: 'top',
+      position: 'TOP',
       champion: '',
       tier: '',
     };
@@ -449,7 +511,16 @@ export default function PostForm() {
         // const res = await axios.post('api주소', formData);\
         // const imgUrl = res.data;
 
+        let values = formData.values();
+        for (const pair of values) {
+          console.log(pair);
+        }
+
         const res = await saveImageAndRequestUrlToS3(formData);
+        console.log(res);
+
+        // const res = await getImageUrl(formData);
+        // console.log(res);
 
         const imgUrl = res.images[0];
         setContentImgUrls((prevUrls) => [...prevUrls, imgUrl]);
@@ -465,20 +536,24 @@ export default function PostForm() {
   }, []);
 
   const beforeUnloadHandler = useCallback((event: BeforeUnloadEvent) => {
-    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-    event.preventDefault();
-    return message;
+    if (isLogin || !postCreated) {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      event.preventDefault();
+      return message;
+    }
   }, []);
 
   const handlePopState = useCallback(async () => {
-    const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
-    if (!confirm(message)) {
-      history.pushState(null, '', '');
-      return;
-    }
+    if (isLogin || !postCreated) {
+      const message = '페이지를 떠나면 작성된 내용이 사라집니다.';
+      if (!confirm(message)) {
+        history.pushState(null, '', '');
+        return;
+      }
 
-    await handleDelete();
-    history.back();
+      await handleDelete();
+      history.back();
+    }
   }, []);
 
   //useEffect
@@ -647,19 +722,20 @@ export default function PostForm() {
                         alt="Video Thumbnail"
                       />
                     </div>
-                  ) : tab.id === 1 ? (
-                    <div className="flex flex-row items-center ">
-                      <div className="flex w-full flex-row items-center justify-center">
-                        <IoLinkOutline className="mr-[10px] text-[25px]" />
-                        <input
-                          type="text"
-                          placeholder="링크를 붙여 넣어주세요"
-                          className="p-font-color-default grow outline-none"
-                          {...register('link')}
-                        />
-                      </div>
-                    </div>
-                  ) : tab.id === 2 ? (
+                  ) : // ) : tab.id === 1 ? (
+                  //   <div className="flex flex-row items-center ">
+                  //     <div className="flex w-full flex-row items-center justify-center">
+                  //       <IoLinkOutline className="mr-[10px] text-[25px]" />
+                  //       <input
+                  //         type="text"
+                  //         placeholder="링크를 붙여 넣어주세요"
+                  //         className="p-font-color-default grow outline-none"
+                  //         {...register('link')}
+                  //       />
+                  //     </div>
+                  //   </div>
+                  // )
+                  tab.id === 1 ? (
                     <div
                       onDragOver={handleDragOver}
                       onDrop={handleThumbnailDrop}
@@ -715,21 +791,21 @@ export default function PostForm() {
               modules={modules}
               className=" h-[100%] w-full whitespace-pre-wrap outline-none"
               value={content}
-              onChange={setContent}
+              onChange={handleChange}
               placeholder={quillPlaceHolder}
             />
           </div>
-          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
+          {/* <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
             해시태그
-          </div>
-          <input
+          </div> */}
+          {/* <input
             type="text"
             className="mb-4 w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
             placeholder="#해시태그를 등록하세요 (최대 5개)"
             value={tagInput}
             onChange={handleTagInputChange}
             onKeyDown={handleTagInput}
-          />
+          /> */}
           <div className="ml-4 flex flex-wrap ">
             {hashtags.map((hashtag, index) => (
               <div

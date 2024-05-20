@@ -1,6 +1,4 @@
 'use client';
-import { useState } from 'react';
-import PostCommentInput from './PostCommentInput';
 import { ICreateCommentsProps, ICreateReplyProps } from '@/app/types/form';
 
 export default function PostComment({
@@ -21,7 +19,7 @@ export default function PostComment({
             {comment?.member.tier}
           </div>
         </div>
-        <div>{comment.content}</div>
+        <div>{comment?.content}</div>
       </div>
     </>
   );

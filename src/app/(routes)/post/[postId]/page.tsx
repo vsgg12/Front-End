@@ -7,110 +7,132 @@ import PostTag from '../PostTag';
 import PostCommentInput from '../PostCommentInput';
 import PostComment from '../PostComment';
 import VoteForm from '../VoteForm';
+import DOMPurify from 'dompurify';
 
 import { IPostReadParams } from '@/app/types/post';
 
-import { testComments } from '@/app/test/dummy';
 import VoteResult from '../VoteResult';
-import { ICreateCommentProps, ICreateCommentsProps } from '@/app/types/form';
 import { getPost } from '@/app/service/post';
 import { getComments } from '@/app/service/comment';
 import Link from 'next/link';
-
-const userPost = {
-  memberId: 0,
-  postId: 0,
-  title: '제목입니다',
-  content: `
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-  Lorem Ipsum is simply dummy text of the printing and typesetting
-  industry. Lorem Ipsum has been the industry's standard dummy
-  text ever since the 1500s, when an unknown printer took a galley
-  of type and scrambled it to make a type specimen book. It has
-  survived not only five centuries, but also the leap into
-  electronic typesetting, remaining essentially unchanged. It was
-  popularised in the 1960s with the release of Letraset sheets
-  containing Lorem Ipsum passages, and more recently with desktop
-  publishing software like Aldus PageMaker including versions of
-  Lorem Ipsum.
-
-  `,
-};
+import Loading from '@/app/components/Loading';
+import Header from '@/app/layout/Header';
+import { useRouter } from 'next/navigation';
 
 export default function PostRead({
   params,
 }: {
   params: IPostReadParams;
 }): JSX.Element {
-  const [post, setPost] = useState<any[]>();
-  const [comments, setComments] = useState<any[]>();
-  const [displayedPosts, setDisplayedPosts] = useState(
-    testComments.slice(0, 5),
-  );
-  const [hasMore, setHasMore] = useState(true);
+  const sanitizeHTML = (html: string) => {
+    return DOMPurify.sanitize(html);
+  };
 
+  const router = useRouter();
+  const [post, setPost] = useState<any>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [ingameInfos, setIngameInfos] = useState<any[]>([]);
+  const [isVoted, setIsVoted] = useState(false);
   const fetchMoreData = () => {
-    if (displayedPosts.length >= testComments.length) {
+    if (displayedPosts.length >= comments.length) {
       setHasMore(false);
       return;
     }
 
     setTimeout(() => {
-      const newPosts = testComments.slice(
+      const newPosts = comments.slice(
         displayedPosts.length,
         displayedPosts.length + 5,
       );
       setDisplayedPosts([...displayedPosts, ...newPosts]);
     }, 500);
   };
+  const [commentCreated, setCommentCreated] = useState(false);
 
-  //useEffect
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}.${month}.${day}. ${hours}:${minutes}`;
+  };
+
+  const refreshComments = async () => {
+    try {
+      const postComments = await getComments(Number(params.postId));
+      if (postComments.resultMsg === 'OK') {
+        setComments(postComments.comments);
+        setDisplayedPosts(postComments.comments.slice(0, 5));
+        setHasMore(postComments.comments.length > 5);
+      } else {
+        setDisplayedPosts([]);
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch comments:', error);
+    }
+  };
+
   useEffect(() => {
     async function getOnePost() {
-      const onePost = await getPost(Number(params.postId));
-      setPost(onePost);
+      try {
+        const onePost = await getPost(Number(params.postId));
+        if (onePost.resultMsg === 'OK') {
+          setPost(onePost.postDTO);
+          setIngameInfos(onePost.inGameInfo);
+        }
+      } catch (error) {
+        console.error('Failed to fetch post:', error);
+      }
     }
 
-    const commentId = 0;
     async function getPostComments() {
-      const postComments = await getComments(Number(params.postId), commentId);
-      setComments(postComments);
+      try {
+        const postComments = await getComments(Number(params.postId));
+        if (postComments.resultMsg === 'OK') {
+          setComments(postComments.comments);
+          const uploadedComments = [...comments].slice(0, 5);
+          setDisplayedPosts(uploadedComments); // comments 가져온 후 displayedPosts 초기화
+        } else {
+          setDisplayedPosts([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch comments:', error);
+      }
     }
-  }, []);
+
+    getOnePost();
+    getPostComments();
+  }, [params.postId]);
+
+  useEffect(() => {
+    if (comments.length > 0) {
+      setDisplayedPosts(comments);
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    router.refresh();
+  }, [commentCreated]);
 
   const [showReply, setShowReply] = useState<number>();
 
+  if (!post) {
+    return (
+      <div className="flex flex-col">
+        <Search />
+        <Loading />
+      </div>
+    );
+  }
+
   return (
     <>
+      <Header />
       <main>
         <Search />
         <section className="flex justify-center">
@@ -131,77 +153,85 @@ export default function PostRead({
             </header>
 
             <div className="flex flex-row">
-              <div className=" p-content-mr p-content-rounded scroll relative mb-11 max-h-[1000px] w-2/3 bg-white  px-[63px] pb-[44px]">
-                <div className="sticky top-[-1px] bg-[#ffffff] pb-[30px] pt-[44px]">
-                  <div className="flex w-full flex-row place-items-start justify-between font-medium">
-                    <div className="p-content-s-mb text-[25px]">
-                      {userPost.title}
-                    </div>
-                    <div className="text-[12px] text-[#C8C8C8]">
-                      조회수 9,999
-                    </div>
-                  </div>
-                  <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
-                    <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
-                    <div>
-                      <div className="flex flex-row">
-                        <div className=" mr-[6px] text-[12px] text-[#333333]">
-                          닉네임
-                        </div>
-                        <div className="text-[12px] text-[#909090]">등급</div>
+              {post && (
+                <div className=" p-content-mr p-content-rounded scroll relative mb-11 max-h-[1000px] w-2/3 bg-white  px-[63px] pb-[44px]">
+                  <div className="sticky top-[-1px] bg-[#ffffff] pb-[30px] pt-[44px]">
+                    <div className="flex w-full flex-row place-items-start justify-between font-medium">
+                      <div className="p-content-s-mb text-[25px]">
+                        {post?.title}
                       </div>
                       <div className="text-[12px] text-[#C8C8C8]">
-                        2024.04.24. 13:34
+                        조회수 {post.viewCount}
+                      </div>
+                    </div>
+                    <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
+                      <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
+                      <div>
+                        <div className="flex flex-row">
+                          <div className=" mr-[6px] text-[12px] text-[#333333]">
+                            {post.memberDTO.nickname}
+                          </div>
+                          <div className="text-[12px] text-[#909090]">등급</div>
+                        </div>
+                        <div className="text-[12px] text-[#C8C8C8]">
+                          {formatDate(post.createdAt)}
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  {post.video.type === 'FILE' ? (
+                    <video
+                      controls
+                      className="p-content-s-mb h-[50%] w-full overflow-hidden rounded-[30px]  "
+                    >
+                      <source src={post.video.url} type="video/webm" />
+                    </video>
+                  ) : (
+                    <iframe
+                      className="p-content-rounded p-content-s-mb h-[50%] w-full"
+                      src="https://www.youtube.com/embed/TByv13Yq4I4"
+                      title="롤 랭크 4:5 바론한타"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    ></iframe>
+                  )}
+
+                  {/* <PostTag /> */}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHTML(post.content),
+                    }}
+                    className="w-full"
+                  ></div>
                 </div>
-
-                <iframe
-                  className="p-content-rounded p-content-s-mb h-[50%] w-full"
-                  src="https://www.youtube.com/embed/TByv13Yq4I4"
-                  title="롤 랭크 4:5 바론한타"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                ></iframe>
-
-                <video
-                  controls
-                  className="p-content-s-mb h-[50%] w-full overflow-hidden rounded-[30px]  "
-                >
-                  <source src="../../../../../cat.mp4" type="video/webm" />
-                </video>
-
-                <PostTag />
-                <div className="w-full">{userPost.content}</div>
-              </div>
-
+              )}
               <div className="p-content-rounded scroll relative mb-11 max-h-[1000px] w-1/3 bg-white px-[63px] pb-[44px]">
                 <div className="sticky top-[-1px] bg-[#ffffff] pt-[44px]">
                   <div className="p-content-s-mb text-lg">댓글</div>
                   <div className="flex flex-row">
                     <PostCommentInput
-                      postId={userPost.postId}
+                      // refreshComments={refreshComments}
+                      postId={params.postId}
                       parentId={null}
+                      setCommentCreated={setCommentCreated}
                     />
                   </div>
                 </div>
-
                 <InfiniteScroll
                   dataLength={displayedPosts.length}
                   next={fetchMoreData}
                   hasMore={hasMore}
                   loader={<p>Loading...</p>}
                 >
-                  {/* <CommentThread comments={organizedComments} /> */}
-                  {testComments.map((testComment, index) => (
+                  {displayedPosts.map((comment, index) => (
                     <div key={index} className="mb-[20px] text-[13px]">
                       <PostComment
                         postId={userPost.postId}
                         comment={testComment}
                       />
-                      {/* <button
+                      <button
                         key={index}
                         type="button"
                         onClick={() => {
@@ -218,18 +248,19 @@ export default function PostRead({
                       {index === showReply && (
                         <div className="text-[12px]">
                           <PostCommentInput
-                            postId={userPost.postId}
-                            parentId={testComment.id}
+                            postId={params.postId}
+                            parentId={comment.id}
                           />
                           <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
-                            {testComment.children.map((reply, index) => (
-                              <div key={index} className="mb-[10px]">
-                                <PostComment
-                                  postId={userPost.postId}
-                                  comment={reply}
-                                />
-                              </div>
-                            ))}
+                            {comment.children &&
+                              comment.children.map((reply: any, index: any) => (
+                                <div key={index} className="mb-[10px]">
+                                  <PostComment
+                                    postId={params.postId}
+                                    comment={reply}
+                                  />
+                                </div>
+                              ))}
                           </div>
                         </div>
                       )} */}
@@ -238,8 +269,12 @@ export default function PostRead({
                 </InfiniteScroll>
               </div>
             </div>
-            <VoteForm />
-            <VoteResult />
+            {!isVoted && (
+              <VoteForm setIsVoted={setIsVoted} ingameInfos={ingameInfos} />
+            )}
+            {isVoted && (
+              <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
+            )}
           </div>
         </section>
       </main>

@@ -8,17 +8,17 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
+import { checkToken, deleteToken } from '../service/auth';
+import { userStore } from '../store/userStoe';
 
 export default function Header() {
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    console.log('헤더 렌더링');
-  });
-
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
+  const handleSignOut = async () => {
+    await signOut().then(async (res) => {
+      await deleteToken();
+    });
+  };
 
   return (
     <>
@@ -33,18 +33,17 @@ export default function Header() {
               />
             </Link>
           </div>
+          {/* <button className="hd-items mr-[0.6rem] ">
+            <IoMdNotificationsOutline />
+          </button> */}
+          {/* <Link href="/myPage">
           <Link href="/myPage">
             <button className="hd-items mr-[1rem] flex items-center justify-center overflow-hidden rounded-full">
               <IoPersonCircle className="h-[2.2rem] w-[2.2rem]" />
             </button>
-          </Link>
-          <div onClick={() => signOut()}>
-            <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
-              로그아웃
-            </button>
-          </div>
+          </Link> */}
           {session ? (
-            <div onClick={() => signOut()}>
+            <div onClick={handleSignOut}>
               <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
                 로그아웃
               </button>

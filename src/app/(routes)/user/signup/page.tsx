@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { createUser } from '@/app/utils/userApi';
+// import { createUser } from '@/app/utils/userApi';
 import { ICreateMemberProps } from '@/app/types/form';
 
 export default function SignUp() {
@@ -51,7 +51,7 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<ICreateMemberProps> = (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
 
-    createUser({ ...naverValue, ...checkboxes, ...rest });
+    // createUser({ ...naverValue, ...checkboxes, ...rest });
     // console.log({ ...naverValue, ...checkboxes, ...rest });
   };
 

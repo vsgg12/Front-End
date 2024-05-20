@@ -1,35 +1,28 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { SiNaver } from 'react-icons/si';
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function SignIn() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const naverLogin = async () => {
     await signIn('naver', { redirect: false });
   };
 
-  // useEffect(() => {
-  //   // Check if the user is already logged in
-  //   if (status === 'authenticated') {
-  //     router.push('/'); // Redirect to home if already logged in
-  //   }
-  // }, [status, router]);
+  if (session) {
+    router.push('/');
+  }
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="mb-10 mt-auto font-['SBAggroB'] text-5xl text-[#8A1F21] md:text-8xl">
         <Link href="/">VS.GG</Link>
       </div>
-      <div
-        // onClick={() => signIn('naver', { redirect: true, callbackUrl: '/' })}
-        // onClick={() => signIn('naver')}
-        onClick={naverLogin}
-      >
+      <div onClick={naverLogin}>
         <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32">
           <SiNaver color="white" />
           <button className="text-white">네이버로 3초만에 시작하기</button>

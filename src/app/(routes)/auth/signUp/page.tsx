@@ -3,10 +3,12 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ICreateMemberProps } from '@/app/types/form';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { checkSameNickname, createMember } from '@/app/service/auth';
 
 export default function SignUp() {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const name = searchParams.get('name');
@@ -17,8 +19,7 @@ export default function SignUp() {
   const age = searchParams.get('age');
 
   const [naverValue, setNaverValue] = useState({
-    id: '',
-    name: '',
+    token: '',
     email: '',
     profileImage: '',
     gender: '',
@@ -42,12 +43,33 @@ export default function SignUp() {
     handleSubmit,
     formState: { errors },
     watch,
+    setError,
+    clearErrors,
   } = useForm<ICreateMemberProps>();
 
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
-
-    await createMember({ ...naverValue, ...checkboxes, ...rest });
+    if (sameNickname) {
+      if (typeof window !== 'undefined') {
+        alert('로그인이 필요한 서비스입니다.');
+      }
+    } else {
+      const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
+      if (res?.message === '이미 존재하는 유저입니다.') {
+        if (typeof window !== 'undefined') {
+          if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
+            router.push('/auth/signIn');
+          } else {
+            return;
+          }
+        }
+      }
+      // {resultCode: 201, resultMsg: 'CREATED'}
+      if (res?.resultMsg === 'CREATED') {
+        alert(`${data.nickname}님, 회원가입을 축하합니다.`);
+        router.push('/auth/signIn');
+      }
+    }
   };
 
   const handleCheckAll = (checked: boolean) => {
@@ -69,9 +91,17 @@ export default function SignUp() {
 
   const handleCheckNickname = async () => {
     const nickname = watch('nickname');
-    await checkSameNickname(nickname).then((res) => {
-      console.log(res);
-    });
+    const res = await checkSameNickname(nickname);
+    if (res.nicknameCheck) {
+      setSameNickname(true);
+      setError('nickname', {
+        type: 'manual',
+      });
+    } else {
+      setSameNickname(false);
+      clearErrors('nickname');
+    }
+    setIsNicknameCheck(true);
   };
 
   useEffect(() => {
@@ -80,8 +110,8 @@ export default function SignUp() {
 
   useEffect(() => {
     setNaverValue({
-      id: id || '',
-      name: name || '',
+      token: id || '',
+      // name: name || '',
       email: email || '',
       profileImage: profile_image || '',
       gender: gender || '',

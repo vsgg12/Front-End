@@ -1,71 +1,79 @@
 'use client';
 import Link from 'next/link';
 import PostTag from '../post/PostTag';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import HomeNotVoted from './HomeNotVoted';
 import HomeVoted from './HomeVoted';
-import { testMember, testPost, testVid } from '@/app/test/dummy';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import HomeVoteResult from '../home/HomeVoteResult';
 import { getPostsSortedByDate, getPostsSortedByView } from '@/app/service/post';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import DOMPurify from 'dompurify';
 
-// { postId, memberId }
+import { IoPersonCircleSharp } from 'react-icons/io5';
+import Loading from '@/app/components/Loading';
+import { useRouter } from 'next/navigation';
+import { userStore } from '@/app/store/userStoe';
+
 export default function HomePostItems() {
-  const [isVoted, setIsVoted] = useState(true);
+  const router = useRouter();
+  const { setIsLogin, isLogin } = userStore();
+
+  const [isVoted, setIsVoted] = useState(false);
   const [sortOption, setSortOption] = useState('latest');
-  const [posts, setPosts] = useState<any[]>();
-  const [displayedPosts, setDisplayedPosts] = useState(testPost.slice(0, 5));
+  const [posts, setPosts] = useState<any[]>([]);
+  const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
   const fetchMoreData = () => {
-    if (displayedPosts.length >= testPost.length) {
+    if (displayedPosts.length >= posts.length) {
       setHasMore(false);
       return;
     }
 
-    //test
     setTimeout(() => {
-      const newPosts = testPost.slice(
+      const newPosts = posts.slice(
         displayedPosts.length,
         displayedPosts.length + 5,
       );
-      setDisplayedPosts([...displayedPosts, ...newPosts]);
+      setDisplayedPosts((prevPosts) => [...prevPosts, ...newPosts]);
     }, 500);
   };
 
-  //   setTimeout(() => {
-  //     const newPosts = posts.slice(
-  //       //post type 적용하면됨
-  //       displayedPosts.length,
-  //       displayedPosts.length + 5,
-  //     );
-  //     setDisplayedPosts([...displayedPosts, ...newPosts]);
-  //   }, 500);
-  // };
+  const removeImagesFromHTML = (html: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const images = doc.querySelectorAll('img');
+    images.forEach((img) => img.remove());
+    return doc.body.innerHTML;
+  };
+
+  const sanitizeHTML = (html: string) => {
+    return DOMPurify.sanitize(html);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}.${month}.${day}. ${hours}:${minutes}`;
+  };
 
   useEffect(() => {
-    // console.log('home 렌더');
     async function getPostsByDates() {
       const postsSortedByDate = await getPostsSortedByDate();
-      setPosts(postsSortedByDate);
-    }
-
-    getPostsByDates();
-  }, []);
-
-  useEffect(() => {
-    async function getPosts() {
-      if (sortOption === 'latest') {
-        const postsSortedByDate = await getPostsSortedByDate();
-        setPosts(postsSortedByDate);
+      console.log(postsSortedByDate);
+      if (postsSortedByDate.resultMsg === 'OK') {
+        const fetchedPosts = postsSortedByDate?.postDTO || [];
+        setPosts(fetchedPosts);
+        setDisplayedPosts(fetchedPosts.slice(0, 5));
       } else {
-        const postsSortedByViews = await getPostsSortedByView();
-        setPosts(postsSortedByViews);
+        router.push('/auth/signIn');
       }
     }
-
-    getPosts();
-  }, [sortOption]);
+    getPostsByDates();
+  }, []);
 
   return (
     <div>
@@ -73,56 +81,78 @@ export default function HomePostItems() {
         dataLength={displayedPosts.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<p>Loading...</p>}
+        loader={<Loading />}
       >
         {displayedPosts.map((post, index) => (
-          <Link key={index} href={`/post/${index}/`}>
-            <div className="p-content-pd p-content-mb h-fit w-full rounded-[1.875rem] bg-[#ffffff]">
-              <div className="flex w-full flex-row  justify-between font-medium">
-                <div className="p-content-s-mb text-[1.563rem]">
-                  {post.title}
+          <div
+            key={index}
+            className="p-content-pd p-content-mb h-fit w-full rounded-[1.875rem] bg-[#ffffff]"
+          >
+            <div className="flex w-full flex-row justify-between font-medium">
+              <div className="p-content-s-mb text-[1.563rem]">{post.title}</div>
+              <div className="text-[0.75rem] text-[#C8C8C8]">
+                조회수 {post.viewCount}
+              </div>
+            </div>
+            <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
+              <IoPersonCircleSharp className="mr-[0.625rem] h-[2.5rem] w-[2.5rem] rounded-full  text-[#D9D9D9]" />
+              <div>
+                <div className="flex flex-row">
+                  <div className="mr-[0.625rem] text-[0.75rem] text-[#333333]">
+                    {post?.memberDTO.nickname}
+                  </div>
+                  <div className="text-[0.75rem] text-[#909090]">
+                    {post?.memberDTO.tier}
+                  </div>
                 </div>
                 <div className="text-[0.75rem] text-[#C8C8C8]">
-                  조회수 {post.viewCount}
+                  {formatDate(post.createdAt)}
                 </div>
               </div>
-              <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
-                <div className="mr-[0.625rem] h-[2rem] w-[2rem] rounded-full bg-[#D9D9D9]"></div>
-                <div>
-                  <div className="flex flex-row">
-                    <div className=" mr-[0.625rem] text-[0.75rem] text-[#333333]">
-                      {testMember.nickname}
-                    </div>
-                    <div className="text-[0.75rem] text-[#909090]">
-                      {testMember.tier}
-                    </div>
-                  </div>
-                  <div className="text-[0.75rem] text-[#C8C8C8]">
-                    {post.createDateTime}
-                  </div>
-                </div>
-              </div>
-              <div className="flex h-fit flex-row">
+            </div>
+            <div className="flex h-fit flex-row">
+              {post.video.type === 'FILE' ? (
+                <video
+                  muted
+                  controls
+                  className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
+                >
+                  <source src={post.video.url} type="video/webm" />
+                </video>
+              ) : (
+                // <img
+                //   src={post?.video.url}
+                //   alt={post.title}
+                //   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
+                // ></img>
                 <iframe
                   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
-                  src={testVid.url}
-                  title="롤 랭크 4:5 바론한타"
+                  src={post.video.url}
+                  title={post.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                 ></iframe>
-                <div className="flex flex-col overflow-hidden">
-                  <div className="mb-2 line-clamp-[8] cursor-pointer overflow-hidden text-ellipsis decoration-solid ">
-                    {post.content}
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-20">
+              )}
+              <div className="flex w-full flex-col overflow-hidden">
+                <Link
+                  href={`/post/${post.id}/`}
+                  className="flex h-full flex-col"
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHTML(removeImagesFromHTML(post.content)),
+                    }}
+                    className="mb-2 line-clamp-[8] h-[50%] cursor-pointer overflow-hidden text-ellipsis decoration-solid"
+                  ></div>
+                  <div className="relative flex h-[8.563rem] items-center justify-center rounded-[1.875rem] bg-gradient-to-b from-[#ADADAD]/30 to-[#DCDCDC]/30">
                     {isVoted ? <HomeVoted /> : <HomeNotVoted />}
                   </div>
-                </div>
+                </Link>
               </div>
-              <PostTag />
             </div>
-          </Link>
+            {/* <PostTag /> */}
+          </div>
         ))}
       </InfiniteScroll>
     </div>

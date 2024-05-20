@@ -2,7 +2,7 @@ import ReactQuill, { Quill } from 'react-quill';
 
 //회원가입 - 백엔드로 보내는 용
 export interface ICreateMemberProps {
-  id: string;
+  token: string;
   email: string;
   nickname: string; //직접 작성
   age: string;
@@ -31,21 +31,60 @@ export interface ICreatePostFormProps {
 }
 
 //게시글 작성 - 백엔드로 보내는 용
-export interface ICreatePostDataProps {
-  uploadVideos: FormData;
-  videoUrl: string;
-  postAddRequest: {
-    title: string;
-    content: string;
-    type: string;
-    hashTag: string[];
-    inGameInfoRequests: {
-      position: string;
-      championName: string;
-      tier: string;
-    }[];
-  };
+// export interface ICreatePostDataProps {
+//   uploadVideos: FormData;
+//   thumbnailImage: FormData;
+//   videoUrl: string;
+//   postAddRequest: {
+//     title: string;
+//     content: string;
+//     type: string;
+//     hashTag: string[];
+//     inGameInfoRequests: {
+//       position: string;
+//       tier: string;
+//       championName: string;
+//     }[];
+//   };
+// }
+
+// export interface ICreatePostDataProps {
+//   uploadVideos: FormData;
+//   thumbnailImage: FormData;
+//   videoUrl: string;
+//   postAddRequest: {
+//     title: string;
+//     content: string;
+//     type: string;
+//     hashTag: string[];
+//     inGameInfoRequests: {
+//       position: string;
+//       tier: string;
+//       championName: string;
+//     }[];
+//   };
+// }
+
+interface inGameInfoRequests {
+  position: string;
+  tier: string;
+  championName: string;
 }
+
+interface ICreatePostRequestProps {
+  title: stirng;
+  // content: string;
+  type: string;
+  hashtag: string[];
+  ingameInfoRequests: inGameInfoRequests[];
+  videoUrl: string;
+}
+
+// interface ICreatePostDataProps {
+//   uploadVideos: File;
+//   thumbnailImage: File;
+//   postAddRequest: ICreatePostRequestProps;
+// }
 
 //투표 - 세부 구조
 export interface ICreateVoteProps {

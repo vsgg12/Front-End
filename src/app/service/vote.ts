@@ -1,13 +1,18 @@
+'use server';
 import { NEXT_PUBLIC_API_URL } from '../constants';
 import { ICreateVotingDataProps } from '../types/form';
 
 const API_URL: string = NEXT_PUBLIC_API_URL || '';
 
+import { cookies } from 'next/headers';
+
 export async function createVote(data: ICreateVotingDataProps): Promise<any> {
   try {
-    const token = ''; //cookie에 저장한 token으로 바꾸기
-    const response = await fetch(`${API_URL}/voting/users`, {
+    const token = cookies().get('token')?.value;
+
+    const response = await fetch(`${API_URL}/vote/save`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -21,10 +26,11 @@ export async function createVote(data: ICreateVotingDataProps): Promise<any> {
 }
 
 //내 판결 조회
-export async function getVotingResults() {
+export async function getVotingResults(postId: any) {
   try {
-    const response = await fetch(`${API_URL}/voting/users`, {
+    const response = await fetch(`${API_URL}/vote/${postId}/avg`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -40,6 +46,7 @@ export async function getVotingHistorys() {
   try {
     const response = await fetch(`${API_URL}/voting/users`, {
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },

@@ -1,34 +1,58 @@
 'use client';
+import Loading from '@/app/components/Loading';
 import { createVote } from '@/app/service/vote';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-const ingameInfos = [
-  { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
-  { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
-  { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
-  { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
-  { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
-];
+// const ingameInfos = [
+//   { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
+//   { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
+//   { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
+//   { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
+//   { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
+// ];
 
-export default function VoteForm() {
+// const ingameInfos = [
+//   {
+//     inGameInfoId: 0,
+//     championName: '챔1',
+//     position: 'top',
+//     tier: 'grandmaster',
+//   },
+//   { inGameInfoId: 1, championName: '챔2', position: 'jungle', tier: 'siver' },
+//   { inGameInfoId: 2, championName: '챔3', position: 'mid', tier: 'gold' },
+//   { inGameInfoId: 3, championName: '챔4', position: 'onedeal', tier: 'bronze' },
+//   { inGameInfoId: 4, championName: '챔5', position: 'support', tier: 'iron' },
+// ];
+
+export default function VoteForm({ ingameInfos, setIsVoted }: any) {
+  const router = useRouter();
+  if (!ingameInfos) {
+    return <Loading />;
+  }
   //useState
   const [vote, setVote] = useState(
-    ingameInfos.map((info) => ({
-      ingameInfoId: info.id,
+    ingameInfos.map((info: any) => ({
+      inGameInfoId: info.inGameInfoId,
       ratio: 0,
     })),
   );
 
-  const [selectedIngameInfoIndex, setSelectedIngameInfoIndex] =
-    useState<number>(ingameInfos[0].id);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
+    ingameInfos[0].inGameInfoId,
+  );
   const [selectedChamp, setSelectedChamp] = useState<string>(
-    ingameInfos[0].champion,
+    ingameInfos[0].championName,
   );
 
   const [votingButtonInfos, setVotingButtonInfos] = useState(
-    Array(10).fill({ selectedChampIndex: undefined }),
+    Array(10).fill({ selectedChampId: undefined }),
   );
+
+  const [changedStyle, setChangedStyle] = useState('');
 
   //useForm
   const {
@@ -37,8 +61,19 @@ export default function VoteForm() {
   } = useForm<any>();
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    console.log(vote);
-    await createVote(vote);
+    const voteData = vote.map(({ inGameInfoId, ...rest }: any) => ({
+      ingameInfoId: inGameInfoId,
+      ...rest,
+    }));
+    console.log(voteData);
+    const res = await createVote(voteData);
+    console.log(res);
+    if (res.resultCode === 200) {
+      setIsVoted(true);
+      router.refresh();
+    } else {
+      setIsVoted(false);
+    }
   };
 
   //function
@@ -73,10 +108,10 @@ export default function VoteForm() {
   };
 
   const handleVoteButtonChange = (index: number) => {
-    if (selectedIngameInfoIndex !== undefined) {
+    if (selectedIngameInfoId !== undefined) {
       const newVotingButtonInfos = votingButtonInfos.map((vBtnInfo, idx) => {
         if (idx === index) {
-          return { selectedChampIndex: selectedIngameInfoIndex };
+          return { selectedChampId: selectedIngameInfoId };
         }
         return vBtnInfo;
       });
@@ -85,11 +120,26 @@ export default function VoteForm() {
     }
   };
 
+  const handleVoteButtonStyleChange = (index: number): string => {
+    const currentColorClass =
+      votingButtonInfos[index].selectedChampId !== undefined
+        ? changeIngameInfoColor(
+            ingameInfos.findIndex(
+              (info: any) =>
+                info.inGameInfoId === votingButtonInfos[index].selectedChampId,
+            ),
+          )
+        : '';
+
+    return votingButtonInfos[index].selectedChampId === selectedIngameInfoId
+      ? changeIngameInfoColor(selectedIndex) + ' p-voing-bar-element'
+      : currentColorClass + ' p-voing-bar-element';
+  };
   const updateVoteRatios = () => {
-    const newVote = vote.map((v) => ({
+    const newVote = vote.map((v: any) => ({
       ...v,
       ratio: votingButtonInfos.filter(
-        (vBtnInfo) => vBtnInfo.selectedChampIndex === v.ingameInfoId,
+        (vBtnInfo) => vBtnInfo.selectedChampId === v.inGameInfoId,
       ).length,
     }));
     setVote(newVote);
@@ -99,29 +149,36 @@ export default function VoteForm() {
     updateVoteRatios();
   }, [votingButtonInfos]);
 
+  useEffect(() => {
+    console.log(ingameInfos);
+    if (ingameInfos.length > 0) {
+      setSelectedIngameInfoId(ingameInfos[0].inGameInfoId);
+      setSelectedChamp(ingameInfos[0].championName);
+    }
+  }, [ingameInfos]);
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
           <div className="relative flex w-full flex-row items-center">
             <div className="mx-2 flex flex-col ">
-              {ingameInfos.map((ingameInfo, index) => (
+              {ingameInfos.map((ingameInfo: any, index: any) => (
                 <div key={index}>
                   <input
                     type="radio"
                     className="p-input-hidden"
-                    name={`id-${ingameInfo.id}`}
-                    id={`${ingameInfo.id}`}
+                    name={`id-${ingameInfo.inGameInfoId}`}
+                    id={`${ingameInfo.inGameInfoId}`}
                     onChange={() => {
-                      setSelectedIngameInfoIndex(index);
-                      setSelectedChamp(ingameInfo.champion);
+                      setSelectedIngameInfoId(ingameInfos[index].inGameInfoId);
+                      setSelectedChamp(ingameInfo.championName);
+                      setSelectedIndex(index);
                     }}
-                    checked={
-                      ingameInfos[selectedIngameInfoIndex].id === ingameInfo.id
-                    }
+                    checked={selectedIngameInfoId === ingameInfo.inGameInfoId}
                   />
                   <label
-                    htmlFor={`${ingameInfo.id}`}
+                    htmlFor={`${ingameInfo.inGameInfoId}`}
                     className="mb-1 flex cursor-pointer flex-row items-center hover:underline  "
                   >
                     <div
@@ -130,7 +187,7 @@ export default function VoteForm() {
                       }
                     ></div>
                     <div className="whitespace-nowrap">
-                      {ingameInfo.champion}
+                      {ingameInfo.championName}
                     </div>
                   </label>
                 </div>
@@ -142,7 +199,7 @@ export default function VoteForm() {
               </div>
               <div className="flex  flex-col items-center">
                 <div className="p-content-s-mb flex flex-row">
-                  {vote.map((eachVote, index) => (
+                  {vote.map((eachVote: any, index: any) => (
                     <div key={index} className="flex">
                       <div
                         className={
@@ -167,33 +224,23 @@ export default function VoteForm() {
                         id={`vote-${index}`}
                         onChange={() => handleVoteButtonChange(index)}
                         checked={
-                          ingameInfos[selectedIngameInfoIndex].id ===
-                          vBtnInfo.selectedChampIndex
+                          selectedIngameInfoId === vBtnInfo.selectedChampId
                         }
                       />
                       {index === 0 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-l-[30px]'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       ) : index === 9 ? (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element rounded-r-[30px]'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       ) : (
                         <label
                           htmlFor={`vote-${index}`}
-                          className={
-                            changeIngameInfoColor(vBtnInfo.selectedChampIndex) +
-                            ' p-voing-bar-element'
-                          }
+                          className={handleVoteButtonStyleChange(index)}
                         ></label>
                       )}
                     </div>
