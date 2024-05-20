@@ -251,6 +251,7 @@ export default function PostRead({
                           <PostCommentInput
                             postId={params.postId}
                             parentId={comment.id}
+                            setCommentCreated={setCommentCreated}
                           />
                           <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
                             {comment.children &&
