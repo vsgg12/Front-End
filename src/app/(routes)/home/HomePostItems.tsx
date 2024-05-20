@@ -11,17 +11,23 @@ import DOMPurify from 'dompurify';
 import { IoPersonCircleSharp } from 'react-icons/io5';
 import Loading from '@/app/components/Loading';
 import { useRouter } from 'next/navigation';
-import { userStore } from '@/app/store/userStoe';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { checkToken, deleteToken } from '@/app/service/auth';
 
 export default function HomePostItems() {
   const router = useRouter();
-  const { setIsLogin, isLogin } = userStore();
 
   const [isVoted, setIsVoted] = useState(false);
   const [sortOption, setSortOption] = useState('latest');
   const [posts, setPosts] = useState<any[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
+
+  const handleSignOut = async () => {
+    await signOut().then(() => {
+      router.push('/auth/signIn');
+    });
+  };
 
   const fetchMoreData = () => {
     if (displayedPosts.length >= posts.length) {
@@ -61,6 +67,14 @@ export default function HomePostItems() {
   };
 
   useEffect(() => {
+    async function handleToken() {
+      const res = await checkToken();
+      console.log(res);
+      if (!res) {
+        router.push('/auth/signIn');
+      }
+    }
+
     async function getPostsByDates() {
       const postsSortedByDate = await getPostsSortedByDate();
       console.log(postsSortedByDate);
@@ -69,10 +83,11 @@ export default function HomePostItems() {
         setPosts(fetchedPosts);
         setDisplayedPosts(fetchedPosts.slice(0, 5));
       } else {
+        handleSignOut();
         router.push('/auth/signIn');
       }
     }
-    getPostsByDates();
+    handleToken().then(() => getPostsByDates());
   }, []);
 
   return (

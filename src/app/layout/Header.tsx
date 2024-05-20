@@ -9,7 +9,6 @@ import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
 import { checkToken, deleteToken } from '../service/auth';
-import { userStore } from '../store/userStoe';
 
 export default function Header() {
   const { data: session, status } = useSession();

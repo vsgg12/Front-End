@@ -5,27 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-// const ingameInfos = [
-//   { id: 0, champion: '챔1', position: 'top', tier: 'grandmaster' },
-//   { id: 1, champion: '챔2', position: 'jungle', tier: 'siver' },
-//   { id: 2, champion: '챔3', position: 'mid', tier: 'gold' },
-//   { id: 3, champion: '챔4', position: 'onedeal', tier: 'bronze' },
-//   { id: 4, champion: '챔5', position: 'support', tier: 'iron' },
-// ];
-
-// const ingameInfos = [
-//   {
-//     inGameInfoId: 0,
-//     championName: '챔1',
-//     position: 'top',
-//     tier: 'grandmaster',
-//   },
-//   { inGameInfoId: 1, championName: '챔2', position: 'jungle', tier: 'siver' },
-//   { inGameInfoId: 2, championName: '챔3', position: 'mid', tier: 'gold' },
-//   { inGameInfoId: 3, championName: '챔4', position: 'onedeal', tier: 'bronze' },
-//   { inGameInfoId: 4, championName: '챔5', position: 'support', tier: 'iron' },
-// ];
-
 export default function VoteForm({ ingameInfos, setIsVoted }: any) {
   const router = useRouter();
   if (!ingameInfos) {
@@ -65,6 +44,18 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
       ingameInfoId: inGameInfoId,
       ...rest,
     }));
+
+    const totalRatio = voteData.reduce(
+      (sum: any, { ratio }: any) => sum + ratio,
+      0,
+    );
+
+    // Check if the sum of the ratios is not equal to 10
+    if (totalRatio !== 10) {
+      alert('판결을 확인해주세요');
+      return;
+    }
+
     console.log(voteData);
     const res = await createVote(voteData);
     console.log(res);
