@@ -5,26 +5,19 @@ import { Doughnut } from 'react-chartjs-2';
 Chart.register(ArcElement);
 
 interface DoughnutChartProps {
-  top: string;
-  mid: string;
-  jun: string;
-  sup: string;
-  adc: string;
+  ingameInfos: { championName: string; averageValue: number }[];
 }
 
-const DoughnutChart: React.FC<DoughnutChartProps> = ({
-  top,
-  jun,
-  mid,
-  sup,
-  adc,
-}) => {
+const DoughnutChart: React.FC<DoughnutChartProps> = ({ ingameInfos }) => {
+  const championNames = ingameInfos.map((info) => info.championName);
+  const averageValues = ingameInfos.map((info) => info.averageValue);
+
   const data = {
-    labels: [top, jun, mid, sup, adc],
+    labels: championNames,
     datasets: [
       {
         label: '# of Votes',
-        data: [20, 20, 20, 20, 20],
+        data: averageValues,
         backgroundColor: [
           '#000000',
           '#9D2A2C',
