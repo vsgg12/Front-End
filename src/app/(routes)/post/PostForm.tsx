@@ -190,15 +190,15 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
-    if (!uploadedVideo) {
-      alert('영상을 업로드 해주세요');
-      return;
-    }
+    // if (!uploadedVideo) {
+    //   alert('영상을 업로드 해주세요');
+    //   return;
+    // }
 
-    if (!thumbnail) {
-      alert('썸네일을 업로드 해주세요');
-      return;
-    }
+    // if (!thumbnail) {
+    //   alert('썸네일을 업로드 해주세요');
+    //   return;
+    // }
 
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,

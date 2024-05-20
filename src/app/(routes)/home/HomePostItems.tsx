@@ -139,7 +139,7 @@ export default function HomePostItems() {
                 //   src={post?.video.url}
                 //   alt={post.title}
                 //   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
-                // ></img>
+                // ></img> :
                 <iframe
                   className="p-content-rounded p-content-s-mb p-content-mr aspect-video h-[30vh] w-[50%] max-w-[37.875rem]"
                   src={post.video.url}
