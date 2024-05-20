@@ -195,10 +195,15 @@ export default function PostForm() {
     //   return;
     // }
 
-    // if (!thumbnail) {
+    // if (!uploadedThumbnail) {
     //   alert('썸네일을 업로드 해주세요');
     //   return;
     // }
+
+    if (data.title === '') {
+      alert('제목을 입력해주세요');
+      return;
+    }
 
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
@@ -274,7 +279,10 @@ export default function PostForm() {
         }
       }
     } else {
-      return;
+      if (typeof window !== 'undefined') {
+        alert('작성 오류입니다.업로드된 파일을 확인해주세요.');
+        return;
+      }
     }
   };
 
@@ -331,6 +339,54 @@ export default function PostForm() {
     }
   };
 
+  // const handleVideoFileChange = async (
+  //   event:
+  //     | React.ChangeEvent<HTMLInputElement>
+  //     | React.DragEvent<HTMLDivElement>,
+  // ) => {
+  //   let file: File | null = null;
+
+  //   if ('dataTransfer' in event) {
+  //     file = event.dataTransfer.files[0];
+  //   } else {
+  //     file = event.target.files?.[0] ?? null;
+  //   }
+
+  //   if (file) {
+  //     setUploadedVideo(file);
+  //     const url = URL.createObjectURL(file);
+  //     if (videoRef.current) {
+  //       videoRef.current.src = url;
+
+  //       videoRef.current.onloadeddata = () => {
+  //         videoRef.current!.currentTime = 5; // 원하는 시점 설정
+  //       };
+
+  //       videoRef.current.onseeked = async () => {
+  //         if (videoRef.current && canvasRef.current) {
+  //           const video = videoRef.current;
+  //           const canvas = canvasRef.current;
+  //           canvas.width = video.videoWidth;
+  //           canvas.height = video.videoHeight;
+
+  //           const ctx = canvas.getContext('2d');
+  //           if (ctx) {
+  //             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  //             if (imageRef.current) {
+  //               canvas.toBlob(async (blob) => {
+  //                 if (blob) {
+  //                   setThumbnail(blob);
+  //                   URL.revokeObjectURL(url);
+  //                 }
+  //               }, 'image/jpeg');
+  //             }
+  //           }
+  //         }
+  //       };
+  //     }
+  //   }
+  // };
+
   const handleVideoFileChange = async (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -345,6 +401,21 @@ export default function PostForm() {
     }
 
     if (file) {
+      // Check file size (500MB) and type (mp4)
+      const maxSizeMB = 500;
+      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+      const fileType = 'video/mp4';
+
+      if (file.size > maxSizeBytes) {
+        alert(`파일 크기가 ${maxSizeMB}MB를 초과합니다.`);
+        return;
+      }
+
+      if (file.type !== fileType) {
+        alert('파일 형식이 mp4가 아닙니다.');
+        return;
+      }
+
       setUploadedVideo(file);
       const url = URL.createObjectURL(file);
       if (videoRef.current) {
@@ -396,6 +467,24 @@ export default function PostForm() {
     handleThumbnailFileChange(event);
   };
 
+  // const handleThumbnailFileChange = async (
+  //   event:
+  //     | React.ChangeEvent<HTMLInputElement>
+  //     | React.DragEvent<HTMLDivElement>,
+  // ) => {
+  //   let file: File | null = null;
+
+  //   if ('dataTransfer' in event) {
+  //     file = event.dataTransfer.files[0];
+  //   } else {
+  //     file = (event.target as HTMLInputElement).files?.[0] ?? null;
+  //   }
+
+  //   if (file) {
+  //     setUploadedThumbnail(file);
+  //   }
+  // };
+
   const handleThumbnailFileChange = async (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -410,6 +499,21 @@ export default function PostForm() {
     }
 
     if (file) {
+      // Check file size (2MB) and type (jpg, jpeg, png)
+      const maxSizeMB = 2;
+      const maxSizeBytes = maxSizeMB * 1024 * 1024;
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+      if (file.size > maxSizeBytes) {
+        alert(`썸네일 파일 크기가 ${maxSizeMB}MB를 초과합니다.`);
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        alert('썸네일 파일 형식이 jpg, jpeg, png가 아닙니다.');
+        return;
+      }
+
       setUploadedThumbnail(file);
     }
   };
