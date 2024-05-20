@@ -100,9 +100,26 @@ export default function PostRead({
   }, [comments]);
 
   useEffect(() => {
+    async function getPostComments() {
+      try {
+        const postComments = await getComments(Number(params.postId));
+        if (postComments.resultMsg === 'OK') {
+          setComments(postComments.comments);
+          const uploadedComments = [...comments].slice(0, 5);
+          setDisplayedPosts(uploadedComments); // comments 가져온 후 displayedPosts 초기화
+        } else {
+          setDisplayedPosts([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch comments:', error);
+      }
+    }
+
     if (commentCreated) {
-      console.log(commentCreated);
+      console.log('댓글작성' + commentCreated);
       router.refresh();
+      getPostComments();
+      setCommentCreated(false);
     }
   }, [commentCreated, router]);
 
