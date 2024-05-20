@@ -8,10 +8,8 @@ import { getPostsSortedByDate, getPostsSortedByView } from '@/app/service/post';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import DOMPurify from 'dompurify';
 
-import { IoPersonCircleOutline } from 'react-icons/io5';
 import { IoPersonCircleSharp } from 'react-icons/io5';
 import Loading from '@/app/components/Loading';
-import { checkToken } from '@/app/service/auth';
 import { useRouter } from 'next/navigation';
 import { userStore } from '@/app/store/userStoe';
 

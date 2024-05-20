@@ -144,9 +144,9 @@ export default function PostForm() {
   const router = useRouter();
 
   //useState
-  const [uploadedVideo, setUploadedVideo] = useState<any>();
-  const [thumbnail, setThumbnail] = useState<any>();
-  const [uploadedThumbnail, setUploadedThumbnail] = useState<File>();
+  const [uploadedVideo, setUploadedVideo] = useState<any>(null);
+  const [thumbnail, setThumbnail] = useState<any>(null);
+  const [uploadedThumbnail, setUploadedThumbnail] = useState<any>(null);
   const [content, setContent] = useState('');
   const [contentUrls, setContentImgUrls] = useState<string[]>([]);
   const [hashtags, setHashtags] = useState<string[]>([]);
@@ -190,17 +190,6 @@ export default function PostForm() {
 
   //form submit
   const onSubmit: SubmitHandler<ICreatePostFormProps> = async (data) => {
-    if (content.length > 1000) {
-      setContent(content.slice(0, 1000)); // 1000자 이하로 잘라서 설정
-      alert('본문은 1000자 이내로 작성해주세요.');
-      return;
-    }
-
-    if (content.length < 1) {
-      alert('내용을 작성해주세요');
-      return;
-    }
-
     if (!uploadedVideo) {
       alert('영상을 업로드 해주세요');
       return;
@@ -211,20 +200,38 @@ export default function PostForm() {
       return;
     }
 
+    // if (content === '') {
+    //   alert('내용을 작성해주세요');
+    // }
+
     const inGameInfoRequests = ingameInfos.map(({ id, champion, ...rest }) => ({
       championName: champion,
       ...rest,
     }));
 
+    for (const info of inGameInfoRequests) {
+      if (!info.championName || !info.position || !info.tier) {
+        alert('모든 챔피언, 포지션 및 티어를 입력해주세요.');
+        return;
+      }
+    }
+
     const contentData = new Blob([content], { type: 'text/html' });
 
     const postRequestData = {
       title: data.title,
-      type: selectedTab === 0 || selectedTab === 2 ? 'FILE' : 'LINK',
+      type: 'FILE',
       hashtag: hashtags,
       inGameInfoRequests: inGameInfoRequests,
       videoUrl: data.link,
     };
+
+    for (const info of inGameInfoRequests) {
+      if (!info.championName || !info.position || !info.tier) {
+        alert('모든 챔피언, 포지션 및 티어를 입력해주세요.');
+        return;
+      }
+    }
 
     console.log(postRequestData);
 
@@ -429,9 +436,7 @@ export default function PostForm() {
   };
 
   const handleChange = (value: string) => {
-    // if (value.length <= 1000) {
-    //   setContent(value);
-    // }
+    setContent(value);
   };
 
   const removeTag = (index: number) => {
