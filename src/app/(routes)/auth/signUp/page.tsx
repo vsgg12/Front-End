@@ -1,10 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { ICreateMemberProps } from '@/app/types/form';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { checkSameNickname, createMember } from '@/app/service/auth';
+import LoadingFull from '@/app/components/LoadingFull';
 
 export default function SignUp() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function SignUp() {
 
   const [sameNickname, setSameNickname] = useState(false);
   const [isNicknameCheck, setIsNicknameCheck] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [checkboxes, setCheckboxes] = useState({
     agreeAge: false,
@@ -45,6 +47,7 @@ export default function SignUp() {
     watch,
     setError,
     clearErrors,
+    control,
   } = useForm<ICreateMemberProps>();
 
   const onSubmit: SubmitHandler<ICreateMemberProps> = async (data) => {
@@ -59,12 +62,15 @@ export default function SignUp() {
         alert('로그인이 필요한 서비스입니다.');
       }
     } else {
+      setIsLoading(true);
       const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
       if (res?.message === '이미 존재하는 유저입니다.') {
         if (typeof window !== 'undefined') {
           if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
+            setIsLoading(false);
             router.push('/auth/signIn');
           } else {
+            setIsLoading(false);
             return;
           }
         }
@@ -72,6 +78,7 @@ export default function SignUp() {
       // {resultCode: 201, resultMsg: 'CREATED'}
       if (res?.resultMsg === 'CREATED') {
         alert(`${data.nickname}님, 회원가입을 축하합니다.`);
+        setIsLoading(false);
         router.push('/auth/signIn');
       }
     }
@@ -94,6 +101,13 @@ export default function SignUp() {
     });
   };
 
+  const handleParsingPhoneNumber = (num: string) => {
+    return num
+      .replace(/[^0-9]/g, '') // 숫자를 제외한 모든 문자 제거
+      .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/, '$1-$2-$3') // 3자리, 4자리, 4자리로 구분
+      .replace(/(-{1,2})$/g, ''); // 마지막에 '-'가 하나나 두 개 있는 경우 제거
+  };
+
   const handleCheckNickname = async () => {
     const nickname = watch('nickname');
     if (!nickname) {
@@ -105,6 +119,7 @@ export default function SignUp() {
       return;
     }
 
+    setIsLoading(true);
     const res = await checkSameNickname(nickname);
     if (res.nicknameCheck) {
       setSameNickname(true);
@@ -117,11 +132,15 @@ export default function SignUp() {
       clearErrors('nickname');
     }
     setIsNicknameCheck(true);
+    setIsLoading(false);
   };
 
+  const nickname = watch('nickname');
   useEffect(() => {
-    console.log('회원가입 페이지 렌더');
-  }, []);
+    if (!nickname) {
+      setIsNicknameCheck(false);
+    }
+  }, [nickname]);
 
   useEffect(() => {
     setNaverValue({
@@ -137,6 +156,7 @@ export default function SignUp() {
 
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
+      {isLoading && <LoadingFull />}
       <Link href="/">
         <div className="font-['SBAggroB'] text-4xl text-[#8A1F21]">VS.GG</div>
       </Link>
@@ -158,32 +178,7 @@ export default function SignUp() {
             className="su-i-blocked"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <p>
-            전화번호
-            {/* <span className="text-red-500">*</span> */}
-          </p>
-          <div className="flex gap-2">
-            <input
-              value={naverValue.mobile}
-              type="text"
-              readOnly
-              className="su-i-blocked mb-1 grow"
-            />
-            {/* <button className="su-btn">인증요청</button> */}
-          </div>
-          {/* <div className="flex gap-2">
-            <input type="text" required className="su-i" />
-            <button type="button" className="su-btn bg-[#8A1F21]  text-white">
-              인증완료
-            </button>
-          </div> */}
-          {/* {wrongNumber && (
-            <span className="pl-5 text-xs text-[#8A1F21]">
-              잘못된 인증번호입니다.
-            </span>
-          )} */}
-        </div>
+
         <div className="flex flex-col gap-2">
           <p>닉네임</p>
           <div className="flex gap-2">
@@ -219,11 +214,12 @@ export default function SignUp() {
             </span>
           )}
 
-          {isNicknameCheck && sameNickname && (
+          {/* {isNicknameCheck && sameNickname && (
             <span className="pl-5 text-xs text-[#8A1F21]">
               중복된 닉네임입니다.
             </span>
-          )}
+          )} */}
+
           {isNicknameCheck && !sameNickname && (
             <span className="pl-5 text-xs text-[#7f9cdb]">
               사용 가능한 닉네임입니다.
@@ -232,6 +228,57 @@ export default function SignUp() {
           {}
         </div>
 
+        <div className="flex flex-col gap-2">
+          <p>
+            전화번호
+            {/* <span className="text-red-500">*</span> */}
+          </p>
+          <div className="flex gap-2">
+            <Controller
+              name="mobile"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: '전화번호는 필수 항목입니다.',
+                pattern: {
+                  value: /^010-\d{4}-\d{4}$/,
+                  message: '전화번호 형식이 올바르지 않습니다. (010-XXXX-XXXX)',
+                },
+              }}
+              render={({ field: { onChange, onBlur, value, ref } }) => (
+                <input
+                  type="tel"
+                  maxLength={13}
+                  value={value}
+                  onChange={(e) =>
+                    onChange(handleParsingPhoneNumber(e.target.value))
+                  }
+                  onBlur={onBlur}
+                  ref={ref}
+                  placeholder="010-1234-5678"
+                  className="su-i"
+                />
+              )}
+            />
+          </div>
+          {errors.mobile && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              {errors.mobile.message}
+            </span>
+          )}
+
+          {/* <div className="flex gap-2">
+            <input type="text" required className="su-i" />
+            <button type="button" className="su-btn bg-[#8A1F21]  text-white">
+              인증완료
+            </button>
+          </div> */}
+          {/* {wrongNumber && (
+            <span className="pl-5 text-xs text-[#8A1F21]">
+              잘못된 인증번호입니다.
+            </span>
+          )} */}
+        </div>
         <div className="h-0.5 bg-[#D9D9D9]"></div>
         <div className="flex flex-col gap-10">
           <div className="flex items-center gap-5">

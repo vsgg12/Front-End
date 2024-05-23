@@ -50,6 +50,7 @@ import {
 } from '@/app/service/post';
 import { useSession } from 'next-auth/react';
 import { userStore } from '@/app/store/userStoe';
+import LoadingFull from '@/app/components/LoadingFull';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -144,6 +145,7 @@ export default function PostForm() {
   const router = useRouter();
 
   //useState
+  const [isLoading, setIsLoading] = useState(false);
   const [uploadedVideo, setUploadedVideo] = useState<any>(null);
   const [thumbnail, setThumbnail] = useState<any>(null);
   const [uploadedThumbnail, setUploadedThumbnail] = useState<any>(null);
@@ -234,8 +236,6 @@ export default function PostForm() {
       }
     }
 
-    console.log(postRequestData);
-
     //아무것도 없을 때 보내는거
     const emptyBlob = new Blob([]);
     const emptyFile = new File([emptyBlob], '');
@@ -263,19 +263,21 @@ export default function PostForm() {
 
     postFormData.append('content', contentData, 'content.html');
 
-    let values = postFormData.values();
-    for (const pair of values) {
-      console.log(pair);
-    }
+    // let values = postFormData.values();
+    // for (const pair of values) {
+    //   console.log(pair);
+    // }
 
     const postComfirm = confirm('게시글 작성을 완료하시겠습니까?');
     if (postComfirm) {
+      setIsLoading(true);
       const res = await createPost(postFormData);
-      console.log(res);
+      // console.log(res);
       if (res.resultMsg === 'CREATED') {
         if (typeof window !== 'undefined') {
           alert('게시글 작성이 완료되었습니다.');
-          router.push('/');
+          setIsLoading(false);
+          router.push('/home');
         }
       }
       if (res.status === 500) {
@@ -757,8 +759,10 @@ export default function PostForm() {
     console.log(data);
   };
   //tsx
+
   return (
     <>
+      {isLoading && <LoadingFull />}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded mb-[44px] h-fit w-full  bg-[#ffffff]">
           <PostUploadDesc />

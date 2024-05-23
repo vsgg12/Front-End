@@ -3,7 +3,7 @@ import {
   NAVER_CLIENT_SECRET,
   NEXTAUTH_SECRET,
 } from '@/app/constants';
-import { mobileCheck } from '@/app/service/auth';
+import { deleteToken, mobileCheck } from '@/app/service/auth';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
 import { cookies } from 'next/headers';
@@ -49,7 +49,7 @@ const handler = NextAuth({
             email: user.email,
             profile_image: user.profile_image,
             gender: user.gender,
-            mobile: user.mobile,
+            // mobile: user.mobile,
             age: user.age,
           }).toString();
 
@@ -57,6 +57,7 @@ const handler = NextAuth({
         }
 
         if (res.token) {
+          await deleteToken(); //원래 있던 토큰 삭제
           cookies().set('token', res.token);
           return true;
         }

@@ -182,3 +182,21 @@ button {
   display: flex;
   gap: 1rem;
 }
+
+/* HTML: <div class="loader"></div> */
+.loader2 {
+  position: fixed; /* 수정된 부분 */
+  top: 50%; /* 수정된 부분 */
+  left: 50%; /* 수정된 부분 */
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid #ececec;
+  border-right-color: #8a1f21;
+  animation: l2 1s infinite linear;
+}
+@keyframes l2 {
+  to {
+    transform: rotate(1turn);
+  }
+}
