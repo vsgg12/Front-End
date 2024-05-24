@@ -57,8 +57,14 @@ const handler = NextAuth({
         }
 
         if (res.token) {
+          const expiresIn = 3 * 60 * 60; // 3시간을 초 단위로 변환 (10800초)
+          const expires = new Date(Date.now() + expiresIn * 1000);
+
           await deleteToken(); //원래 있던 토큰 삭제
+
           cookies().set('token', res.token);
+          cookies().set('expiry', expires.toISOString(), { expires });
+
           return true;
         }
       } catch (error) {
