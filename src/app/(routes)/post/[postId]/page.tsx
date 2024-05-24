@@ -17,6 +17,8 @@ import { getComments } from '@/app/service/comment';
 import Loading from '@/app/components/Loading';
 import Header from '@/app/layout/Header';
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import { checkToken } from '@/app/service/auth';
 
 export default function PostRead({
   params,
@@ -28,6 +30,8 @@ export default function PostRead({
   };
 
   const router = useRouter();
+  const { data: session } = useSession();
+
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
@@ -35,6 +39,12 @@ export default function PostRead({
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
   const [commentCreated, setCommentCreated] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut().then(() => {
+      router.push('/auth/signIn');
+    });
+  };
 
   const fetchMoreData = () => {
     if (displayedPosts.length >= comments.length) {
@@ -62,6 +72,13 @@ export default function PostRead({
   };
 
   useEffect(() => {
+    async function handleToken() {
+      const res = await checkToken();
+      if (!res) {
+        router.push('/auth/signIn');
+      }
+    }
+
     async function getOnePost() {
       try {
         const onePost = await getPost(Number(params.postId));
@@ -89,8 +106,10 @@ export default function PostRead({
       }
     }
 
-    getOnePost();
-    getPostComments();
+    handleToken().then(() => {
+      getOnePost();
+      getPostComments();
+    });
   }, [params.postId]);
 
   useEffect(() => {
@@ -128,6 +147,10 @@ export default function PostRead({
   }, []);
 
   const [showReply, setShowReply] = useState<number>();
+
+  if (!session) {
+    router.push('/auth/signIn');
+  }
 
   if (!post) {
     return (

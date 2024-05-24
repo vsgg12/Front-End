@@ -13,12 +13,14 @@ import Loading from '@/app/components/Loading';
 import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { checkToken, deleteToken } from '@/app/service/auth';
+import LoadingFull from '@/app/components/LoadingFull';
 
 export default function HomePostItems() {
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const [isVoted, setIsVoted] = useState(false);
   const [sortOption, setSortOption] = useState('latest');
+  const [isVoted, setIsVoted] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -69,7 +71,6 @@ export default function HomePostItems() {
   useEffect(() => {
     async function handleToken() {
       const res = await checkToken();
-      console.log(res);
       if (!res) {
         router.push('/auth/signIn');
       }
@@ -82,6 +83,7 @@ export default function HomePostItems() {
         const fetchedPosts = postsSortedByDate?.postDTO || [];
         setPosts(fetchedPosts);
         setDisplayedPosts(fetchedPosts.slice(0, 5));
+        console.log(fetchedPosts);
       } else {
         handleSignOut();
         router.push('/auth/signIn');

@@ -23,6 +23,20 @@ export async function mobileCheck(mobile: string) {
   }
 }
 
+export async function emailCheck(email: string) {
+  try {
+    const response = await fetch(`${API_URL}/users/emailcheck?email=` + email, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function createMember(user: ICreateMemberProps) {
   try {
     const response = await fetch(`${API_URL}/users/signup`, {

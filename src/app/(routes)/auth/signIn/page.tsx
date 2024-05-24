@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { SiNaver } from 'react-icons/si';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoadingFull from '@/app/components/LoadingFull';
 
 export default function SignIn() {
@@ -20,6 +20,8 @@ export default function SignIn() {
     }
   };
 
+  useEffect(() => {}, []);
+
   if (session) {
     router.push('/home');
   }
@@ -28,7 +30,7 @@ export default function SignIn() {
     <div className="flex h-screen flex-col items-center justify-center">
       {isLoading && <LoadingFull />}
       <div className="mb-10 mt-auto font-['SBAggroB'] text-5xl text-[#8A1F21] md:text-8xl">
-        <Link href="/home">VS.GG</Link>
+        <div>VS.GG</div>
       </div>
       <div onClick={naverLogin}>
         <div className="mb-3 flex items-center justify-center gap-2 rounded-3xl bg-black p-2 px-32 ">
