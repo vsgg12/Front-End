@@ -15,12 +15,11 @@ export default function SignIn() {
   const naverLogin = async () => {
     setIsLoading(true);
     const res = await signIn('naver', { redirect: false });
+    console.log(res);
     if (res) {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {}, []);
 
   if (session) {
     router.push('/home');

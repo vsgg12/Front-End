@@ -32,13 +32,17 @@ const handler = NextAuth({
         user.profile_image = profile.response.profile_image;
         user.gender = profile.response.gender;
         user.age = profile.response.age;
-        // user.name = profile.response.name || user.name;
-        // user.mobile = profile.response.mobile;
+        user.name = profile.response.name || user.name;
+        user.mobile = profile.response.mobile;
       }
 
       try {
         // const res = await mobileCheck(user.mobile);
         const res = await emailCheck(user.email);
+
+        console.log(res);
+        console.log('토큰' + res.token);
+        console.log('이메일' + user.email);
 
         if (res.token === null) {
           const params = new URLSearchParams({
@@ -52,6 +56,7 @@ const handler = NextAuth({
           }).toString();
 
           return `/auth/signUp?${params}`; // 로그인 실패 시 리디렉션 경로에 파라미터 추가
+          // return true;
         }
 
         if (res.token) {
