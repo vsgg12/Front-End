@@ -16,21 +16,16 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
     })),
   );
   const [isLoading, setIsLoading] = useState(false);
-
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
     ingameInfos[0].inGameInfoId,
   );
   const [selectedChamp, setSelectedChamp] = useState<string>(
     ingameInfos[0].championName,
   );
-
   const [votingButtonInfos, setVotingButtonInfos] = useState(
     Array(10).fill({ selectedChampId: undefined }),
   );
-
-  const [changedStyle, setChangedStyle] = useState('');
 
   //useForm
   const {

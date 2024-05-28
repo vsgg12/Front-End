@@ -1,12 +1,14 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Header from './layout/Header';
-import Footer from './layout/Footer';
+// import Header from './layout/Header';
+// import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
+import TokenComponent from './components/TokenComponent';
 import Script from 'next/script';
 import AuthSession from './(routes)/api/auth/[...nextauth]/AuthSession';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -38,7 +40,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthSession>
           {/* <Header />*/}
-          <Suspense>{children}</Suspense>
+          <Suspense>
+            <TokenComponent />
+            {children}
+          </Suspense>
           {/* <Footer /> */}
         </AuthSession>
       </body>

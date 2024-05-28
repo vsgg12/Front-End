@@ -77,17 +77,6 @@ export async function deleteToken() {
 
 export async function checkToken(): Promise<boolean> {
   const token = cookies().get('token');
-  const expiry = cookies().get('expiry');
-
-  if (!token || !expiry) {
-    return false;
-  }
-
-  const tokenExpiryDate = new Date(expiry.value);
-
-  if (tokenExpiryDate <= new Date()) {
-    return false;
-  }
 
   if (token) {
     return true;

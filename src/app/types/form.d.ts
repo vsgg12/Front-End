@@ -30,41 +30,6 @@ export interface ICreatePostFormProps {
   ];
 }
 
-//게시글 작성 - 백엔드로 보내는 용
-// export interface ICreatePostDataProps {
-//   uploadVideos: FormData;
-//   thumbnailImage: FormData;
-//   videoUrl: string;
-//   postAddRequest: {
-//     title: string;
-//     content: string;
-//     type: string;
-//     hashTag: string[];
-//     inGameInfoRequests: {
-//       position: string;
-//       tier: string;
-//       championName: string;
-//     }[];
-//   };
-// }
-
-// export interface ICreatePostDataProps {
-//   uploadVideos: FormData;
-//   thumbnailImage: FormData;
-//   videoUrl: string;
-//   postAddRequest: {
-//     title: string;
-//     content: string;
-//     type: string;
-//     hashTag: string[];
-//     inGameInfoRequests: {
-//       position: string;
-//       tier: string;
-//       championName: string;
-//     }[];
-//   };
-// }
-
 interface inGameInfoRequests {
   position: string;
   tier: string;
@@ -80,23 +45,12 @@ interface ICreatePostRequestProps {
   videoUrl: string;
 }
 
-// interface ICreatePostDataProps {
-//   uploadVideos: File;
-//   thumbnailImage: File;
-//   postAddRequest: ICreatePostRequestProps;
-// }
-
 //투표 - 세부 구조
 export interface ICreateVoteProps {
   ingameInfoId: number;
   ratio: number;
 }
 
-//투표 - 백엔드로 보내는 용
-// export interface ICreateVotingDataProps {
-//   memberId: number;
-//   vote: ICreateVoteProps[];
-// }
 export type ICreateVotingDataProps = ICreateVoteProps[];
 
 //react-quill

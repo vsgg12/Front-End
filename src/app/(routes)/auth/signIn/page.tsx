@@ -6,24 +6,31 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import LoadingFull from '@/app/components/LoadingFull';
+import { checkToken } from '@/app/service/auth';
+import Header from '@/app/layout/Header';
 
 export default function SignIn() {
   const router = useRouter();
-  const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const naverLogin = async () => {
     setIsLoading(true);
     const res = await signIn('naver', { redirect: false });
-    console.log(res);
+
     if (res) {
       setIsLoading(false);
     }
   };
 
-  if (session) {
-    router.push('/home');
-  }
+  useEffect(() => {
+    async function handleToken() {
+      const res = await checkToken();
+      if (res) {
+        router.push('/home');
+      }
+    }
+    handleToken();
+  }, []);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">

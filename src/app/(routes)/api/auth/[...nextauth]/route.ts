@@ -33,17 +33,12 @@ const handler = NextAuth({
         user.gender = profile.response.gender;
         user.age = profile.response.age;
         user.name = profile.response.name || user.name;
-        user.mobile = profile.response.mobile;
       }
 
       try {
-        // const res = await mobileCheck(user.mobile);
         const res = await emailCheck(user.email);
 
         console.log(res);
-        console.log('토큰' + res.token);
-        console.log('이메일' + user.email);
-
         if (res.token === null) {
           const params = new URLSearchParams({
             id: user.id,
@@ -51,15 +46,12 @@ const handler = NextAuth({
             profile_image: user.profile_image,
             gender: user.gender,
             age: user.age,
-            // name: user.name,
-            // mobile: user.mobile,
           }).toString();
 
           return `/auth/signUp?${params}`; // 로그인 실패 시 리디렉션 경로에 파라미터 추가
-          // return true;
         }
 
-        if (res.token) {
+        if (res.resultCode === 200) {
           await deleteToken(); //원래 있던 토큰 삭제
           cookies().set('token', res.token);
 
@@ -71,10 +63,9 @@ const handler = NextAuth({
         }
       } catch (error) {
         console.log(error);
-        return false; // 로그인 실패로 처리
+        return '/auth/signIn'; // 로그인 실패로 처리
       }
 
-      //로그인 되면 next cookie에 cookie set 하기
       return true;
     },
     async jwt({ token, user, account }) {

@@ -899,17 +899,17 @@ export default function PostForm() {
               placeholder={quillPlaceHolder}
             />
           </div>
-          {/* <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
+          <div className="mx-[30px] mb-[30px] text-[20px] font-semibold  text-[#8A1F21]">
             해시태그
-          </div> */}
-          {/* <input
+          </div>
+          <input
             type="text"
             className="mb-4 w-full rounded-[30px] border-[1.5px] border-[#828282] px-[30px] py-[10px] outline-none"
             placeholder="#해시태그를 등록하세요 (최대 5개)"
             value={tagInput}
             onChange={handleTagInputChange}
             onKeyDown={handleTagInput}
-          /> */}
+          />
           <div className="ml-4 flex flex-wrap ">
             {hashtags.map((hashtag, index) => (
               <div
