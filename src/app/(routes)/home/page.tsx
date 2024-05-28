@@ -27,18 +27,6 @@ export default function Home(): JSX.Element {
     }
   };
 
-  useEffect(() => {
-    async function handleToken() {
-      const res = await checkToken();
-      console.log(res);
-      if (!res) {
-        router.push('/auth/signIn');
-      }
-    }
-
-    handleToken();
-  }, []);
-
   return (
     <>
       <Header />

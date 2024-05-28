@@ -3,7 +3,7 @@ import {
   NAVER_CLIENT_SECRET,
   NEXTAUTH_SECRET,
 } from '@/app/constants';
-import { mobileCheck } from '@/app/service/auth';
+import { deleteToken, emailCheck, mobileCheck } from '@/app/service/auth';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
 import { cookies } from 'next/headers';
@@ -26,46 +26,46 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // console.log('Profile object:', profile);
-
       if (account?.provider === 'naver' && profile?.response) {
         user.id = profile.response.id || user.id;
-        user.name = profile.response.name || user.name;
         user.email = profile.response.email || user.email;
         user.profile_image = profile.response.profile_image;
         user.gender = profile.response.gender;
-        user.mobile = profile.response.mobile;
         user.age = profile.response.age;
+        user.name = profile.response.name || user.name;
       }
 
       try {
-        const res = await mobileCheck(user.mobile);
+        const res = await emailCheck(user.email);
 
+        console.log(res);
         if (res.token === null) {
-          console.log('없는 사용자');
           const params = new URLSearchParams({
             id: user.id,
-            name: user.name,
             email: user.email,
             profile_image: user.profile_image,
             gender: user.gender,
-            mobile: user.mobile,
             age: user.age,
           }).toString();
 
           return `/auth/signUp?${params}`; // 로그인 실패 시 리디렉션 경로에 파라미터 추가
         }
 
-        if (res.token) {
+        if (res.resultCode === 200) {
+          await deleteToken(); //원래 있던 토큰 삭제
           cookies().set('token', res.token);
+
+          // const expiresIn = 3 * 60 * 60; // 3시간을 초 단위로 변환 (10800초)
+          // const expires = new Date(Date.now() + expiresIn * 1000);
+          // cookies().set('expiry', expires.toISOString(), { expires });
+
           return true;
         }
       } catch (error) {
         console.log(error);
-        return false; // 로그인 실패로 처리
+        return '/auth/signIn'; // 로그인 실패로 처리
       }
 
-      //로그인 되면 next cookie에 cookie set 하기
       return true;
     },
     async jwt({ token, user, account }) {

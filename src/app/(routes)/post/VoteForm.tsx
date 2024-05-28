@@ -7,9 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 export default function VoteForm({ ingameInfos, setIsVoted }: any) {
   const router = useRouter();
-  if (!ingameInfos) {
-    return <Loading />;
-  }
+
   //useState
   const [vote, setVote] = useState(
     ingameInfos.map((info: any) => ({
@@ -17,21 +15,17 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
       ratio: 0,
     })),
   );
-
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
     ingameInfos[0].inGameInfoId,
   );
   const [selectedChamp, setSelectedChamp] = useState<string>(
     ingameInfos[0].championName,
   );
-
   const [votingButtonInfos, setVotingButtonInfos] = useState(
     Array(10).fill({ selectedChampId: undefined }),
   );
-
-  const [changedStyle, setChangedStyle] = useState('');
 
   //useForm
   const {
@@ -56,10 +50,10 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
       return;
     }
 
-    console.log(voteData);
+    setIsLoading(true);
     const res = await createVote(voteData);
-    console.log(res);
     if (res.resultCode === 200) {
+      setIsLoading(false);
       setIsVoted(true);
       router.refresh();
     } else {
@@ -141,12 +135,31 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
   }, [votingButtonInfos]);
 
   useEffect(() => {
-    console.log(ingameInfos);
     if (ingameInfos.length > 0) {
       setSelectedIngameInfoId(ingameInfos[0].inGameInfoId);
       setSelectedChamp(ingameInfos[0].championName);
     }
   }, [ingameInfos]);
+
+  if (!ingameInfos || isLoading) {
+    return (
+      <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
+        <div className="relative flex w-full flex-row items-center">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+
+  // if (!isLoading) {
+  //   return (
+  //     <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
+  //       <div className="relative flex w-full flex-row items-center">
+  //         <Loading />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>

@@ -9,14 +9,15 @@ import { IoPersonCircle } from 'react-icons/io5';
 
 import writeSVG from '../../../public/svg/writing.svg';
 import { checkToken, deleteToken } from '../service/auth';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
   const { data: session, status } = useSession();
 
   const handleSignOut = async () => {
-    await signOut().then(async (res) => {
-      await deleteToken();
-    });
+    await deleteToken();
+    await signOut();
   };
 
   return (
