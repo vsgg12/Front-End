@@ -78,16 +78,28 @@ export default function VoteResult({ postId, ingameInfos }: any) {
 
   const changeTierName = (tier: string) => {
     switch (tier) {
+      case 'UNRANK':
+        return '언랭';
       case 'IRON':
         return '아이언';
+      case 'BRONZE':
+        return '브론즈';
       case 'SILVER':
-        return '원딜';
+        return '실버';
+      case 'GOLD':
+        return '골드';
+      case 'PLATINUM':
+        return '플래티넘';
+      case 'EMERALD':
+        return '에메랄드';
       case 'DIAMOND':
-        return '미드';
-      case 'JUNGLE':
-        return '정글';
-      case 'SUPPORT':
-        return '서폿';
+        return '다이아';
+      case 'MASTER':
+        return '마스터';
+      case 'GRANDMASTER':
+        return '그랜드마스터';
+      case 'CHALLENGER':
+        return '챌린저';
     }
   };
 
