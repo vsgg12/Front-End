@@ -65,8 +65,10 @@ export default function HomePostItems() {
   useEffect(() => {
     async function getPostsByDates() {
       const postsSortedByDate = await getPostsSortedByDate();
+      console.log(postsSortedByDate);
       if (postsSortedByDate.resultMsg === 'OK') {
         const fetchedPosts = postsSortedByDate?.postDTO || [];
+        setPosts(postsSortedByDate?.postDTO);
         setDisplayedPosts(fetchedPosts.slice(0, 5));
       } else if (postsSortedByDate?.postDTO?.length === 0) {
         return;
