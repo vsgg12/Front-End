@@ -9,6 +9,7 @@ import jungleWSVG from '../../../../public/svg/jungle-w.svg';
 import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
 import supportWSVG from '../../../../public/svg/supporter-w.svg';
 import DoughnutChart from '@/app/components/DoughnutChart';
+import Loading from '@/app/components/Loading';
 
 export default function VoteResult({ postId, ingameInfos }: any) {
   const [voteInfos, setVoteInfos] = useState<any[]>([]);
@@ -109,46 +110,52 @@ export default function VoteResult({ postId, ingameInfos }: any) {
     <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
       <div className="flex items-center">
         <div className="flex w-[40%] flex-col">
-          {voteInfos.length !== 0
-            ? voteInfos.map((gameInfo: any, index: number) => (
-                <div key={index} className="flex w-full ">
-                  <label
-                    htmlFor={`${gameInfo.inGameInfoId}`}
-                    className={'v-label ' + changeVoteInfoBorderColor(index)}
-                  >
-                    <div
-                      className={
-                        changeIngameInfoColor(index) +
-                        ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
-                      }
-                    >
-                      {/* {changePostionSVG(gameInfo.position)} */}
-                      {changePostionSVG('TOP')}
-                    </div>
-                    <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
-                      {/* {changePositionName(gameInfo.position)} */}
-                      {changePositionName('TOP')}
-                    </div>
-                    <div className="w-[50%]">
-                      <div className="text=[#33333] text-[14px] font-semibold">
-                        {gameInfo.championName}
-                      </div>
-                      <div className="text=[#33333] text-[12px]">
-                        {/* {gameInfo.tier} */}
-                        {'DIAMOND'}
-                      </div>
-                    </div>
-                  </label>
+          {voteInfos.map((gameInfo: any, index: number) => (
+            <div key={index} className="flex w-full items-center ">
+              <label
+                htmlFor={`${gameInfo.inGameInfoId}`}
+                className={'v-label ' + changeVoteInfoBorderColor(index)}
+              >
+                <div
+                  className={
+                    changeIngameInfoColor(index) +
+                    ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
+                  }
+                >
+                  {/* {changePostionSVG(gameInfo.position)} */}
+                  {changePostionSVG('TOP')}
                 </div>
-              ))
-            : '아직 한 명도 투표하지 않은 게시글 입니다.'}
+                <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
+                  {/* {changePositionName(gameInfo.position)} */}
+                  {changePositionName('TOP')}
+                </div>
+                <div className="w-[50%]">
+                  <div className="text=[#33333] text-[14px] font-semibold">
+                    {gameInfo.championName}
+                  </div>
+                  <div className="text=[#33333] text-[12px]">
+                    {/* {gameInfo.tier} */}
+                    {'DIAMOND'}
+                  </div>
+                </div>
+              </label>
+              <div className="text-[#8A1F21]">과실 {gameInfo.averageValue}</div>
+            </div>
+          ))}
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="mb-[10px]  flex text-[20px] ">
             이 게임의 과실은 몇 대 몇 ~?
             <div className="ml-[10px] text-[#8f8f8f]">(전체 평균)</div>
           </div>
-          <DoughnutChart ingameInfos={voteInfos} />
+
+          {voteInfos.length === 0 ? (
+            <div className="flex justify-center">
+              아직 투표한 사람이 없는 게시글입니다.
+            </div>
+          ) : (
+            <DoughnutChart ingameInfos={voteInfos} />
+          )}
         </div>
       </div>
     </div>

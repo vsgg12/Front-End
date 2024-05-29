@@ -194,7 +194,9 @@ export default function PostRead({
                           <div className=" mr-[6px] text-[12px] text-[#333333]">
                             {post.memberDTO.nickname}
                           </div>
-                          <div className="text-[12px] text-[#909090]">등급</div>
+                          <div className="text-[12px] text-[#909090]">
+                            {post.memberDTO.tier}
+                          </div>
                         </div>
                         <div className="text-[12px] text-[#C8C8C8]">
                           {formatDate(post.createdAt)}
@@ -241,52 +243,60 @@ export default function PostRead({
                     />
                   </div>
                 </div>
-                <InfiniteScroll
-                  dataLength={displayedComments.length}
-                  next={fetchMoreData}
-                  hasMore={hasMore}
-                  loader={<Loading />}
-                >
-                  {displayedComments.map((comment, index) => (
-                    <div key={index} className="mb-[20px] text-[13px]">
-                      <PostComment postId={params.postId} comment={comment} />
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => {
-                          if (index === showReply) {
-                            setShowReply(undefined);
-                          } else {
-                            setShowReply(index);
-                          }
-                        }}
-                        className="mb-[10px] text-[10px] font-medium text-[#8A1F21]"
-                      >
-                        {index === showReply ? '닫기' : '답글'}
-                      </button>
-                      {index === showReply && (
-                        <div className="text-[12px]">
-                          <PostCommentInput
-                            postId={params.postId}
-                            parentId={comment.id}
-                            setCommentCreated={setCommentCreated}
-                          />
-                          <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
-                            {comment.children &&
-                              comment.children.map((reply: any, index: any) => (
-                                <div key={index} className="mb-[10px]">
-                                  <PostComment
-                                    postId={params.postId}
-                                    comment={reply}
-                                  />
-                                </div>
-                              ))}
+                {displayedComments.length === 0 ? (
+                  <div className="flex justify-center">
+                    <div>아직 댓글이 없습니다.</div>
+                  </div>
+                ) : (
+                  <InfiniteScroll
+                    dataLength={displayedComments.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={<Loading />}
+                  >
+                    {displayedComments.map((comment, index) => (
+                      <div key={index} className="mb-[20px] text-[13px]">
+                        <PostComment postId={params.postId} comment={comment} />
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            if (index === showReply) {
+                              setShowReply(undefined);
+                            } else {
+                              setShowReply(index);
+                            }
+                          }}
+                          className="mb-[10px] text-[10px] font-medium text-[#8A1F21]"
+                        >
+                          {index === showReply ? '닫기' : '답글'}
+                        </button>
+                        {index === showReply && (
+                          <div className="text-[12px]">
+                            <PostCommentInput
+                              postId={params.postId}
+                              parentId={comment.id}
+                              setCommentCreated={setCommentCreated}
+                            />
+                            <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
+                              {comment.children &&
+                                comment.children.map(
+                                  (reply: any, index: any) => (
+                                    <div key={index} className="mb-[10px]">
+                                      <PostComment
+                                        postId={params.postId}
+                                        comment={reply}
+                                      />
+                                    </div>
+                                  ),
+                                )}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </InfiniteScroll>
+                        )}
+                      </div>
+                    ))}
+                  </InfiniteScroll>
+                )}
               </div>
             </div>
             {!isVoted && (

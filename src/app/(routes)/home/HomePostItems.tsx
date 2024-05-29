@@ -92,7 +92,8 @@ export default function HomePostItems() {
     <div>
       {displayedPosts.length === 0 ? (
         <div className="flex h-full w-full items-center justify-center">
-          <div>등록된 게시글이 없습니다.</div>
+          {/* <div>등록된 게시글이 없습니다.</div> */}
+          <Loading />
         </div>
       ) : (
         <InfiniteScroll
