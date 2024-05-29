@@ -59,7 +59,6 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
 
     setIsLoading(true);
     const res = await createVote(voteData, postId); //postId 추가
-    console.log(res);
     if (res.resultCode === 200) {
       setIsLoading(false);
       setIsVoted(true);

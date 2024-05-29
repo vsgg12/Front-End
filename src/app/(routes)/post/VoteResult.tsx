@@ -18,7 +18,6 @@ export default function VoteResult({ postId, ingameInfos }: any) {
     async function getResult() {
       try {
         const res = await getVotingResults(postId);
-        console.log(res);
         if (Array.isArray(res)) {
           setVoteInfos(res);
         } else {

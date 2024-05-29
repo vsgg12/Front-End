@@ -16,7 +16,6 @@ export default function SignUp() {
   const email = searchParams.get('email');
   const profile_image = searchParams.get('profile_image');
   const gender = searchParams.get('gender');
-  const mobile = searchParams.get('mobile');
   const age = searchParams.get('age');
 
   const [naverValue, setNaverValue] = useState({
@@ -24,7 +23,6 @@ export default function SignUp() {
     email: '',
     profileImage: '',
     gender: '',
-    mobile: '',
     age: '',
   });
 
@@ -59,11 +57,18 @@ export default function SignUp() {
     const { email, age, gender, mobile, profileImage, ...rest } = data; // data에서 id를 제외한 나머지를 rest로 받음
     if (sameNickname) {
       if (typeof window !== 'undefined') {
-        alert('로그인이 필요한 서비스입니다.');
+        alert('닉네임이 중복되었습니다.');
       }
     } else {
       setIsLoading(true);
-      const res = await createMember({ ...naverValue, ...checkboxes, ...rest });
+      console.log({ ...naverValue, ...checkboxes, mobile, ...rest });
+      const res = await createMember({
+        ...naverValue,
+        mobile,
+        ...checkboxes,
+        ...rest,
+      });
+      console.log(res);
       if (res?.message === '이미 존재하는 유저입니다.') {
         if (typeof window !== 'undefined') {
           if (confirm('이미 가입된 사용자입니다. 로그인 하시겠습니까?')) {
@@ -75,7 +80,6 @@ export default function SignUp() {
           }
         }
       }
-      // {resultCode: 201, resultMsg: 'CREATED'}
       if (res?.resultMsg === 'CREATED') {
         alert(`${data.nickname}님, 회원가입을 축하합니다.`);
         setIsLoading(false);
@@ -149,10 +153,9 @@ export default function SignUp() {
       email: email || '',
       profileImage: profile_image || '',
       gender: gender || '',
-      mobile: mobile || '',
       age: age || '',
     });
-  }, [name, email, profile_image, gender, mobile, age]);
+  }, [name, email, profile_image, gender, age]);
 
   return (
     <div className="mt-12 flex h-full flex-col items-center justify-center gap-10">
@@ -247,6 +250,7 @@ export default function SignUp() {
               }}
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <input
+                  {...register('mobile')}
                   type="tel"
                   maxLength={13}
                   value={value}

@@ -613,13 +613,7 @@ export default function PostForm() {
         // const res = await axios.post('api주소', formData);\
         // const imgUrl = res.data;
 
-        let values = formData.values();
-        for (const pair of values) {
-          console.log(pair);
-        }
-
         const res = await saveImageAndRequestUrlToS3(formData);
-        console.log(res);
 
         // const res = await getImageUrl(formData);
         // console.log(res);
@@ -660,7 +654,6 @@ export default function PostForm() {
 
   //useEffect
   useEffect(() => {
-    console.log('postForm 렌더');
     if (!isClickedFirst.current) {
       history.pushState(null, '', '');
       isClickedFirst.current = true;
@@ -686,7 +679,6 @@ export default function PostForm() {
 
   //useEffect
   useEffect(() => {
-    console.log('postForm 렌더');
     if (!isClickedFirst.current) {
       history.pushState(null, '', '');
       isClickedFirst.current = true;
@@ -756,7 +748,6 @@ export default function PostForm() {
   const handleDelete = async () => {
     const deleteData = { imageUrl: contentUrls };
     const data = await sendDeleteRequestToS3(deleteData);
-    console.log(data);
   };
   //tsx
 

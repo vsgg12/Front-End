@@ -65,7 +65,6 @@ export default function HomePostItems() {
   useEffect(() => {
     async function getPostsByDates() {
       const postsSortedByDate = await getPostsSortedByDate();
-      console.log(postsSortedByDate);
       if (postsSortedByDate.resultMsg === 'OK') {
         const fetchedPosts = postsSortedByDate?.postDTO || [];
         setPosts(postsSortedByDate?.postDTO);
@@ -74,7 +73,6 @@ export default function HomePostItems() {
         return;
       } else {
         alert('게시글 로드에 오류가 생겼습니다.');
-        console.log(postsSortedByDate);
         return;
       }
     }

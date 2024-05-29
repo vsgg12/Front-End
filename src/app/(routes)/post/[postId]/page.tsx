@@ -81,7 +81,6 @@ export default function PostRead({
     async function getOnePost() {
       try {
         const onePost = await getPost(Number(params.postId));
-        console.log(onePost);
         if (onePost.resultMsg === 'OK') {
           setPost(onePost.postDTO);
           setIngameInfos(onePost.inGameInfo);
@@ -136,7 +135,6 @@ export default function PostRead({
     }
 
     if (commentCreated) {
-      console.log('댓글작성' + commentCreated);
       router.refresh();
       getPostComments();
       setCommentCreated(false);
