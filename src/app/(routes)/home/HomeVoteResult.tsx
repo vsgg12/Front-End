@@ -116,7 +116,7 @@ export default function HomeVoteResult() {
 
   return (
     <div className="h-full rounded-[1.875em] bg-gray-100">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {/* <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
           <div className="relative flex w-full flex-row items-center">
             <div className="mx-2 flex flex-col ">
@@ -163,7 +163,7 @@ export default function HomeVoteResult() {
           </div>
           <div className="flex justify-end"></div>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 }
