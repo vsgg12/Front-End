@@ -134,20 +134,20 @@ export default function VoteResult({ postId, ingameInfos }: any) {
                     ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
                   }
                 >
-                  {/* {changePostionSVG(gameInfo.position)} */}
-                  {changePostionSVG('TOP')}
+                  {changePostionSVG(gameInfo.position)}
+                  {/* {changePostionSVG('TOP')} */}
                 </div>
                 <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
-                  {/* {changePositionName(gameInfo.position)} */}
-                  {changePositionName('TOP')}
+                  {changePositionName(gameInfo.position)}
+                  {/* {changePositionName('TOP')} */}
                 </div>
                 <div className="w-[50%]">
                   <div className="text=[#33333] text-[14px] font-semibold">
                     {gameInfo.championName}
                   </div>
                   <div className="text=[#33333] text-[12px]">
-                    {/* {gameInfo.tier} */}
-                    {'DIAMOND'}
+                    {gameInfo.tier}
+                    {/* {'DIAMOND'} */}
                   </div>
                 </div>
               </label>

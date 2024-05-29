@@ -12,7 +12,7 @@ import jungleWSVG from '../../../../public/svg/jungle-w.svg';
 import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
 import supportWSVG from '../../../../public/svg/supporter-w.svg';
 
-export default function VoteForm({ ingameInfos, setIsVoted }: any) {
+export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
   const router = useRouter();
 
   //useState
@@ -58,7 +58,8 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
     }
 
     setIsLoading(true);
-    const res = await createVote(voteData);
+    const res = await createVote(voteData, postId); //postId 추가
+    console.log(res);
     if (res.resultCode === 200) {
       setIsLoading(false);
       setIsVoted(true);
