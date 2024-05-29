@@ -268,7 +268,10 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
                   />
                   <label
                     htmlFor={`${ingameInfo.inGameInfoId}`}
-                    className={'v-label ' + changeVoteInfoBorderColor(index)}
+                    className={
+                      'v-label cursor-pointer ' +
+                      changeVoteInfoBorderColor(index)
+                    }
                   >
                     <div
                       className={

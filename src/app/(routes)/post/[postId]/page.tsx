@@ -30,7 +30,6 @@ export default function PostRead({
   };
 
   const router = useRouter();
-  const { data: session } = useSession();
 
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
@@ -140,10 +139,6 @@ export default function PostRead({
       setCommentCreated(false);
     }
   }, [commentCreated, router]);
-
-  // if (!session) {
-  //   router.push('/auth/signIn');
-  // }
 
   if (!post) {
     return (

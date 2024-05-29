@@ -145,7 +145,7 @@ export default function VoteResult({ postId, ingameInfos }: any) {
                     {gameInfo.championName}
                   </div>
                   <div className="text=[#33333] text-[12px]">
-                    {gameInfo.tier}
+                    {changeTierName(gameInfo.tier)}
                     {/* {'DIAMOND'} */}
                   </div>
                 </div>
@@ -155,7 +155,7 @@ export default function VoteResult({ postId, ingameInfos }: any) {
           ))}
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="mb-[10px]  flex text-[20px] ">
+          <div className="mb-[50px]  flex text-[20px] ">
             이 게임의 과실은 몇 대 몇 ~?
             <div className="ml-[10px] text-[#8f8f8f]">(전체 평균)</div>
           </div>
