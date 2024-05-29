@@ -424,7 +424,7 @@ export default function PostForm() {
         videoRef.current.src = url;
 
         videoRef.current.onloadeddata = () => {
-          videoRef.current!.currentTime = 5; // 원하는 시점 설정
+          videoRef.current!.currentTime = 1; // 원하는 시점 설정
         };
 
         videoRef.current.onseeked = async () => {

@@ -5,6 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
+import Image from 'next/image';
+import topWSVG from '../../../../public/svg/top-w.svg';
+import midWSVG from '../../../../public/svg/mid-w.svg';
+import jungleWSVG from '../../../../public/svg/jungle-w.svg';
+import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
+import supportWSVG from '../../../../public/svg/supporter-w.svg';
+
 export default function VoteForm({ ingameInfos, setIsVoted }: any) {
   const router = useRouter();
 
@@ -92,6 +99,81 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
     }
   };
 
+  const changeHoverColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return '[#000000]';
+      case 1:
+        return '[#9D2A2C]';
+      case 2:
+        return '[#CACACA]';
+      case 3:
+        return '[#656565]';
+      case 4:
+        return '[#6C0000]';
+    }
+  };
+
+  const changeVoteInfoBorderColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'border-[#000000]';
+      case 1:
+        return 'border-[#9D2A2C]';
+      case 2:
+        return 'border-[#CACACA]';
+      case 3:
+        return 'border-[#656565]';
+      case 4:
+        return 'border-[#6C0000]';
+    }
+  };
+
+  const changePositionName = (position: string) => {
+    switch (position) {
+      case 'TOP':
+        return '탑';
+      case 'ADCARRY':
+        return '원딜';
+      case 'MID':
+        return '미드';
+      case 'JUNGLE':
+        return '정글';
+      case 'SUPPORT':
+        return '서폿';
+    }
+  };
+
+  const changeTierName = (tier: string) => {
+    switch (tier) {
+      case 'IRON':
+        return '아이언';
+      case 'SILVER':
+        return '원딜';
+      case 'DIAMOND':
+        return '미드';
+      case 'JUNGLE':
+        return '정글';
+      case 'SUPPORT':
+        return '서폿';
+    }
+  };
+
+  const changePostionSVG = (position: string) => {
+    switch (position) {
+      case 'TOP':
+        return <Image alt="top" src={topWSVG} />;
+      case 'ADCARRY':
+        return <Image alt="top" src={onedealWSVG} />;
+      case 'MID':
+        return <Image alt="top" src={midWSVG} />;
+      case 'JUNGLE':
+        return <Image alt="JUNGLE" src={jungleWSVG} />;
+      case 'SUPPORT':
+        return <Image alt="top" src={supportWSVG} />;
+    }
+  };
+
   const handleVoteButtonChange = (index: number) => {
     if (selectedIngameInfoId !== undefined) {
       const newVotingButtonInfos = votingButtonInfos.map((vBtnInfo, idx) => {
@@ -120,6 +202,7 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
       ? changeIngameInfoColor(selectedIndex) + ' p-voing-bar-element'
       : currentColorClass + ' p-voing-bar-element';
   };
+
   const updateVoteRatios = () => {
     const newVote = vote.map((v: any) => ({
       ...v,
@@ -151,16 +234,6 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
     );
   }
 
-  // if (!isLoading) {
-  //   return (
-  //     <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
-  //       <div className="relative flex w-full flex-row items-center">
-  //         <Loading />
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -183,15 +256,26 @@ export default function VoteForm({ ingameInfos, setIsVoted }: any) {
                   />
                   <label
                     htmlFor={`${ingameInfo.inGameInfoId}`}
-                    className="mb-1 flex cursor-pointer flex-row items-center hover:underline  "
+                    className={'v-label ' + changeVoteInfoBorderColor(index)}
                   >
                     <div
                       className={
-                        'p-voting-champ-dot ' + changeIngameInfoColor(index)
+                        changeIngameInfoColor(index) +
+                        ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
                       }
-                    ></div>
-                    <div className="whitespace-nowrap">
-                      {ingameInfo.championName}
+                    >
+                      {changePostionSVG(ingameInfo.position)}
+                    </div>
+                    <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
+                      {changePositionName(ingameInfo.position)}
+                    </div>
+                    <div className="w-[50%]">
+                      <div className="text=[#33333] text-[14px] font-semibold">
+                        {ingameInfo.championName}
+                      </div>
+                      <div className="text=[#33333] text-[12px]">
+                        {ingameInfo.tier}
+                      </div>
                     </div>
                   </label>
                 </div>

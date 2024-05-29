@@ -39,6 +39,7 @@ export default function PostRead({
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
   const [commentCreated, setCommentCreated] = useState(false);
+  const [showReply, setShowReply] = useState<number>();
 
   const fetchMoreData = () => {
     if (displayedComments.length >= comments.length) {
@@ -64,6 +65,10 @@ export default function PostRead({
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}.${month}.${day}. ${hours}:${minutes}`;
   };
+
+  useEffect(() => {
+    setCommentCreated(false);
+  }, []);
 
   useEffect(() => {
     async function handleToken() {
@@ -138,15 +143,9 @@ export default function PostRead({
     }
   }, [commentCreated, router]);
 
-  useEffect(() => {
-    setCommentCreated(false);
-  }, []);
-
-  const [showReply, setShowReply] = useState<number>();
-
-  if (!session) {
-    router.push('/auth/signIn');
-  }
+  // if (!session) {
+  //   router.push('/auth/signIn');
+  // }
 
   if (!post) {
     return (
