@@ -1,8 +1,8 @@
 import React from 'react';
-import { Chart, ArcElement } from 'chart.js';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
-Chart.register(ArcElement);
+Chart.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
   ingameInfos: { championName: string; averageValue: number }[];
@@ -30,10 +30,27 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ ingameInfos }) => {
     ],
   };
 
-  const options = {};
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false, // 범례를 숨깁니다.
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function (context: any) {
+            const label = context.label || '';
+            const value = context.raw || '';
+            return `${label}: ${value}`;
+          },
+        },
+      },
+    },
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex h-[175px] w-[175px] flex-col items-center justify-center">
       <Doughnut data={data} options={options} />
     </div>
   );

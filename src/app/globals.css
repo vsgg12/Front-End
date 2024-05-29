@@ -142,7 +142,7 @@ button {
 }
 
 .v-label {
-  @apply mb-1 flex w-[240px] cursor-pointer flex-row items-center justify-between rounded-[84px] border-2 hover:opacity-80;
+  @apply mb-1 flex w-[240px] cursor-pointer flex-row items-center justify-between rounded-[84px] border-2;
 }
 
 .si-input {

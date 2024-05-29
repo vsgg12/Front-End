@@ -1,8 +1,6 @@
 'use client';
 import { getVotingResults } from '@/app/service/vote';
 import { useEffect, useState } from 'react';
-import DoughnutChart from '@/app/components/DoughnutChart';
-import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Image from 'next/image';
 import topWSVG from '../../../../public/svg/top-w.svg';
@@ -10,21 +8,27 @@ import midWSVG from '../../../../public/svg/mid-w.svg';
 import jungleWSVG from '../../../../public/svg/jungle-w.svg';
 import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
 import supportWSVG from '../../../../public/svg/supporter-w.svg';
+import DoughnutChart from '@/app/components/DoughnutChart';
 
-const ingameInfoDummy = [
-  { id: 0, championName: '이렐리아', averageValue: 4 },
-  { id: 1, championName: '마스터 이', averageValue: 4 },
-  { id: 2, championName: '가렌', averageValue: 2 },
-];
-
-export default function VoteResult({ postId }: any) {
+export default function VoteResult({ postId, ingameInfos }: any) {
   const [voteInfos, setVoteInfos] = useState<any[]>([]);
 
-  const [selectedIngameInfoIndex, setSelectedIngameInfoIndex] =
-    useState<number>(ingameInfoDummy[0].id);
-  const [selectedChamp, setSelectedChamp] = useState<string>(
-    ingameInfoDummy[0].championName,
-  );
+  useEffect(() => {
+    async function getResult() {
+      try {
+        const res = await getVotingResults(postId);
+        console.log(res);
+        if (Array.isArray(res)) {
+          setVoteInfos(res);
+        } else {
+          console.error('Expected an array from getVotingResults');
+        }
+      } catch (error) {
+        console.error('Failed to fetch voting results:', error);
+      }
+    }
+    getResult();
+  }, [postId]); // Use postId as dependency to trigger the effect when postId changes
 
   const changeIngameInfoColor = (index: number) => {
     switch (index) {
@@ -38,36 +42,6 @@ export default function VoteResult({ postId }: any) {
         return 'bg-[#656565]';
       case 4:
         return 'bg-[#6C0000]';
-    }
-  };
-
-  const changeVoteInfoColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return 'text-[#000000]';
-      case 1:
-        return 'text-[#9D2A2C]';
-      case 2:
-        return 'text-[#CACACA]';
-      case 3:
-        return 'text-[#656565]';
-      case 4:
-        return 'text-[#6C0000]';
-    }
-  };
-
-  const changeHoverColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return '[#000000]';
-      case 1:
-        return '[#9D2A2C]';
-      case 2:
-        return '[#CACACA]';
-      case 3:
-        return '[#656565]';
-      case 4:
-        return '[#6C0000]';
     }
   };
 
@@ -131,64 +105,52 @@ export default function VoteResult({ postId }: any) {
     }
   };
 
-  useEffect(() => {
-    async function getResult() {
-      try {
-        const res = await getVotingResults(postId);
-        if (Array.isArray(res)) {
-          setVoteInfos(res);
-        } else {
-          console.error('Expected an array from getVotingResults');
-        }
-      } catch (error) {
-        console.error('Failed to fetch voting results:', error);
-      }
-    }
-    getResult();
-  }, [postId]); // Use postId as dependency to trigger the effect when postId changes
-
   return (
-    <>
-      <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
-        <div className="relative flex w-full flex-row items-center">
-          <div className="mx-2 flex flex-col ">
-            {ingameInfoDummy.map((ingameInfo, index) => (
-              <div key={index}>
-                <label
-                  htmlFor={`${ingameInfo.inGameInfoId}`}
-                  className={'v-label ' + changeVoteInfoBorderColor(index)}
-                >
-                  <div
-                    className={
-                      changeIngameInfoColor(index) +
-                      ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
-                    }
+    <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
+      <div className="flex items-center">
+        <div className="flex w-[40%] flex-col">
+          {voteInfos.length !== 0
+            ? voteInfos.map((gameInfo: any, index: number) => (
+                <div key={index} className="flex w-full ">
+                  <label
+                    htmlFor={`${gameInfo.inGameInfoId}`}
+                    className={'v-label ' + changeVoteInfoBorderColor(index)}
                   >
-                    {changePostionSVG(ingameInfo.position)}
-                  </div>
-                  <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
-                    {changePositionName(ingameInfo.position)}
-                  </div>
-                  <div className="w-[50%]">
-                    <div className="text=[#33333] text-[14px] font-semibold">
-                      {ingameInfo.championName}
+                    <div
+                      className={
+                        changeIngameInfoColor(index) +
+                        ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
+                      }
+                    >
+                      {/* {changePostionSVG(gameInfo.position)} */}
+                      {changePostionSVG('TOP')}
                     </div>
-                    <div className="text=[#33333] text-[12px]">
-                      {ingameInfo.tier}
+                    <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
+                      {/* {changePositionName(gameInfo.position)} */}
+                      {changePositionName('TOP')}
                     </div>
-                  </div>
-                </label>
-              </div>
-            ))}
+                    <div className="w-[50%]">
+                      <div className="text=[#33333] text-[14px] font-semibold">
+                        {gameInfo.championName}
+                      </div>
+                      <div className="text=[#33333] text-[12px]">
+                        {/* {gameInfo.tier} */}
+                        {'DIAMOND'}
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              ))
+            : '아직 한 명도 투표하지 않은 게시글 입니다.'}
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="mb-[10px]  flex text-[20px] ">
+            이 게임의 과실은 몇 대 몇 ~?
+            <div className="ml-[10px] text-[#8f8f8f]">(전체 평균)</div>
           </div>
-          <div className="flex grow flex-col items-center justify-center">
-            <div className="mb-[3rem] text-[20px]">
-              이 게임의 과실은 몇 대 몇~?
-            </div>
-            <DoughnutChart ingameInfos={ingameInfoDummy} />
-          </div>
+          <DoughnutChart ingameInfos={voteInfos} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
