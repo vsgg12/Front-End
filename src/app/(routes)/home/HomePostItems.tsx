@@ -72,7 +72,9 @@ export default function HomePostItems() {
       } else if (postsSortedByDate?.postDTO?.length === 0) {
         return;
       } else {
+        await deleteToken();
         alert('게시글 로드에 오류가 생겼습니다.');
+        router.push('/auth/signIn');
         return;
       }
     }

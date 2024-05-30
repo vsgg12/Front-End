@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 
 export async function getPostsSortedByDate() {
   try {
-    const token = cookies().get('token')?.value; //지우기
+    const token = cookies().get('authToken')?.value; //지우기
     const response = await fetch(`${API_URL}/post?orderby=createdatetime`, {
       method: 'GET',
       credentials: 'include',
@@ -25,7 +25,7 @@ export async function getPostsSortedByDate() {
 
 export async function getPostsSortedByView() {
   try {
-    const token = cookies().get('token')?.value; //지우기
+    const token = cookies().get('authToken')?.value; //지우기
     const response = await fetch(`${API_URL}/post?orderby=view`, {
       method: 'GET',
       credentials: 'include',
@@ -60,7 +60,7 @@ export async function getPostsByKeyword(keyword: string) {
 
 export async function getPost(postId: number) {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/post/${postId}`, {
       method: 'GET',
       credentials: 'include',
@@ -77,7 +77,7 @@ export async function getPost(postId: number) {
 
 export async function getUserPosts() {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/post/users`, {
       method: 'GET',
       credentials: 'include',
@@ -94,7 +94,7 @@ export async function getUserPosts() {
 
 export async function createPost(data: FormData): Promise<any> {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/post`, {
       method: 'POST',
       credentials: 'include',
@@ -125,7 +125,7 @@ export async function saveImageAndRequestUrlToS3(
 ): Promise<any> {
   const data = { file: formdata };
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
 
     const response = await fetch(`${API_URL}/image/upload`, {
       method: 'POST',
@@ -144,7 +144,7 @@ export async function sendDeleteRequestToS3(
   imgUrls: ICreateImageData, //imgUrls string[]
 ): Promise<any> {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/image`, {
       method: 'DELETE',
       credentials: 'include',

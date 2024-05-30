@@ -18,7 +18,7 @@ import Loading from '@/app/components/Loading';
 import Header from '@/app/layout/Header';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { checkToken } from '@/app/service/auth';
+import { checkToken, deleteToken } from '@/app/service/auth';
 
 export default function PostRead({
   params,
@@ -84,6 +84,11 @@ export default function PostRead({
           setPost(onePost.postDTO);
           setIngameInfos(onePost.inGameInfo);
           setIsVoted(onePost.postDTO.isVote);
+        } else {
+          await deleteToken();
+          alert('게시글 로드에 오류가 생겼습니다.');
+          router.push('/auth/signIn');
+          return;
         }
       } catch (error) {
         console.error('Failed to fetch post:', error);

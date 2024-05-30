@@ -11,7 +11,7 @@ export async function createVote(
   postId: any,
 ): Promise<any> {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
 
     // const response = await fetch(`${API_URL}/vote/save`
 
@@ -33,7 +33,7 @@ export async function createVote(
 //내 판결 조회
 export async function getVotingResults(postId: any) {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/post/${postId}/avg`, {
       method: 'GET',
       credentials: 'include',
@@ -51,7 +51,7 @@ export async function getVotingResults(postId: any) {
 //내 판결 전적
 export async function getVotingHistorys() {
   try {
-    const token = cookies().get('token')?.value;
+    const token = cookies().get('authToken')?.value;
     const response = await fetch(`${API_URL}/voting/users`, {
       method: 'GET',
       credentials: 'include',

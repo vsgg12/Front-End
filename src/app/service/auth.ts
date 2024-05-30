@@ -72,11 +72,11 @@ export async function checkSameNickname(nickname: string) {
 }
 
 export async function deleteToken() {
-  cookies().delete('token');
+  cookies().delete('authToken');
 }
 
 export async function checkToken(): Promise<boolean> {
-  const token = cookies().get('token');
+  const token = cookies().get('authToken');
 
   if (token) {
     return true;

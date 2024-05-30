@@ -51,6 +51,7 @@ import {
 import { useSession } from 'next-auth/react';
 import { userStore } from '@/app/store/userStoe';
 import LoadingFull from '@/app/components/LoadingFull';
+import { deleteToken } from '@/app/service/auth';
 
 const ReactQuillBase = dynamic(
   async () => {
@@ -281,7 +282,11 @@ export default function PostForm() {
         }
       }
       if (res.status === 500) {
-        alert('작성 오류입니다. 업로드한 파일을 확인해주세요');
+        // alert('작성 오류입니다. 업로드한 파일을 확인해주세요');
+        await deleteToken();
+        alert('문제가 생겨 게시글을 업로드 할 수 없습니다.');
+        router.push('/auth/signIn');
+        return;
       }
     } else {
       return;

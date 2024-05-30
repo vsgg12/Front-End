@@ -6,7 +6,7 @@ const API_URL: string = NEXT_PUBLIC_API_URL || '';
 import { cookies } from 'next/headers';
 
 export async function getAlarms() {
-  const token = cookies().get('token')?.value;
+  const token = cookies().get('authToken')?.value;
   try {
     const response = await fetch(`${API_URL}/post/alarm/users`, {
       method: 'GET',
