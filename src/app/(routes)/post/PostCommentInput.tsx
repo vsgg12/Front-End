@@ -1,7 +1,6 @@
 import { BsArrowUpCircle } from 'react-icons/bs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createComments } from '@/app/service/comment';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Loading from '@/app/components/Loading';
 
@@ -11,6 +10,8 @@ export default function PostCommentInput({
   setCommentCreated,
   setIsCommentLoading,
   isCommentLoading,
+  isReplyLoading,
+  setIsReplyLoading,
 }: any) {
   const {
     register,
@@ -20,7 +21,6 @@ export default function PostCommentInput({
   } = useForm<any>();
 
   const [isSend, setIsSend] = useState(false);
-  const router = useRouter();
 
   const onSubmit: SubmitHandler<any> = async (data) => {
     if (data.content === '') {
@@ -33,12 +33,21 @@ export default function PostCommentInput({
       content: data.content,
     };
 
-    setIsCommentLoading(true);
+    if (parentId === null) {
+      setIsCommentLoading(true);
+    } else {
+      setIsReplyLoading(true);
+    }
+
     const res = await createComments(postId, commentData);
+
     if (res.resultCode === 201) {
       setCommentCreated(true);
       setIsSend(true);
       setIsCommentLoading(false);
+      setIsReplyLoading(false);
+    } else {
+      console.log(res);
     }
   };
 
@@ -70,6 +79,7 @@ export default function PostCommentInput({
           </div>
         </form>
         {isCommentLoading && <Loading />}
+        {isReplyLoading && <Loading />}
       </div>
     </>
   );

@@ -52,7 +52,7 @@ export default function HomeVoteResult() {
     //   vote: [...vote],
     // };
     // console.log(voteData);
-    console.log(votingButtonInfos);
+    // console.log(votingButtonInfos);
   };
 
   //function
@@ -111,7 +111,7 @@ export default function HomeVoteResult() {
 
   useEffect(() => {
     updateVoteRatios();
-    console.log(vote);
+    // console.log(vote);
   }, [votingButtonInfos]);
 
   return (

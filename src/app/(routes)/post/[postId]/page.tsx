@@ -38,6 +38,7 @@ export default function PostRead({
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
   const [isCommentLoading, setIsCommentLoading] = useState(true);
+  const [isReplyLoading, setIsReplyLoading] = useState(false);
   const [commentCreated, setCommentCreated] = useState(false);
   const [showReply, setShowReply] = useState<number>();
 
@@ -243,6 +244,7 @@ export default function PostRead({
                       isCommentLoading={isCommentLoading}
                       setCommentCreated={setCommentCreated}
                       setIsCommentLoading={setIsCommentLoading}
+                      setIsReplyLoading={setIsReplyLoading}
                     />
                   </div>
                 </div>
@@ -280,6 +282,9 @@ export default function PostRead({
                               postId={params.postId}
                               parentId={comment.id}
                               setCommentCreated={setCommentCreated}
+                              setIsCommentLoading={setIsCommentLoading}
+                              setIsReplyLoading={setIsReplyLoading}
+                              isReplyLoading={isReplyLoading}
                             />
                             <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
                               {comment.children &&
