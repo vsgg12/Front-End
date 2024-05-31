@@ -297,14 +297,14 @@ export default function PostRead({
                 )}
               </div>
             </div>
-            {!isVoted && (
+            {isVoted && (
               <VoteForm
                 setIsVoted={setIsVoted}
                 postId={params.postId}
                 ingameInfos={ingameInfos}
               />
             )}
-            {isVoted && (
+            {!isVoted && (
               <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
             )}
             {/* <VoteResult postId={params.postId} ingameInfos={ingameInfos} /> */}

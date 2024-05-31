@@ -22,7 +22,7 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
       ratio: 0,
     })),
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
     ingameInfos[0].inGameInfoId,
@@ -238,7 +238,7 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
 
   if (!ingameInfos || isLoading) {
     return (
-      <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
+      <div className="p-content-pd p-content-rounded p-last-mb flex flex h-[313px] w-full items-center bg-white">
         <div className="relative flex w-full flex-row items-center">
           <Loading />
         </div>
