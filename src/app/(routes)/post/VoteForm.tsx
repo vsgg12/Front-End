@@ -22,7 +22,7 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
       ratio: 0,
     })),
   );
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedIngameInfoId, setSelectedIngameInfoId] = useState<number>(
     ingameInfos[0].inGameInfoId,
