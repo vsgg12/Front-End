@@ -10,7 +10,7 @@ import VoteForm from '../VoteForm';
 import DOMPurify from 'dompurify';
 
 import { IPostReadParams } from '@/app/types/post';
-
+import { IoPersonCircleSharp } from 'react-icons/io5';
 import VoteResult from '../VoteResult';
 import { getPost } from '@/app/service/post';
 import { getComments } from '@/app/service/comment';
@@ -189,7 +189,7 @@ export default function PostRead({
                       </div>
                     </div>
                     <div className="p-content-s-mb flex flex-row items-center justify-start font-medium">
-                      <div className="mr-[10px] h-[32px] w-[32px] rounded-full bg-[#D9D9D9]"></div>
+                      <IoPersonCircleSharp className="mr-[0.625rem] h-[2.5rem] w-[2.5rem] rounded-full  text-[#D9D9D9]" />
                       <div>
                         <div className="flex flex-row">
                           <div className=" mr-[6px] text-[12px] text-[#333333]">
