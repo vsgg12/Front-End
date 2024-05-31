@@ -37,6 +37,7 @@ export default function PostRead({
   const [hasMore, setHasMore] = useState(true);
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
+  const [isCommentLoading, setIsCommentLoading] = useState(true);
   const [commentCreated, setCommentCreated] = useState(false);
   const [showReply, setShowReply] = useState<number>();
 
@@ -102,8 +103,10 @@ export default function PostRead({
           setComments(postComments.comments);
           const uploadedComments = [...comments].slice(0, 5);
           setDisplayedComments(uploadedComments); // comments 가져온 후 displayedComments 초기화
+          setIsCommentLoading(false);
         } else {
           setDisplayedComments([]);
+          setIsCommentLoading(false);
         }
       } catch (error) {
         console.error('Failed to fetch comments:', error);
@@ -237,7 +240,9 @@ export default function PostRead({
                     <PostCommentInput
                       postId={params.postId}
                       parentId={null}
+                      isCommentLoading={isCommentLoading}
                       setCommentCreated={setCommentCreated}
+                      setIsCommentLoading={setIsCommentLoading}
                     />
                   </div>
                 </div>
@@ -307,7 +312,6 @@ export default function PostRead({
             {isVoted && (
               <VoteResult postId={params.postId} ingameInfos={ingameInfos} />
             )}
-            {/* <VoteResult postId={params.postId} ingameInfos={ingameInfos} /> */}
           </div>
         </section>
       </main>
