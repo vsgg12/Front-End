@@ -33,6 +33,8 @@ jobs:
       - name: Build # React Build
         run: npm run build
         
+      - name: BuildFile check
+        run: find . -name build
 
       - name: Deploy # S3에 배포하기
         env:
