@@ -14,7 +14,7 @@ jobs:
       - name: Cache node modules # node modules 캐싱
         uses: actions/cache@v1
         with:
-          path: node_modules # 프로젝트의 node_modules가 있는 경로로 설정
+          path: src # 프로젝트의 node_modules가 있는 경로로 설정
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-build-
