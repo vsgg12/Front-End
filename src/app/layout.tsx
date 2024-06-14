@@ -1,17 +1,13 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-// import Header from './layout/Header';
-// import Footer from './layout/Footer';
 import 'react-quill/dist/quill.snow.css';
 
 import TokenComponent from './components/TokenComponent';
 import Script from 'next/script';
-import AuthSession from './(routes)/api/auth/[...nextauth]/AuthSession';
-import { Suspense, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import AuthSession from './api/auth/[...nextauth]/AuthSession';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
-
 export const metadata = {
   title: 'VS.GG',
   description: '리그 오브 레전드 과실 판결 커뮤니티',

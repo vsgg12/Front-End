@@ -1,10 +1,9 @@
-import Home from './(routes)/home/page';
-import SignIn from './(routes)/auth/signIn/page';
+import Home from './(Routes)/home/page';
 export default function Main() {
   return (
     <>
       {/* <Home /> */}
-      <SignIn />
+      <Home />
     </>
   );
 }

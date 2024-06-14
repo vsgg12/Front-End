@@ -1,9 +1,9 @@
 'use server';
-import { NEXT_PUBLIC_API_URL } from '../constants';
+
 import { ICreateMemberProps } from '../types/form';
 import { cookies } from 'next/headers';
 
-const API_URL: string = NEXT_PUBLIC_API_URL || '';
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL || '';
 
 export async function mobileCheck(mobile: string) {
   try {
