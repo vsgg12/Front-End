@@ -5,63 +5,50 @@ import { useEffect, useState } from 'react';
 import Loading from '@/app/components/Loading';
 
 export default function PostCommentInput({
-  postId,
-  parentId,
-  setCommentCreated,
-  setIsCommentLoading,
-  isCommentLoading,
-  isReplyLoading,
-  setIsReplyLoading,
+  postId,setCommentCreated
 }: any) {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm<any>();
 
-  const [isSend, setIsSend] = useState(false);
+  const [isCreationInProgress, setIsCreationInProgress] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<any> = async (data) => {
+    if(isCreationInProgress){
+      return;
+    }
+  
+    setIsCreationInProgress(true);
+
     if (data.content === '') {
       alert('댓글 내용을 작성해주세요');
       return;
     }
 
     const commentData = {
-      parentId: parentId,
+      parentId: null,
       content: data.content,
     };
 
-    if (parentId === null) {
-      setIsCommentLoading(true);
-    } else {
-      setIsReplyLoading(true);
+    try{
+      const res = await createComments(postId, commentData);
+      if (res.resultCode === 201) {
+        reset({
+          content: '',
+        });
+        setCommentCreated(true);
+      } 
+    }catch (err){
+      console.log(err);
+    }finally{
+      setIsCreationInProgress(false);
     }
-
-    const res = await createComments(postId, commentData);
-
-    if (res.resultCode === 201) {
-      setCommentCreated(true);
-      setIsSend(true);
-      setIsCommentLoading(false);
-      setIsReplyLoading(false);
-    } else {
-      console.log(res);
-    }
+  
   };
 
-  useEffect(() => {
-    if (isSend) {
-      reset({
-        content: '',
-      });
-      setIsSend(false);
-    }
-  }, [isSend, reset]);
-
   return (
-    <>
       <div className="mb-[20px] flex grow flex-col">
         <form className="grow" onSubmit={handleSubmit(onSubmit)}>
           <textarea
@@ -78,9 +65,7 @@ export default function PostCommentInput({
             </button>
           </div>
         </form>
-        {isCommentLoading && <Loading />}
-        {isReplyLoading && <Loading />}
+        {isCreationInProgress && <Loading />}
       </div>
-    </>
   );
 }

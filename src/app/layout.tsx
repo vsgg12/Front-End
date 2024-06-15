@@ -35,12 +35,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthSession>
-          {/* <Header />*/}
           <Suspense>
             <TokenComponent />
             {children}
           </Suspense>
-          {/* <Footer /> */}
         </AuthSession>
       </body>
     </html>

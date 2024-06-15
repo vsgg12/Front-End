@@ -4,6 +4,11 @@ import NaverProvider from 'next-auth/providers/naver';
 import { cookies } from 'next/headers';
 
 const handler = NextAuth({
+  // pages: {
+  //   signIn: '/home',
+  //   signOut: '/home',
+  //   newUser: '/home',
+  // },
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
