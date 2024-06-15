@@ -1,4 +1,4 @@
-import Home from './(Routes)/home/page';
+import Home from './(routes)/home/page';
 export default function Main() {
   return (
     <>
