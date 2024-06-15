@@ -23,11 +23,11 @@ export default function PostRead({params }: { params: IPostReadParams;}) {
 
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
+  const [commentCreated, setCommentCreated] = useState(false);
   const [displayedComments, setDisplayedComments] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
-  const [commentCreated, setCommentCreated] = useState(false);
   const [showReply, setShowReply] = useState<number>();
 
   const fetchMoreData = () => {
