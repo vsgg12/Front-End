@@ -1,6 +1,7 @@
 import { GoSearch } from 'react-icons/go';
 import Logo from './Logo';
-export default function Search(): JSX.Element {
+
+export default function Search(){
   return (
     <>
       <div className="my-[150px] flex flex-col items-center justify-center">
