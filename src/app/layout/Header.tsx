@@ -24,16 +24,14 @@ export default function Header() {
   return (
     <>
       <div className="p-right-20 absolute right-10 top-10 flex flex-row items-center justify-end">
-        <div className="flex flex-row items-center">
-          <div className="flex flex-col ">
-            <Link className="hd-items mr-[0.5rem]  " href={`/post/write`}>
-              <Image
-                className="h-[32px] w-[32px]"
-                src={writeSVG}
-                alt="writeIcon"
-              />
-            </Link>
-          </div>
+        <div className="flex flex-row items-center gap-4">
+          <Image
+            className="h-[32px] w-[32px]"
+            src={writeSVG}
+            alt="writeIcon"
+            onClick={() => router.push('/post/write')}
+          />
+
           {/* <button className="hd-items mr-[0.6rem] ">
             <IoMdNotificationsOutline />
           </button> */}
@@ -50,10 +48,12 @@ export default function Header() {
               </button>
             </div>
           ) : (
-              <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]"
-                      onClick={() => router.push('/auth/signIn')}>
-                로그인
-              </button>
+            <button
+              className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]"
+              onClick={() => router.push('/auth/signIn')}
+            >
+              로그인
+            </button>
           )}
         </div>
       </div>
