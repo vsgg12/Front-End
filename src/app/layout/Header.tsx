@@ -25,12 +25,14 @@ export default function Header() {
     <>
       <div className="p-right-20 absolute right-10 top-10 flex flex-row items-center justify-end">
         <div className="flex flex-row items-center gap-4">
-          <Image
-            className="h-[32px] w-[32px]"
-            src={writeSVG}
-            alt="writeIcon"
-            onClick={() => router.push('/post/write')}
-          />
+          <div className="cursor-pointer">
+            <Image
+              className="h-[32px] w-[32px]"
+              src={writeSVG}
+              alt="writeIcon"
+              onClick={() => router.push('/post/write')}
+            />
+          </div>
 
           {/* <button className="hd-items mr-[0.6rem] ">
             <IoMdNotificationsOutline />
