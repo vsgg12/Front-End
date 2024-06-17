@@ -1,27 +1,22 @@
-import {
-  NAVER_CLIENT_ID,
-  NAVER_CLIENT_SECRET,
-  NEXTAUTH_SECRET,
-} from '@/app/constants';
 import { deleteToken, emailCheck, mobileCheck } from '@/app/service/auth';
 import NextAuth from 'next-auth';
 import NaverProvider from 'next-auth/providers/naver';
 import { cookies } from 'next/headers';
 
 const handler = NextAuth({
-  pages: {
-    signIn: '/home',
-    signOut: '/',
-    newUser: '/auth/signUp',
-  },
-  secret: NEXTAUTH_SECRET,
+  // pages: {
+  //   signIn: '/home',
+  //   signOut: '/home',
+  //   newUser: '/home',
+  // },
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
   providers: [
     NaverProvider({
-      clientId: NAVER_CLIENT_ID!,
-      clientSecret: NAVER_CLIENT_SECRET!,
+      clientId: process.env.NAVER_CLIENT_ID!,
+      clientSecret: process.env.NAVER_CLIENT_SECRET!,
     }),
   ],
   callbacks: {

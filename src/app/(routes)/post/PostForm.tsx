@@ -526,8 +526,8 @@ export default function PostForm() {
   };
 
   //hashtags
-  const handleTagInput = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+  const handleTagInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       event.preventDefault(); // 폼 제출 방지
       const newTag = event.currentTarget.value.trim();
       if (newTag && !hashtags.includes(newTag) && hashtags.length < 5) {
@@ -768,7 +768,6 @@ export default function PostForm() {
                 <button
                   type="button"
                   key={index}
-                  // onClick={() => setSelectedTab(index)}
                   onClick={() => handleTabChange(index)}
                   className={changeTabTitleStyle(index)}
                 >

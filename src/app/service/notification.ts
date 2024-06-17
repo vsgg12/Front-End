@@ -1,7 +1,6 @@
 'use server';
-import { NEXT_PUBLIC_API_URL } from '../constants';
 
-const API_URL: string = NEXT_PUBLIC_API_URL || '';
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL || '';
 
 import { cookies } from 'next/headers';
 

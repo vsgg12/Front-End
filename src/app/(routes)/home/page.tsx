@@ -10,7 +10,7 @@ import { checkToken } from '@/app/service/auth';
 import { useRouter } from 'next/navigation';
 import Header from '@/app/layout/Header';
 import { useSession } from 'next-auth/react';
-// import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
+import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function Home(): JSX.Element {
             <div className="mb-[44px] flex flex-row items-center justify-between ">
               {/* <button className="box-content flex h-[34px] items-center justify-center rounded-[150px] bg-[#8A1F21] text-white"> */}
               <div className="flex flex-col">
-                {/* <Tabs key="default" aria-label="Options">
+                <Tabs key="default" aria-label="Options">
                   <Tab key="latest" title="최신순">
                     <Card>
                       <CardBody>최신순</CardBody>
@@ -60,7 +60,7 @@ export default function Home(): JSX.Element {
                       <CardBody>추천순</CardBody>
                     </Card>
                   </Tab>
-                </Tabs> */}
+                </Tabs>
               </div>
               {/* </button> */}
               <div className="text-xs text-[#909090]">홈</div>

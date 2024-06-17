@@ -13,7 +13,6 @@ import Loading from '@/app/components/Loading';
 import { useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { checkToken, deleteToken } from '@/app/service/auth';
-import LoadingFull from '@/app/components/LoadingFull';
 
 export default function HomePostItems() {
   const router = useRouter();
@@ -74,7 +73,7 @@ export default function HomePostItems() {
       } else {
         await deleteToken();
         alert('게시글 로드에 오류가 생겼습니다.');
-        router.push('/auth/signIn');
+        router.push('/home');
         return;
       }
     }
@@ -84,7 +83,7 @@ export default function HomePostItems() {
       if (res) {
         await getPostsByDates();
       } else {
-        router.push('/auth/signIn');
+        router.push('/home');
       }
     }
     getPost();
@@ -108,6 +107,7 @@ export default function HomePostItems() {
             <div
               key={index}
               className="p-content-pd p-content-mb h-fit w-full rounded-[1.875rem] bg-[#ffffff]"
+              onClick={()=>{router.push(`/post/${post.id}/`)}}
             >
               <div className="flex w-full flex-row justify-between font-medium">
                 <div className="p-content-s-mb text-[1.563rem]">
@@ -158,10 +158,6 @@ export default function HomePostItems() {
                   ></iframe>
                 )}
                 <div className="flex w-full flex-col overflow-hidden">
-                  <Link
-                    href={`/post/${post.id}/`}
-                    className="flex h-full flex-col"
-                  >
                     <div
                       dangerouslySetInnerHTML={{
                         __html: sanitizeHTML(
@@ -174,7 +170,7 @@ export default function HomePostItems() {
                       {/* {post?.isVote ? <HomeVoted /> : <HomeNotVoted />} */}
                       <HomeNotVoted />
                     </div>
-                  </Link>
+                  
                 </div>
               </div>
               <PostTag hashtags={post?.hashtagList} />

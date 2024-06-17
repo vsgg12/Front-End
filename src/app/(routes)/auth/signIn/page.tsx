@@ -15,22 +15,24 @@ export default function SignIn() {
 
   const naverLogin = async () => {
     setIsLoading(true);
-    const res = await signIn('naver', { redirect: false });
+    const res = await signIn('naver', { redirect: true, callbackUrl:'/home' });
 
     if (res) {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    async function handleToken() {
-      const res = await checkToken();
-      if (res) {
-        router.push('/home');
-      }
-    }
-    handleToken();
-  }, []);
+
+
+  // useEffect(() => {
+  //   async function handleToken() {
+  //     const res = await checkToken();
+  //     if (res) {
+  //       router.push('/home');
+  //     }
+  //   }
+  //   handleToken();
+  // }, []);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">

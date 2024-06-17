@@ -18,6 +18,7 @@ export default function Header() {
   const handleSignOut = async () => {
     await deleteToken();
     await signOut();
+    router.push('/home');
   };
 
   return (
@@ -49,11 +50,10 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            <Link href={'/auth/signIn'}>
-              <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]">
+              <button className="mr-[1rem] rounded-[150px] border-2 border-[#8A1F21] px-[30px] py-[5px] text-[#8A1F21]"
+                      onClick={() => router.push('/auth/signIn')}>
                 로그인
               </button>
-            </Link>
           )}
         </div>
       </div>

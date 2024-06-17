@@ -1,8 +1,7 @@
 'use server';
-import { NEXT_PUBLIC_API_URL } from '../constants';
 import { ICreateVotingDataProps } from '../types/form';
 
-const API_URL: string = NEXT_PUBLIC_API_URL || '';
+const API_URL: string = process.env.NEXT_PUBLIC_API_URL || '';
 
 import { cookies } from 'next/headers';
 
@@ -12,8 +11,6 @@ export async function createVote(
 ): Promise<any> {
   try {
     const token = cookies().get('authToken')?.value;
-
-    // const response = await fetch(`${API_URL}/vote/save`
 
     const response = await fetch(`${API_URL}/post/${postId}/vote`, {
       method: 'POST',

@@ -1,16 +1,72 @@
 'use client';
+
 import Loading from '@/app/components/Loading';
 import { createVote } from '@/app/service/vote';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
 import Image from 'next/image';
-import topWSVG from '../../../../public/svg/top-w.svg';
-import midWSVG from '../../../../public/svg/mid-w.svg';
-import jungleWSVG from '../../../../public/svg/jungle-w.svg';
-import onedealWSVG from '../../../../public/svg/onedeal-w.svg';
-import supportWSVG from '../../../../public/svg/supporter-w.svg';
+
+const colors =[
+  {
+    background: 'bg-[#000000]',
+    text: 'text-[#000000]',
+    hover: 'hover:[#000000]',
+    border: 'border-[#000000]',
+  },
+  {
+    background: 'bg-[#9D2A2C]',
+    text: 'text-[#9D2A2C]',
+    hover: 'hover:[#9D2A2C]',
+    border: 'border-[#9D2A2C]',
+  },
+  {
+    background: 'bg-[#CACACA]',
+    text: 'text-[#CACACA]',
+    hover: 'hover:[#CACACA]',
+    border: 'border-[#CACACA]',
+  },
+  {
+    background: 'bg-[#656565]',
+    text: 'text-[#656565]',
+    hover: 'hover:[#656565]',
+    border: 'border-[#656565]',
+  },
+  {
+    background: 'bg-[#6C0000]',
+    text: 'text-[#6C0000]',
+    hover: 'hover:[#6C0000]',
+    border: 'border-[#6C0000]',
+  },
+];
+
+const positions = [
+  {
+    name: 'TOP',
+    ko: '탑',
+    src: '/svg/top-w.svg',
+  },
+  {
+    name: 'ADCARRY',
+    ko: '원딜',
+    src: '/svg/onedeal-w.svg',
+  },
+  {
+    name: 'MID',
+    ko: '미드',
+    src: '/svg/mid-w.svg',
+  },
+  {
+    name: 'JUNGLE',
+    ko: '정글',
+    src: '/svg/jungle-w.svg'
+  },
+  {
+    name: 'SUPPORT',
+    ko: '서폿',
+    src: '/svg/supporter-w.svg'
+  },
+];
 
 export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
   const router = useRouter();
@@ -68,80 +124,9 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
     }
   };
 
-  //function
-  const changeIngameInfoColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return 'bg-[#000000]';
-      case 1:
-        return 'bg-[#9D2A2C]';
-      case 2:
-        return 'bg-[#CACACA]';
-      case 3:
-        return 'bg-[#656565]';
-      case 4:
-        return 'bg-[#6C0000]';
-    }
-  };
-
-  const changeVoteInfoColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return 'text-[#000000]';
-      case 1:
-        return 'text-[#9D2A2C]';
-      case 2:
-        return 'text-[#CACACA]';
-      case 3:
-        return 'text-[#656565]';
-      case 4:
-        return 'text-[#6C0000]';
-    }
-  };
-
-  const changeHoverColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return '[#000000]';
-      case 1:
-        return '[#9D2A2C]';
-      case 2:
-        return '[#CACACA]';
-      case 3:
-        return '[#656565]';
-      case 4:
-        return '[#6C0000]';
-    }
-  };
-
-  const changeVoteInfoBorderColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return 'border-[#000000]';
-      case 1:
-        return 'border-[#9D2A2C]';
-      case 2:
-        return 'border-[#CACACA]';
-      case 3:
-        return 'border-[#656565]';
-      case 4:
-        return 'border-[#6C0000]';
-    }
-  };
-
   const changePositionName = (position: string) => {
-    switch (position) {
-      case 'TOP':
-        return '탑';
-      case 'ADCARRY':
-        return '원딜';
-      case 'MID':
-        return '미드';
-      case 'JUNGLE':
-        return '정글';
-      case 'SUPPORT':
-        return '서폿';
-    }
+    const positionName = positions.find(img => img.name === position);
+    return positionName ? positionName.ko : '';
   };
 
   const changeTierName = (tier: string) => {
@@ -172,18 +157,8 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
   };
 
   const changePostionSVG = (position: string) => {
-    switch (position) {
-      case 'TOP':
-        return <Image alt="top" src={topWSVG} />;
-      case 'ADCARRY':
-        return <Image alt="top" src={onedealWSVG} />;
-      case 'MID':
-        return <Image alt="top" src={midWSVG} />;
-      case 'JUNGLE':
-        return <Image alt="JUNGLE" src={jungleWSVG} />;
-      case 'SUPPORT':
-        return <Image alt="top" src={supportWSVG} />;
-    }
+    const positionImg = positions.find(img => img.name === position);
+    return positionImg ? positionImg.src : '';
   };
 
   const handleVoteButtonChange = (index: number) => {
@@ -202,16 +177,16 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
   const handleVoteButtonStyleChange = (index: number): string => {
     const currentColorClass =
       votingButtonInfos[index].selectedChampId !== undefined
-        ? changeIngameInfoColor(
+        ? colors[(
             ingameInfos.findIndex(
               (info: any) =>
                 info.inGameInfoId === votingButtonInfos[index].selectedChampId,
-            ),
-          )
+            )
+          )].background
         : '';
 
     return votingButtonInfos[index].selectedChampId === selectedIngameInfoId
-      ? changeIngameInfoColor(selectedIndex) + ' p-voing-bar-element'
+      ? colors[selectedIndex].background + ' p-voing-bar-element'
       : currentColorClass + ' p-voing-bar-element';
   };
 
@@ -247,39 +222,39 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-content-pd p-content-rounded p-last-mb flex h-fit w-full flex-col bg-white">
           <div className="relative flex w-full flex-row items-center">
             <div className="mx-2 flex flex-col ">
               {ingameInfos.map((ingameInfo: any, index: any) => (
-                <div key={index}>
-                  <input
-                    type="radio"
-                    className="p-input-hidden"
-                    name={`id-${ingameInfo.inGameInfoId}`}
-                    id={`${ingameInfo.inGameInfoId}`}
-                    onChange={() => {
+                <div 
+                className={`${colors[index].hover} `}
+                key={index}>
+                  <div
+                    onClick={() => {
                       setSelectedIngameInfoId(ingameInfos[index].inGameInfoId);
                       setSelectedChamp(ingameInfo.championName);
                       setSelectedIndex(index);
                     }}
-                    checked={selectedIngameInfoId === ingameInfo.inGameInfoId}
                   />
                   <label
                     htmlFor={`${ingameInfo.inGameInfoId}`}
                     className={
                       'v-label cursor-pointer ' +
-                      changeVoteInfoBorderColor(index)
+                      colors[index].border
                     }
                   >
                     <div
                       className={
-                        changeIngameInfoColor(index) +
+                        colors[index].text +
                         ' flex h-[48px] w-[48px] items-center justify-center rounded-full'
                       }
                     >
-                      {changePostionSVG(ingameInfo.position)}
+                      <Image
+                        src={changePostionSVG(ingameInfo.position)} 
+                        alt='position'
+                        width={48}
+                        height={48}
+                        />
                     </div>
                     <div className="mx-[10px] text-[16px] font-semibold text-[#8A1F21]">
                       {changePositionName(ingameInfo.position)}
@@ -306,7 +281,7 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
                     <div key={index} className="flex">
                       <div
                         className={
-                          changeVoteInfoColor(index) +
+                          colors[index].border +
                           ' p-voting-number-element'
                         }
                       >
@@ -331,19 +306,17 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
                         }
                       />
                       {index === 0 ? (
-                        <label
-                          htmlFor={`vote-${index}`}
+                        <div
                           className={
                             handleVoteButtonStyleChange(index) +
                             ' rounded-l-[30px]'
                           }
-                        ></label>
+                        ></div>
                       ) : index === 9 ? (
                         <label
                           htmlFor={`vote-${index}`}
                           className={
-                            handleVoteButtonStyleChange(index) +
-                            ' rounded-r-[30px]'
+                            handleVoteButtonStyleChange(index) + ' rounded-r-[30px]'
                           }
                         ></label>
                       ) : (
@@ -365,12 +338,11 @@ export default function VoteForm({ ingameInfos, setIsVoted, postId }: any) {
             <button
               type="submit"
               className="h-9 w-28 rounded-full bg-[#8A1F21] text-lg text-white hover:bg-red-800"
+              onClick={handleSubmit(onSubmit)}
             >
               제출하기
             </button>
           </div>
         </div>
-      </form>
-    </>
   );
 }

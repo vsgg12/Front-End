@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import Search from '@/app/components/Search';
@@ -7,7 +7,6 @@ import PostTag from '../PostTag';
 import PostCommentInput from '../PostCommentInput';
 import PostComment from '../PostComment';
 import VoteForm from '../VoteForm';
-import DOMPurify from 'dompurify';
 
 import { IPostReadParams } from '@/app/types/post';
 import { IoPersonCircleSharp } from 'react-icons/io5';
@@ -17,29 +16,18 @@ import { getComments } from '@/app/service/comment';
 import Loading from '@/app/components/Loading';
 import Header from '@/app/layout/Header';
 import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
 import { checkToken, deleteToken } from '@/app/service/auth';
 
-export default function PostRead({
-  params,
-}: {
-  params: IPostReadParams;
-}): JSX.Element {
-  const sanitizeHTML = (html: string) => {
-    return DOMPurify.sanitize(html);
-  };
-
+export default function PostRead({params }: { params: IPostReadParams;}) {
   const router = useRouter();
 
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<any[]>([]);
+  const [commentCreated, setCommentCreated] = useState(false);
   const [displayedComments, setDisplayedComments] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [ingameInfos, setIngameInfos] = useState<any[]>([]);
   const [isVoted, setIsVoted] = useState(false);
-  const [isCommentLoading, setIsCommentLoading] = useState(true);
-  const [isReplyLoading, setIsReplyLoading] = useState(false);
-  const [commentCreated, setCommentCreated] = useState(false);
   const [showReply, setShowReply] = useState<number>();
 
   const fetchMoreData = () => {
@@ -67,9 +55,6 @@ export default function PostRead({
     return `${year}.${month}.${day}. ${hours}:${minutes}`;
   };
 
-  useEffect(() => {
-    setCommentCreated(false);
-  }, []);
 
   useEffect(() => {
     async function handleToken() {
@@ -83,6 +68,7 @@ export default function PostRead({
       try {
         const onePost = await getPost(Number(params.postId));
         if (onePost.resultMsg === 'OK') {
+          console.log(onePost);
           setPost(onePost.postDTO);
           setIngameInfos(onePost.inGameInfo);
           setIsVoted(onePost.postDTO.isVote);
@@ -104,10 +90,8 @@ export default function PostRead({
           setComments(postComments.comments);
           const uploadedComments = [...comments].slice(0, 5);
           setDisplayedComments(uploadedComments); // comments 가져온 후 displayedComments 초기화
-          setIsCommentLoading(false);
         } else {
           setDisplayedComments([]);
-          setIsCommentLoading(false);
         }
       } catch (error) {
         console.error('Failed to fetch comments:', error);
@@ -143,11 +127,10 @@ export default function PostRead({
     }
 
     if (commentCreated) {
-      router.refresh();
       getPostComments();
       setCommentCreated(false);
     }
-  }, [commentCreated, router]);
+  }, [commentCreated]);
 
   if (!post) {
     return (
@@ -227,11 +210,8 @@ export default function PostRead({
 
                   <PostTag hashtags={post?.hashtagList} />
                   <div
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeHTML(post.content),
-                    }}
                     className="w-full"
-                  ></div>
+                  >{post.content}</div>
                 </div>
               )}
               <div className="p-content-rounded scroll relative mb-11 max-h-[1000px] w-1/3 bg-white px-[63px] pb-[44px]">
@@ -240,11 +220,7 @@ export default function PostRead({
                   <div className="flex flex-row">
                     <PostCommentInput
                       postId={params.postId}
-                      parentId={null}
-                      isCommentLoading={isCommentLoading}
                       setCommentCreated={setCommentCreated}
-                      setIsCommentLoading={setIsCommentLoading}
-                      setIsReplyLoading={setIsReplyLoading}
                     />
                   </div>
                 </div>
@@ -281,10 +257,6 @@ export default function PostRead({
                             <PostCommentInput
                               postId={params.postId}
                               parentId={comment.id}
-                              setCommentCreated={setCommentCreated}
-                              setIsCommentLoading={setIsCommentLoading}
-                              setIsReplyLoading={setIsReplyLoading}
-                              isReplyLoading={isReplyLoading}
                             />
                             <div className="mb-[30px] border-l-2 border-[#8A1F21] pl-6">
                               {comment.children &&
